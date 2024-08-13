@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCUSXN6Ed5-lc1K_0MDDJDiQnfAms7NVzE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>349490467829</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tugelatech.tugela</string>
+	<key>PROJECT_ID</key>
+	<string>articulate-ego-429522-d4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>articulate-ego-429522-d4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:349490467829:ios:578472b2c5092e815806bc</string>
+</dict>
+</plist>

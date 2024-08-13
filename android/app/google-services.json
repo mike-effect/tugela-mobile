@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "349490467829",
+    "project_id": "articulate-ego-429522-d4",
+    "storage_bucket": "articulate-ego-429522-d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349490467829:android:2bba085ccf7dca5e5806bc",
+        "android_client_info": {
+          "package_name": "com.tugelatech.tugela"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKPRVWUbB42l4f7PIWhrhqB2qVSYOECyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
