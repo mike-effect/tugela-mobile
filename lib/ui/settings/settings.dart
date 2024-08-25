@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tugela/extensions.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/ui/company/company_create.dart';
 import 'package:tugela/utils.dart';
@@ -36,6 +37,9 @@ class Settings extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: context.colorScheme.error,
+          ),
           onPressed: () {
             userProvider.logout();
           },
