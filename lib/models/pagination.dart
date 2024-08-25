@@ -3,14 +3,14 @@ import 'package:tugela/models/base_model.dart';
 
 part 'pagination.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: true)
 class Pagination extends BaseModel {
-  final int? total;
+  final int? count;
   final int? next;
   final int? previous;
 
   const Pagination({
-    this.total,
+    this.count,
     this.next,
     this.previous,
   });
@@ -21,7 +21,7 @@ class Pagination extends BaseModel {
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
 
   @override
-  List<Object?> get props => [total, next, previous];
+  List<Object?> get props => [count, next, previous];
 }
 
 @JsonSerializable()
