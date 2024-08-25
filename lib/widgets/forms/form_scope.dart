@@ -28,7 +28,9 @@ class FormScope extends StatelessWidget {
       child: Form(
         key: formKey,
         canPop: canPop,
-        onPopInvoked: onPopInvoked,
+        onPopInvokedWithResult: (didPop, _) {
+          onPopInvoked?.call(didPop);
+        },
         // autovalidateMode: AutovalidateMode.onUserInteraction,
         child: AutofillGroup(child: child),
       ),
