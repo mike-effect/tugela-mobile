@@ -24,16 +24,16 @@ class Onboard extends StatelessWidget {
       bodyPadding: ContentPadding,
       body: Column(
         children: [
-          card(
-            context: context,
-            title: "Freelancer",
-            subtitle: "Finish setting up your profile",
-            onTap: () {
-              createFreelancer(context);
-            },
-            icon: const Icon(PhosphorIconsRegular.userCircle, size: 44),
-          ),
-          VSizedBox16,
+          // card(
+          //   context: context,
+          //   title: "Freelancer",
+          //   subtitle: "Finish setting up your profile",
+          //   onTap: () {
+          //     createFreelancer(context);
+          //   },
+          //   icon: const Icon(PhosphorIconsRegular.userCircle, size: 44),
+          // ),
+          // VSizedBox16,
           card(
             context: context,
             title: "Company",
