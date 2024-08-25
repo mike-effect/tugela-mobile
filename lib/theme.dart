@@ -253,7 +253,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
           padding: AppTheme.buttonPadding,
-          side: BorderSide(color: AppColors.grey.shade400, width: 1),
+          side: BorderSide(color: AppColors.grey.shade300, width: 1),
           textStyle: TextStyle(
             fontSize: 16,
             fontFamily: fontFamily,
@@ -359,7 +359,7 @@ class AppTheme {
         },
       ),
       colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: AppColors.yellow,
+        primarySwatch: AppColors.indigo,
         accentColor: AppColors.secondaryColor,
       )
           .copyWith(
