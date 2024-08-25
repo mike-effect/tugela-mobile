@@ -7,25 +7,17 @@ part of 'pagination.dart';
 // **************************************************************************
 
 Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(
-      total: (json['total'] as num?)?.toInt(),
+      count: (json['count'] as num?)?.toInt(),
       next: (json['next'] as num?)?.toInt(),
       previous: (json['previous'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$PaginationToJson(Pagination instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('total', instance.total);
-  writeNotNull('next', instance.next);
-  writeNotNull('previous', instance.previous);
-  return val;
-}
+Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
+    <String, dynamic>{
+      'count': instance.count,
+      'next': instance.next,
+      'previous': instance.previous,
+    };
 
 QueryOptions _$QueryOptionsFromJson(Map<String, dynamic> json) => QueryOptions(
       ordering: json['ordering'] as String?,
