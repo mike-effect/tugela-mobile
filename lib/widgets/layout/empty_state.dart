@@ -3,7 +3,7 @@ import 'package:tugela/extensions.dart';
 import 'package:tugela/utils.dart';
 
 class EmptyState extends StatelessWidget {
-  final Widget icon;
+  final Widget? icon;
   final String? title;
   final String? subtitle;
   final String? buttonLabel;
@@ -12,7 +12,7 @@ class EmptyState extends StatelessWidget {
   final Color? backgroundColor;
   const EmptyState({
     super.key,
-    required this.icon,
+    this.icon,
     this.title,
     this.subtitle,
     this.buttonLabel,
@@ -25,31 +25,45 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      alignment: Alignment.topCenter,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
+      // alignment: Alignment.topCenter,
+      padding: ContentPadding * 2,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.inputTheme.enabledBorder!.borderSide.color,
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          VSizedBox24,
-          icon,
-          VSizedBox24,
-          if (title != null)
-            Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+          // VSizedBox24,
+          // if (icon != null)
+          // IconTheme(
+          //   data: context.iconTheme.copyWith(
+          //     size: 48,
+          //     color: context.textTheme.bodySmall?.color?.withOpacity(0.2),
+          //   ),
+          //   child: icon!,
+          // ),
+          // VSizedBox24,
+          Text(
+            title ?? "Nothing to show here yet 🍃",
+            // textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15,
+              letterSpacing: 0.2,
+              fontWeight: FontWeight.w600,
             ),
+          ),
           if (subtitle != null) ...[
             VSizedBox4,
             Text(
               subtitle!,
-              textAlign: TextAlign.center,
+              // textAlign: TextAlign.center,
               style: TextStyle(
-                // fontSize: 13,
+                // fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: context.textTheme.bodySmall?.color,
               ),
