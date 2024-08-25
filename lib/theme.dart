@@ -372,6 +372,7 @@ class AppTheme {
           .copyWith(surface: AppColors.backgroundColor),
       chipTheme: ChipThemeData(
         backgroundColor: Colors.grey.shade100,
+        pressElevation: 1,
       ),
     );
   }
