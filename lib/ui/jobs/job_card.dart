@@ -121,33 +121,25 @@ class JobCard extends StatelessWidget {
                     ),
                     VSizedBox4,
                   ],
+                  VSizedBox8,
                   Wrap(
                     spacing: 5,
                     runSpacing: 0,
                     alignment: WrapAlignment.start,
                     children: [
                       if (job.createdAt != null)
-                        Chip(
-                          label: Text(
-                            "Posted on ${formatDate(job.createdAt)}",
-                            style: chipStyle,
-                          ),
-                        ),
+                        "Posted on ${formatDate(job.createdAt)}",
                       if (job.roleType != null)
-                        Chip(
-                          label: Text(
-                            "${job.roleType?.name.sentenceCase}",
-                            style: chipStyle,
-                          ),
-                        ),
+                        "${job.roleType?.name.sentenceCase}",
                       if (job.location != null)
-                        Chip(
-                          label: Text(
-                            "${job.location?.name.sentenceCase}",
-                            style: chipStyle,
-                          ),
-                        ),
-                    ],
+                        "${job.location?.name.sentenceCase}",
+                    ].map((t) {
+                      return RawChip(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                        label: Text(t, style: chipStyle),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
