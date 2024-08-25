@@ -1,14 +1,92 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tugela/models/base_model.dart';
+import 'package:tugela/models/company_manager.dart';
+import 'package:tugela/models/company_value.dart';
+import 'package:tugela/models/industry.dart';
 import 'package:tugela/models/user.dart';
 
 part 'company.g.dart';
+
+@JsonSerializable()
+class Company extends BaseModel {
+  final String? id;
+  final String? xrpAddress;
+  final String? xrpSeed;
+  final String? address;
+  final String? name;
+  final String? description;
+  final String? email;
+  final String? phoneNumber;
+  final String? tagline;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  final CompanySize? companySize;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  final OrganizationType? organizationType;
+  final String? website;
+  final String? logo;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  final HowYouFoundUs? howYouFoundUs;
+  final String? founded;
+  final String? location;
+  final int totalJobs;
+  final int activeJobs;
+  final int assignedJobs;
+  final int completedJobs;
+  final int totalApplications;
+  final DateTime? date;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final List<CompanyManager> managers;
+  final Industry? industry;
+  final List<CompanyValue> values;
+
+  const Company({
+    this.id,
+    this.address,
+    this.xrpAddress,
+    this.xrpSeed,
+    this.name,
+    this.description,
+    this.email,
+    this.phoneNumber,
+    this.tagline,
+    this.companySize,
+    this.organizationType,
+    this.website,
+    this.logo,
+    this.howYouFoundUs,
+    this.founded,
+    this.location,
+    this.totalJobs = 0,
+    this.activeJobs = 0,
+    this.assignedJobs = 0,
+    this.completedJobs = 0,
+    this.totalApplications = 0,
+    this.date,
+    this.createdAt,
+    this.updatedAt,
+    this.managers = const [],
+    this.industry,
+    this.values = const [],
+  });
+
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      _$CompanyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CompanyToJson(this);
+
+  Map<String, dynamic> toInputJson() {
+    final j = _$CompanyToJson(this);
+    j['values'] = values.map((c) => c.id).toList();
+    j['industry'] = industry?.id;
+    return j;
+  }
+}
 
 enum CompanySize {
   small,
   medium,
   big,
-  unknown,
 }
 
 enum OrganizationType {
@@ -24,48 +102,4 @@ enum OrganizationType {
   @JsonValue("privately_held")
   privatelyHeld,
   partnership,
-  unknown,
-}
-
-@JsonSerializable()
-class Company extends BaseModel {
-  final String? id;
-  final String? user;
-  final String? name;
-  final String? description;
-  final String? email;
-  final String? phoneNumber;
-  final String? tagline;
-  @JsonKey(unknownEnumValue: CompanySize.unknown)
-  final CompanySize? companySize;
-  @JsonKey(unknownEnumValue: OrganizationType.unknown)
-  final OrganizationType? organizationType;
-  final String? website;
-  final String? logo;
-  @JsonKey(unknownEnumValue: HowYouFoundUs.unknown)
-  final HowYouFoundUs? howYouFoundUs;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  const Company({
-    this.id,
-    this.user,
-    this.name,
-    this.description,
-    this.email,
-    this.phoneNumber,
-    this.tagline,
-    this.companySize,
-    this.organizationType,
-    this.website,
-    this.logo,
-    this.howYouFoundUs,
-    this.createdAt,
-    this.updatedAt,
-  });
-
-  factory Company.fromJson(Map<String, dynamic> json) =>
-      _$CompanyFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CompanyToJson(this);
 }
