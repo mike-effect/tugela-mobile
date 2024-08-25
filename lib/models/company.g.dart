@@ -8,7 +8,9 @@ part of 'company.dart';
 
 Company _$CompanyFromJson(Map<String, dynamic> json) => Company(
       id: json['id'] as String?,
-      user: json['user'] as String?,
+      address: json['address'] as String?,
+      xrpAddress: json['xrp_address'] as String?,
+      xrpSeed: json['xrp_seed'] as String?,
       name: json['name'] as String?,
       description: json['description'] as String?,
       email: json['email'] as String?,
@@ -16,21 +18,41 @@ Company _$CompanyFromJson(Map<String, dynamic> json) => Company(
       tagline: json['tagline'] as String?,
       companySize: $enumDecodeNullable(
           _$CompanySizeEnumMap, json['company_size'],
-          unknownValue: CompanySize.unknown),
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
       organizationType: $enumDecodeNullable(
           _$OrganizationTypeEnumMap, json['organization_type'],
-          unknownValue: OrganizationType.unknown),
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
       website: json['website'] as String?,
       logo: json['logo'] as String?,
       howYouFoundUs: $enumDecodeNullable(
           _$HowYouFoundUsEnumMap, json['how_you_found_us'],
-          unknownValue: HowYouFoundUs.unknown),
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
+      founded: json['founded'] as String?,
+      location: json['location'] as String?,
+      totalJobs: (json['total_jobs'] as num?)?.toInt() ?? 0,
+      activeJobs: (json['active_jobs'] as num?)?.toInt() ?? 0,
+      assignedJobs: (json['assigned_jobs'] as num?)?.toInt() ?? 0,
+      completedJobs: (json['completed_jobs'] as num?)?.toInt() ?? 0,
+      totalApplications: (json['total_applications'] as num?)?.toInt() ?? 0,
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
+      managers: (json['managers'] as List<dynamic>?)
+              ?.map((e) => CompanyManager.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      industry: json['industry'] == null
+          ? null
+          : Industry.fromJson(json['industry'] as Map<String, dynamic>),
+      values: (json['values'] as List<dynamic>?)
+              ?.map((e) => CompanyValue.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$CompanyToJson(Company instance) {
@@ -43,7 +65,9 @@ Map<String, dynamic> _$CompanyToJson(Company instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('user', instance.user);
+  writeNotNull('xrp_address', instance.xrpAddress);
+  writeNotNull('xrp_seed', instance.xrpSeed);
+  writeNotNull('address', instance.address);
   writeNotNull('name', instance.name);
   writeNotNull('description', instance.description);
   writeNotNull('email', instance.email);
@@ -56,8 +80,19 @@ Map<String, dynamic> _$CompanyToJson(Company instance) {
   writeNotNull('logo', instance.logo);
   writeNotNull(
       'how_you_found_us', _$HowYouFoundUsEnumMap[instance.howYouFoundUs]);
+  writeNotNull('founded', instance.founded);
+  writeNotNull('location', instance.location);
+  val['total_jobs'] = instance.totalJobs;
+  val['active_jobs'] = instance.activeJobs;
+  val['assigned_jobs'] = instance.assignedJobs;
+  val['completed_jobs'] = instance.completedJobs;
+  val['total_applications'] = instance.totalApplications;
+  writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  val['managers'] = instance.managers.map((e) => e.toJson()).toList();
+  writeNotNull('industry', instance.industry?.toJson());
+  val['values'] = instance.values.map((e) => e.toJson()).toList();
   return val;
 }
 
@@ -65,7 +100,6 @@ const _$CompanySizeEnumMap = {
   CompanySize.small: 'small',
   CompanySize.medium: 'medium',
   CompanySize.big: 'big',
-  CompanySize.unknown: 'unknown',
 };
 
 const _$OrganizationTypeEnumMap = {
@@ -76,7 +110,6 @@ const _$OrganizationTypeEnumMap = {
   OrganizationType.soleProprietorship: 'sole_proprietorship',
   OrganizationType.privatelyHeld: 'privately_held',
   OrganizationType.partnership: 'partnership',
-  OrganizationType.unknown: 'unknown',
 };
 
 const _$HowYouFoundUsEnumMap = {
@@ -87,5 +120,4 @@ const _$HowYouFoundUsEnumMap = {
   HowYouFoundUs.techEvent: 'techEvent',
   HowYouFoundUs.afriblockMember: 'afriblockMember',
   HowYouFoundUs.afriblockEmployee: 'afriblockEmployee',
-  HowYouFoundUs.unknown: 'unknown',
 };
