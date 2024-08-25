@@ -14,6 +14,7 @@ import 'package:tugela/firebase_options.dart';
 import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/freelancer_provider.dart';
+import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/services/contracts/api_service.contract.dart';
 import 'package:tugela/services/contracts/local_auth.contract.dart';
@@ -61,6 +62,7 @@ class SurfClubApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
         ChangeNotifierProvider(create: (_) => FreelancerProvider()),
+        ChangeNotifierProvider(create: (_) => JobProvider()),
       ],
       child: Builder(builder: (context) {
         return MaterialApp(
