@@ -10,11 +10,11 @@ abstract class CompanyProviderContract extends BaseProvider {
     PaginatedOptions options = const PaginatedOptions(),
   });
 
-  Future<ApiResponse<Company>?> createCompany(Company data);
+  Future<ApiResponse<bool>?> createCompany(Company data);
 
   Future<ApiResponse<Company>?> getCompany(String id);
 
-  Future<ApiResponse<Company>?> updateCompany(String id, Company data);
+  Future<ApiResponse<bool>?> updateCompany(String id, Company data);
 
   Future<ApiResponse<bool>?> deleteCompany(String id);
 }
