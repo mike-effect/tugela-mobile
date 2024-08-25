@@ -97,7 +97,7 @@ class Onboard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: AppTheme.cardBorderRadius,
           border: Border.all(
-            color: context.theme.dividerColor,
+            color: context.inputTheme.border!.borderSide.color,
           ),
         ),
         child: Row(
