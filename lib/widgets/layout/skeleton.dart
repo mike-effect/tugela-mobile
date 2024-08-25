@@ -19,6 +19,7 @@ class Skeleton {
   Widget rect({
     double width = double.infinity,
     double height = 16,
+    BorderRadius? borderRadius,
   }) {
     return Container(
       height: height,
@@ -29,7 +30,7 @@ class Skeleton {
           light: AppColors.grey.shade200,
           dark: AppColors.grey.shade700,
         ),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: borderRadius ?? BorderRadius.circular(6),
       ),
     );
   }
