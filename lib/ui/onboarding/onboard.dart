@@ -46,7 +46,7 @@ class Onboard extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        child: TextButton(
+        child: OutlinedButton(
           style: TextButton.styleFrom(
             foregroundColor: context.colorScheme.error,
           ),
@@ -105,7 +105,12 @@ class Onboard extends StatelessWidget {
             SizedBox(
               width: 60,
               height: 70,
-              child: icon,
+              child: IconTheme(
+                data: context.iconTheme.copyWith(
+                  color: context.colorScheme.secondary,
+                ),
+                child: icon,
+              ),
             ),
             HSizedBox12,
             Expanded(
