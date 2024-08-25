@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tugela/theme.dart';
 
-class Tag extends StatelessWidget {
+class TagChip extends StatelessWidget {
   final String text;
   final MaterialColor? color;
   final Color? textColor;
   final Color? backgroundColor;
   final double scale;
 
-  const Tag({
+  const TagChip({
     super.key,
     required this.text,
     this.color,
