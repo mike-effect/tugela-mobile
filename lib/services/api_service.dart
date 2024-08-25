@@ -124,6 +124,7 @@ class ApiService implements ApiServiceContract {
     Map<String, dynamic>? params,
     bool auth = true,
   }) async {
+    params?.removeWhere((k, v) => v == null);
     return await _makeRequest('GET', url, queryParams: params, auth: auth);
   }
 
@@ -132,6 +133,7 @@ class ApiService implements ApiServiceContract {
     String url, {
     Map<String, dynamic>? params,
   }) async {
+    params?.removeWhere((k, v) => v == null);
     return await _makeRequest('DELETE', url, queryParams: params);
   }
 
@@ -351,7 +353,7 @@ class ApiService implements ApiServiceContract {
   }) async {
     final res = await get(
       '/companies/',
-      params: params..removeWhere((k, v) => v == null),
+      params: params,
     );
     return ApiResponse.fromJsonList(
       res.data,
@@ -360,9 +362,9 @@ class ApiService implements ApiServiceContract {
   }
 
   @override
-  Future<ApiResponse<Company>> createCompany(Company data) async {
-    final res = await post('/companies/', data.toJson());
-    return ApiResponse.fromJson(res.data, Company.fromJson);
+  Future<ApiResponse<bool>> createCompany(Company data) async {
+    final res = await post('/companies/', data.toInputJson());
+    return ApiResponse.successful(res);
   }
 
   @override
@@ -372,9 +374,9 @@ class ApiService implements ApiServiceContract {
   }
 
   @override
-  Future<ApiResponse<Company>> updateCompany(String id, Company data) async {
-    final res = await patch('/companies/$id/', data.toJson());
-    return ApiResponse.fromJson(res.data, Company.fromJson);
+  Future<ApiResponse<bool>> updateCompany(String id, Company data) async {
+    final res = await patch('/companies/$id/', data.toInputJson());
+    return ApiResponse.successful(res);
   }
 
   @override
@@ -434,46 +436,36 @@ class ApiService implements ApiServiceContract {
   // }
 
   // ------------------- Freelancers endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<Freelancer>>> getFreelancers({
-  //   String? user,
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/freelancers/',
-  //     params: {
-  //       'user': user,
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => Freelancer.fromJson(e)).toList(),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<List<Freelancer>>> getFreelancers({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/freelancers/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => Freelancer.fromJson(e)).toList(),
+    );
+  }
 
   @override
-  Future<ApiResponse<Freelancer>> createFreelancer(Freelancer data) async {
+  Future<ApiResponse<bool>> createFreelancer(Freelancer data) async {
     final res = await post('/freelancers/', data.toJson());
-    return ApiResponse.fromJson(res.data, Freelancer.fromJson);
+    return ApiResponse.successful(res.data);
   }
 
   @override
   Future<ApiResponse<Freelancer>> getFreelancer(String id) async {
     final res = await get('/freelancers/$id/');
-    return ApiResponse.fromJson(res.data, Freelancer.fromJson);
+    return ApiResponse.successful(res);
   }
 
   @override
-  Future<ApiResponse<Freelancer>> updateFreelancer(
+  Future<ApiResponse<bool>> updateFreelancer(
     String id,
     Freelancer data,
   ) async {
     final res = await patch('/freelancers/$id/', data.toJson());
-    return ApiResponse.fromJson(res.data, Freelancer.fromJson);
+    return ApiResponse.successful(res);
   }
 
   // @override
@@ -484,309 +476,229 @@ class ApiService implements ApiServiceContract {
   //   );
   // }
 
-  // // ------------------- Freelancers Portfolio Items endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<PortfolioItem>>> getFreelancersPortfolioItems({
-  //   String? user,
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/freelancers/portfolio-items/',
-  //     params: {
-  //       'user': user,
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => PortfolioItem.fromJson(e)).toList(),
-  //   );
-  // }
+  // ------------------- Freelancers Portfolio Items endpoints -------------------
+  @override
+  Future<ApiResponse<List<PortfolioItem>>> getPortfolioItems({
+    required String freelancerId,
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get(
+      '/freelancers/portfolio-items/',
+      params: {"freelancer": freelancerId, ...params},
+    );
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => PortfolioItem.fromJson(e)).toList(),
+    );
+  }
 
-  // @override
-  // Future<ApiResponse<PortfolioItem>> createFreelancerPortfolioItem(
-  //     PortfolioItem data) async {
-  //   return post(
-  //     '/freelancers/portfolio-items/',
-  //     data.toJson(),
-  //     creator: PortfolioItem.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> createPortfolioItem(
+    PortfolioItem data,
+  ) async {
+    final res = await post('/freelancers/portfolio-items/', data.toJson());
+    return ApiResponse.successful(res.data);
+  }
 
-  // @override
-  // Future<ApiResponse<PortfolioItem>> getFreelancerPortfolioItem(
-  //     String id) async {
-  //   return get(
-  //     '/freelancers/portfolio-items/$id/',
-  //     creator: (json) => PortfolioItem.fromJson(json),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<PortfolioItem>> getPortfolioItem(String id) async {
+    final res = await get('/freelancers/portfolio-items/$id/');
+    return ApiResponse.fromJson(res.data, PortfolioItem.fromJson);
+  }
 
-  // @override
-  // Future<ApiResponse<PortfolioItem>> updateFreelancerPortfolioItem(
-  //     String id, PortfolioItem data) async {
-  //   return patch(
-  //     '/freelancers/portfolio-items/$id/',
-  //     data.toJson(),
-  //     creator: PortfolioItem.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> updatePortfolioItem(
+    String id,
+    PortfolioItem data,
+  ) async {
+    final res = await patch('/freelancers/portfolio-items/$id/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<void>> deleteFreelancerPortfolioItem(String id) async {
-  //   return delete(
-  //     '/freelancers/portfolio-items/$id/',
-  //     creator: (_) {},
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> deletePortfolioItem(String id) async {
+    final res = await delete('/freelancers/portfolio-items/$id/');
+    return ApiResponse.successful(res);
+  }
 
-  // // ------------------- Freelancers Services endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<Service>>> getFreelancersServices({
-  //   String? user,
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/freelancers/services/',
-  //     params: {
-  //       'user': user,
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => Service.fromJson(e)).toList(),
-  //   );
-  // }
+  // ------------------- Freelancers Services endpoints -------------------
+  @override
+  Future<ApiResponse<List<FreelancerService>>> getServices({
+    required String freelancerId,
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get(
+      '/freelancers/services/',
+      params: {'freelancer': freelancerId, ...params},
+    );
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => FreelancerService.fromJson(e)).toList(),
+    );
+  }
 
-  // @override
-  // Future<ApiResponse<Service>> createFreelancerService(Service data) async {
-  //   return post(
-  //     '/freelancers/services/',
-  //     data.toJson(),
-  //     creator: Service.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> createService(
+    FreelancerService data,
+  ) async {
+    final res = await post('/freelancers/services/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<Service>> getFreelancerService(String id) async {
-  //   return get(
-  //     '/freelancers/services/$id/',
-  //     creator: (json) => Service.fromJson(json),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<FreelancerService>> getService(String id) async {
+    final res = await get('/freelancers/services/$id/');
+    return ApiResponse.fromJson(res.data, FreelancerService.fromJson);
+  }
 
-  // @override
-  // Future<ApiResponse<Service>> updateFreelancerService(
-  //     String id, Service data) async {
-  //   return patch(
-  //     '/freelancers/services/$id/',
-  //     data.toJson(),
-  //     creator: Service.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> updateService(
+      String id, FreelancerService data) async {
+    final res = await patch('/freelancers/services/$id/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<void>> deleteFreelancerService(String id) async {
-  //   return delete(
-  //     '/freelancers/services/$id/',
-  //     creator: (_) {},
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> deleteService(String id) async {
+    final res = await delete('/freelancers/services/$id/');
+    return ApiResponse.successful(res);
+  }
 
-  // // ------------------- Freelancers Work Experiences endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<WorkExperience>>> getFreelancersWorkExperiences({
-  //   String? user,
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/freelancers/work-experiences/',
-  //     params: {
-  //       'user': user,
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => WorkExperience.fromJson(e)).toList(),
-  //   );
-  // }
+  // ------------------- Freelancers Work Experiences endpoints -------------------
+  @override
+  Future<ApiResponse<List<WorkExperience>>> getWorkExperiences({
+    required String freelancerId,
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get(
+      '/freelancers/work-experiences/',
+      params: {'freelancer': freelancerId, ...params},
+    );
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => WorkExperience.fromJson(e)).toList(),
+    );
+  }
 
-  // @override
-  // Future<ApiResponse<WorkExperience>> createFreelancerWorkExperience(
-  //     WorkExperience data) async {
-  //   return post(
-  //     '/freelancers/work-experiences/',
-  //     data.toJson(),
-  //     creator: WorkExperience.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> createWorkExperience(WorkExperience data) async {
+    final res = await post('/freelancers/work-experiences/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<WorkExperience>> getFreelancerWorkExperience(
-  //     String id) async {
-  //   return get(
-  //     '/freelancers/work-experiences/$id/',
-  //     creator: (json) => WorkExperience.fromJson(json),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<WorkExperience>> getWorkExperience(String id) async {
+    final res = await get('/freelancers/work-experiences/$id/');
+    return ApiResponse.fromJson(res.data, WorkExperience.fromJson);
+  }
 
-  // @override
-  // Future<ApiResponse<WorkExperience>> updateFreelancerWorkExperience(
-  //     String id, WorkExperience data) async {
-  //   return patch(
-  //     '/freelancers/work-experiences/$id/',
-  //     data.toJson(),
-  //     creator: WorkExperience.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> updateWorkExperience(
+    String id,
+    WorkExperience data,
+  ) async {
+    final res =
+        await patch('/freelancers/work-experiences/$id/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<void>> deleteFreelancerWorkExperience(String id) async {
-  //   return delete(
-  //     '/freelancers/work-experiences/$id/',
-  //     creator: (_) {},
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> deleteWorkExperience(String id) async {
+    final res = await delete('/freelancers/work-experiences/$id/');
+    return ApiResponse.successful(res);
+  }
 
-  // // ------------------- Jobs endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<Job>>> getJobs({
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/jobs/',
-  //     params: {
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => Job.fromJson(e)).toList(),
-  //   );
-  // }
+  // ------------------- Jobs endpoints -------------------
+  @override
+  Future<ApiResponse<List<Job>>> getJobs({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/jobs/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => Job.fromJson(e)).toList(),
+    );
+  }
 
-  // @override
-  // Future<ApiResponse<Job>> createJob(Job data) async {
-  //   return post(
-  //     '/jobs/',
-  //     data.toJson(),
-  //     creator: Job.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> createJob(Job data) async {
+    final res = await post('/jobs/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<Job>> getJob(String id) async {
-  //   return get(
-  //     '/jobs/$id/',
-  //     creator: (json) => Job.fromJson(json),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<Job>> getJob(String id) async {
+    final res = await get('/jobs/$id/');
+    return ApiResponse.fromJson(res.data, Job.fromJson);
+  }
 
-  // @override
-  // Future<ApiResponse<Job>> updateJob(String id, Job data) async {
-  //   return put(
-  //     '/jobs/$id/',
-  //     data.toJson(),
-  //     creator: Job.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> updateJob(String id, Job data) async {
+    final res = await put('/jobs/$id/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
   // @override
   // Future<ApiResponse<Job>> partialUpdateJob(String id, Job data) async {
-  //   return patch(
-  //     '/jobs/$id/',
-  //     data.toJson(),
-  //     creator: Job.fromJson,
-  //   );
+  //   final res = await patch('/jobs/$id/', data.toJson());
+  //   return ApiResponse.fromJson(res.data, Job.fromJson);
   // }
 
-  // @override
-  // Future<ApiResponse<void>> deleteJob(String id) async {
-  //   return delete(
-  //     '/jobs/$id/',
-  //     creator: (_) {},
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> deleteJob(String id) async {
+    final res = await delete('/jobs/$id/');
+    return ApiResponse.successful(res);
+  }
 
-  // // ------------------- Jobs Applications endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<Application>>> getJobsApplications({
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/jobs/applications/',
-  //     params: {
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => Application.fromJson(e)).toList(),
-  //   );
-  // }
+  // ------------------- Jobs Applications endpoints -------------------
+  @override
+  Future<ApiResponse<List<JobApplication>>> getJobApplications({
+    String? jobId,
+    String? freelancerId,
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/jobs/applications/', params: {
+      'job': jobId,
+      'freelancer': freelancerId,
+      ...params,
+    });
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => JobApplication.fromJson(e)).toList(),
+    );
+  }
 
-  // @override
-  // Future<ApiResponse<Application>> createJobApplication(
-  //     Application data) async {
-  //   return post(
-  //     '/jobs/applications/',
-  //     data.toJson(),
-  //     creator: Application.fromJson,
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> createJobApplication(JobApplication data) async {
+    final res = await post('/jobs/applications/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
-  // @override
-  // Future<ApiResponse<Application>> getJobApplication(String id) async {
-  //   return get(
-  //     '/jobs/applications/$id/',
-  //     creator: (json) => Application.fromJson(json),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<JobApplication>> getJobApplication(String id) async {
+    final res = await get('/jobs/applications/$id/');
+    return ApiResponse.fromJson(res.data, JobApplication.fromJson);
+  }
+
+  @override
+  Future<ApiResponse<bool>> updateJobApplication(
+      String id, JobApplication data) async {
+    final res = await put('/jobs/applications/$id/', data.toJson());
+    return ApiResponse.successful(res);
+  }
 
   // @override
-  // Future<ApiResponse<Application>> updateJobApplication(
-  //     String id, Application data) async {
-  //   return put(
-  //     '/jobs/applications/$id/',
-  //     data.toJson(),
-  //     creator: Application.fromJson,
-  //   );
+  // Future<ApiResponse<JobApplication>> partialUpdateJobApplication(
+  //     String id, JobApplication data) async {
+  //   final res = await patch('/jobs/applications/$id/', data.toJson());
+  //   return ApiResponse.fromJson(res.data, JobApplication.fromJson);
   // }
 
-  // @override
-  // Future<ApiResponse<Application>> partialUpdateJobApplication(
-  //     String id, Application data) async {
-  //   return patch(
-  //     '/jobs/applications/$id/',
-  //     data.toJson(),
-  //     creator: Application.fromJson,
-  //   );
-  // }
-
-  // @override
-  // Future<ApiResponse<void>> deleteJobApplication(String id) async {
-  //   return delete(
-  //     '/jobs/applications/$id/',
-  //     creator: (_) {},
-  //   );
-  // }
+  @override
+  Future<ApiResponse<bool>> deleteJobApplication(String id) async {
+    final res = await delete('/jobs/applications/$id/');
+    return ApiResponse.successful(res.data);
+  }
 
   // // ------------------- Jobs Tags endpoints -------------------
   // @override
@@ -1048,4 +960,26 @@ class ApiService implements ApiServiceContract {
   //     creator: User.fromJson,
   //   );
   // }
+
+  @override
+  Future<ApiResponse<List<Industry>>> getCompanyIndustries({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/companies/industries/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => Industry.fromJson(e)).toList(),
+    );
+  }
+
+  @override
+  Future<ApiResponse<List<CompanyValue>>> getCompanyValues({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/companies/values/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => CompanyValue.fromJson(e)).toList(),
+    );
+  }
 }
