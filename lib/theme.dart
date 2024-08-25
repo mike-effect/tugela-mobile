@@ -13,20 +13,23 @@ part 'theme/app_colors.dart';
 class AppTheme {
   const AppTheme._();
 
-  static TextTheme get googleFont => GoogleFonts.instrumentSansTextTheme(
+  static TextTheme get googleFont => GoogleFonts.interTextTheme(
         const TextTheme(),
       );
 
   static final fontFamily = googleFont.bodyMedium?.fontFamily ?? "";
   static final secondaryFontFamily = fontFamily;
   static final formBorderRadius = BorderRadius.circular(12);
-  static final buttonBorderRadius = BorderRadius.circular(12);
+  static final buttonBorderRadius = BorderRadius.circular(100);
   static final cardBorderRadius = BorderRadius.circular(12);
+  static final avatarBorderRadius = BorderRadius.circular(12);
   static const textfieldPadding = EdgeInsets.all(16);
   static const buttonPadding = EdgeInsets.symmetric(
     vertical: 18,
     horizontal: 24,
   );
+
+  static const largeAppBarHeight = kToolbarHeight + 12;
 
   static ButtonStyle? smallElevatedButtonStyle(BuildContext context) {
     return context.theme.elevatedButtonTheme.style?.copyWith(
@@ -157,7 +160,7 @@ class AppTheme {
           fontSize: 17,
           fontWeight: FontWeight.w600,
           fontFamily: fontFamily,
-          letterSpacing: 0.4,
+          // letterSpacing: 0.4,
         ),
       ),
       bottomAppBarTheme: const BottomAppBarTheme(
@@ -177,6 +180,8 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.onPrimary,
+        elevation: 3,
+        iconSize: 32,
       ),
       snackBarTheme: SnackBarThemeData(
         elevation: 0,
@@ -270,7 +275,7 @@ class AppTheme {
           textStyle: TextStyle(
             fontSize: 17,
             height: 1,
-            letterSpacing: 0.2,
+            // letterSpacing: 0.2,
             fontFamily: fontFamily,
             fontWeight: FontWeight.w800,
           ),
@@ -291,7 +296,6 @@ class AppTheme {
           ),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: false,
         fillColor: AppColors.grey.shade100,
@@ -330,7 +334,7 @@ class AppTheme {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: AppTheme.formBorderRadius,
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: AppColors.disabledBorderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppTheme.formBorderRadius,
@@ -366,6 +370,9 @@ class AppTheme {
             tertiary: AppColors.tertiaryColor,
           )
           .copyWith(surface: AppColors.backgroundColor),
+      chipTheme: ChipThemeData(
+        backgroundColor: Colors.grey.shade100,
+      ),
     );
   }
 
@@ -386,6 +393,7 @@ class AppTheme {
     // final elevatedButtonTheme = light.elevatedButtonTheme;
     final inputDecorationTheme = light.inputDecorationTheme;
     final floatingActionButtonTheme = light.floatingActionButtonTheme;
+    final chipTheme = light.chipTheme;
 
     return light.copyWith(
       brightness: Brightness.dark,
@@ -573,6 +581,9 @@ class AppTheme {
           )
           .copyWith(surface: AppColors.backgroundColorDark)
           .copyWith(error: AppColors.red.shade300),
+      chipTheme: chipTheme.copyWith(
+        backgroundColor: const Color.fromARGB(255, 31, 31, 31),
+      ),
     );
   }
 }
