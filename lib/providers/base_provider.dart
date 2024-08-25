@@ -29,18 +29,25 @@ abstract class BaseProvider extends ChangeNotifier {
   Future<Paginated<T>?> paginatedQuery<T>({
     PaginatedOptions options = const PaginatedOptions(),
     required Paginated<T>? paginated,
-    required Future<ApiResponse<List<T>>> initialRequest,
-    required Future<ApiResponse<List<T>>> loadMoreRequest,
+    required Future<ApiResponse<List<T>>> Function() initialRequest,
+    required Future<ApiResponse<List<T>>> Function() loadMoreRequest,
   }) async {
+    if (options.loadMore) {
+      options = PaginatedOptions(
+        keepCount: options.keepCount,
+        loadMore: true,
+        refresh: false,
+      );
+    }
     Paginated<T>? pagination = paginated;
     if (pagination == null || pagination.data == null || options.refresh) {
-      final res = await initialRequest;
+      final res = await initialRequest();
       pagination = Paginated<T>(
         data: res.data ?? [],
         pagination: res.pagination,
       );
     } else if (options.loadMore && pagination.canLoadMore) {
-      final res = await loadMoreRequest;
+      final res = await loadMoreRequest();
       pagination.append(res);
     }
     return pagination;
