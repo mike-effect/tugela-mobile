@@ -30,43 +30,6 @@ class _SignUpState extends State<SignUp> {
 
   UserProvider get provider => context.read<UserProvider>();
 
-  void signup() async {
-    errorMessage = null;
-    apiError = null;
-    if (mounted) setState(() {});
-    if (!formKey.currentState!.validate()) return;
-    await ProviderRequest.api(
-      context: context,
-      loadingMessage: "Creating account",
-      request: provider.signUp(SignUpRequest(
-        email: emailController.text,
-        password: passwordController.text,
-        password2: rePasswordController.text,
-      )),
-      onError: (context) {
-        setState(() => errorMessage = 'An error occurred');
-      },
-      onApiError: (context, error) {
-        setState(() => apiError = error);
-        formKey.currentState!.validate();
-      },
-      onSuccess: (context, res) async {
-        ProviderRequest.api(
-          context: context,
-          request: provider.login(TokenObtainPairRequest(
-            email: emailController.text,
-            password: rePasswordController.text,
-          )),
-          onSuccess: (context, res) {
-            if (res.data == null) return;
-            rootNavigator(context).pushNamedAndRemoveUntil(
-                provider.getRouteForUser(), (_) => false);
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return FormScope(
@@ -231,6 +194,44 @@ class _SignUpState extends State<SignUp> {
           ],
         ),
       ),
+    );
+  }
+
+  void signup() async {
+    errorMessage = null;
+    apiError = null;
+    if (mounted) setState(() {});
+    if (!formKey.currentState!.validate()) return;
+    await ProviderRequest.api(
+      context: context,
+      loadingMessage: "Creating account",
+      request: provider.signUp(SignUpRequest(
+        email: emailController.text,
+        password: passwordController.text,
+        password2: rePasswordController.text,
+        username: usernameController.text,
+      )),
+      onError: (context) {
+        setState(() => errorMessage = 'An error occurred');
+      },
+      onApiError: (context, error) {
+        setState(() => apiError = error);
+        formKey.currentState!.validate();
+      },
+      onSuccess: (context, res) async {
+        ProviderRequest.api(
+          context: context,
+          request: provider.login(TokenObtainPairRequest(
+            email: emailController.text,
+            password: rePasswordController.text,
+          )),
+          onSuccess: (context, res) {
+            if (res.data == null) return;
+            rootNavigator(context).pushNamedAndRemoveUntil(
+                provider.getRouteForUser(), (_) => false);
+          },
+        );
+      },
     );
   }
 }
