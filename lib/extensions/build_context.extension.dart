@@ -15,6 +15,9 @@ extension BuildContextX on BuildContext {
 
   InputDecorationTheme get inputTheme => theme.inputDecorationTheme;
 
+  Color? get borderColor =>
+      theme.inputDecorationTheme.enabledBorder?.borderSide.color;
+
   TextTheme get textTheme => theme.textTheme;
 
   IconThemeData get iconTheme => theme.iconTheme;
