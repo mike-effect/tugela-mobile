@@ -3,16 +3,16 @@ part of '../theme.dart';
 class AppColors {
   AppColors._();
 
-  static const primaryColor = black;
+  static const primaryColor = indigo;
   static const primaryColorLight = black12;
-  static const primaryColorDark = black;
+  static const primaryColorDark = indigo;
 
   static const primaryColorDarkTheme = white;
   static const primaryColorLightDarkTheme = white38;
   static const primaryColorDarkDarkTheme = white24;
 
-  static Color get secondaryColor => teal;
-  static Color get secondaryColorDark => teal;
+  static get secondaryColor => indigo;
+  static get secondaryColorDark => indigo;
 
   static final tertiaryColor = amber.shade700;
   static final tertiaryColorDark = amber.shade800;
@@ -20,7 +20,7 @@ class AppColors {
   static const accentColor = primaryColor;
   static final accentColorFaint = indigo.shade300;
 
-  static final dividerColor = grey.shade300;
+  static get dividerColor => grey.shade400;
   static final dividerColorDark = grey.shade800;
 
   static final borderColor = grey.shade300;
@@ -43,8 +43,8 @@ class AppColors {
   static const onSurface = Colors.black;
   static const onSurfaceDark = Colors.white;
 
-  static final onSecondary = yellow.shade900;
-  static final onSecondaryDark = yellow.shade700;
+  static final onSecondary = secondaryColor.shade900;
+  static final onSecondaryDark = secondaryColor.shade700;
 
   static const Color transparent = Color(0x00000000);
 
@@ -160,7 +160,7 @@ class AppColors {
   static Color greyElevatedBackgroundColor(context) {
     return dynamic(
       context: context,
-      light: Colors.grey.shade200,
+      light: Colors.grey.shade100,
       dark: const Color.fromARGB(255, 22, 22, 22),
     )!;
   }
