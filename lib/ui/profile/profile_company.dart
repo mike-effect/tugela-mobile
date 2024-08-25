@@ -9,6 +9,7 @@ import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/ui/jobs/job_details.dart';
+import 'package:tugela/ui/jobs/job_list.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/icons/right_chevron.dart';
 import 'package:tugela/widgets/layout/app_image.dart';
@@ -24,7 +25,7 @@ class ProfileCompany extends StatelessWidget {
     final jobProvider = context.watch<JobProvider>();
     // ignore: no_leading_underscores_for_local_identifiers
     final _company = companyProvider.company[company.id] ?? company;
-    const chipStyle = TextStyle(height: 1.1, fontSize: 13);
+    const chipStyle = TextStyle(height: 1.2, fontSize: 13);
     final jobs = (jobProvider.jobs[_company.id]?.data ?? []);
 
     return Column(
@@ -138,13 +139,49 @@ class ProfileCompany extends StatelessWidget {
           ],
         ),
         VSizedBox48,
-        const Text(
-          "Job Listings",
-          style: TextStyle(
-            fontSize: 16,
-            letterSpacing: 0.2,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          children: [
+            const Text(
+              "Job Listings",
+              style: TextStyle(
+                fontSize: 16,
+                letterSpacing: 0.2,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Space,
+            if (jobs.length > 3)
+              GestureDetector(
+                onTap: () {
+                  push(
+                    context: context,
+                    builder: (_) => JobList(
+                      title: "My Jobs Listings",
+                      mapId: company.id,
+                      params: {"company": company.id},
+                    ),
+                    rootNavigator: true,
+                  );
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(32),
+                    border: Border.all(
+                      color: context.theme.dividerColor.withOpacity(0.4),
+                    ),
+                  ),
+                  child: const Text(
+                    "View all",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
         if (jobs.isEmpty)
           Container(
@@ -156,7 +193,7 @@ class ProfileCompany extends StatelessWidget {
             ),
           )
         else
-          ...jobs.map((job) {
+          ...jobs.take(3).map((job) {
             final sub = [
               (job.roleType?.name ?? ''),
               (job.location?.name ?? '').toLowerCase()
