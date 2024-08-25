@@ -15,7 +15,7 @@ class FreelancerProvider extends FreelancerProviderContract {
   }
 
   @override
-  Future<ApiResponse<Freelancer>?> createFreelancer(Freelancer data) async {
+  Future<ApiResponse<bool>?> createFreelancer(Freelancer data) async {
     try {
       final res = await apiService.createFreelancer(data);
       return res;
@@ -36,12 +36,12 @@ class FreelancerProvider extends FreelancerProviderContract {
   }
 
   @override
-  Future<ApiResponse<Freelancer>?> updateFreelancer(
+  Future<ApiResponse<bool>?> updateFreelancer(
     String id,
     Freelancer data,
   ) async {
     try {
-      return await apiService.getFreelancer(id);
+      return await apiService.updateFreelancer(id, data);
     } catch (e, s) {
       handleError(e, stackTrace: s);
       return null;
