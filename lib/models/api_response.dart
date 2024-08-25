@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -56,13 +55,10 @@ class ApiResponse<T> extends Equatable {
         final results = jsonData['results'];
         data = results != null ? creator(results) : null;
         pagination = Pagination(
-          total: jsonData['count'],
-          previous: int.tryParse(
-            _extractQuery(jsonData['previous'], 'page') ?? "",
-          ),
-          next: int.tryParse(
-            _extractQuery(jsonData['next'], 'page') ?? "",
-          ),
+          count: jsonData['count'],
+          previous:
+              int.tryParse(_extractQuery(jsonData['previous'], 'page') ?? ""),
+          next: int.tryParse(_extractQuery(jsonData['next'], 'page') ?? ""),
         );
       } else {
         data = jsonData != null ? creator(jsonData) : null;
@@ -86,7 +82,7 @@ class ApiResponse<T> extends Equatable {
   }
 
   ApiResponse.successful(Response response) {
-    final json = jsonDecode(utf8.decode(response.data));
+    final json = response.data;
     error = json['error'] != null ? ApiError.fromJson(json['error']) : null;
     data = ((response.statusCode ?? 0) >= 200 &&
         (response.statusCode ?? 0) < 400) as T?;
