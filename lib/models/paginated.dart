@@ -10,13 +10,20 @@ class Paginated<T> extends BaseModel {
 
   Paginated({this.data, this.pagination});
 
+  bool get isEmpty => (data ?? []).isEmpty;
+
+  bool get isNotEmpty => (data ?? []).isNotEmpty;
+
+  int get length => (data ?? []).length;
+
   void append(ApiResponse<List<T>>? response) {
+    if (response == null) return;
     if (data != null) {
-      data?.addAll(response?.data ?? []);
+      data?.addAll(response.data ?? []);
     } else {
-      data = data;
+      data = response.data ?? [];
     }
-    if (response != null) pagination = response.pagination;
+    if (response.pagination != null) pagination = response.pagination;
   }
 
   bool get canLoadMore {
