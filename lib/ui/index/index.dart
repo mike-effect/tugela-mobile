@@ -8,7 +8,10 @@ import 'package:tugela/extensions/build_context.extension.dart';
 import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/services/contracts/api_service.contract.dart';
+import 'package:tugela/ui/applications/applications_tab.dart';
+import 'package:tugela/ui/freelancer/freelancer_tab.dart';
 import 'package:tugela/ui/home/home_tab.dart';
+import 'package:tugela/ui/profile/profile_tab.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/routes.dart';
 import 'package:tugela/widgets/feedback/dialog.dart';
@@ -49,32 +52,25 @@ class _IndexState extends State<Index> {
         Routes.tabIndex: (_) => const HomeTab(),
       },
     ),
-    // CupertinoTabView(
-    //   navigatorKey: navigators[1],
-    //   navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
-    //   routes: {
-    //     Routes.tabIndex: (_) => const TransfersTab(),
-    //   },
-    // ),
+    CupertinoTabView(
+      navigatorKey: navigators[1],
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
+      routes: {
+        Routes.tabIndex: (_) => const FreelancerTab(),
+      },
+    ),
     CupertinoTabView(
       navigatorKey: navigators[2],
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       routes: {
-        Routes.tabIndex: (_) => Container(),
+        Routes.tabIndex: (_) => const ApplicationsTab(),
       },
     ),
-    // CupertinoTabView(
-    //   navigatorKey: navigators[3],
-    //   navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
-    //   routes: {
-    //     Routes.tabIndex: (_) => const CryptoTab(),
-    //   },
-    // ),
     CupertinoTabView(
-      navigatorKey: navigators[4],
+      navigatorKey: navigators[3],
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       routes: {
-        Routes.tabIndex: (_) => Container(),
+        Routes.tabIndex: (_) => const ProfileTab(),
       },
     ),
   ];
@@ -131,7 +127,7 @@ class _IndexState extends State<Index> {
 
     return PopScope(
       canPop: canPopTab,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (!didPop) tabNavigator?.pop();
       },
       child: AppTabScaffold(
@@ -150,10 +146,9 @@ class _IndexState extends State<Index> {
           onTap: (index) {
             final tabName = {
               0: "home",
-              1: "transfer",
-              2: "cards",
-              3: "crypto",
-              4: "profile",
+              1: "talent",
+              2: "applications",
+              3: "profile",
             };
             if (currentIndex == index) {
               final nav = navigators[index].currentState;
@@ -178,20 +173,20 @@ class _IndexState extends State<Index> {
               label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: PhosphorIcon(PhosphorIconsRegular.compass),
-              activeIcon: PhosphorIcon(PhosphorIconsFill.compass),
-              label: "Explore",
+              icon: PhosphorIcon(PhosphorIconsRegular.magnifyingGlass),
+              activeIcon: PhosphorIcon(PhosphorIconsFill.magnifyingGlass),
+              label: "Talent",
+            ),
+            BottomNavigationBarItem(
+              icon: PhosphorIcon(PhosphorIconsRegular.briefcase),
+              activeIcon: PhosphorIcon(PhosphorIconsFill.briefcase),
+              label: "Applications",
             ),
             BottomNavigationBarItem(
               icon: PhosphorIcon(PhosphorIconsRegular.userCircle),
               activeIcon: PhosphorIcon(PhosphorIconsFill.userCircle),
               label: "Profile",
             ),
-            // BottomNavigationBarItem(
-            //   icon: PhosphorIcon(PhosphorIconsRegular.bell),
-            //   activeIcon: PhosphorIcon(PhosphorIconsFill.bell),
-            //   label: "Notifications",
-            // ),
           ],
         ),
       ),
