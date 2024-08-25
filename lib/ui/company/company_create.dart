@@ -272,7 +272,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                       ? Row(
                           children: [
                             Text(
-                              "Select up to 6 values",
+                              "Select up to 6 company values",
                               style: TextStyle(
                                 fontSize: 15,
                                 color: context.textTheme.bodySmall?.color,
@@ -375,10 +375,8 @@ class _CompanyCreateState extends State<CompanyCreate> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: ElevatedButton(
+            onPressed: companyValues.isNotEmpty ? submit : null,
             child: const Text("Save"),
-            onPressed: () {
-              submit();
-            },
           ),
         ),
       ),
