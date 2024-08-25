@@ -197,71 +197,69 @@ class _SliverScaffoldState extends cupertino.State<SliverScaffold> {
                 backgroundColor: widget.backgroundColor,
               ),
             ),
-            child: Scrollbar(
-              child: CustomScrollView(
-                cacheExtent: 1000,
-                keyboardDismissBehavior: widget.keyboardDismissBehavior,
-                controller: PrimaryScrollController.of(context),
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
-                ),
-                // primary: controller == null,
-                // primary: true,
-                slivers: <Widget>[
-                  if (!widget.hideAppBar) ...[
-                    if (widget.pageAppBar != null) widget.pageAppBar!,
-                    if (widget.sliverAppBar != null) widget.sliverAppBar!,
-                  ],
-                  if (widget.onRefresh != null)
-                    cupertino.CupertinoSliverRefreshControl(
-                      onRefresh: widget.onRefresh,
-                      builder: buildSimpleRefreshIndicator,
-                      refreshTriggerPullDistance: 120,
+            child: CustomScrollView(
+              cacheExtent: 1000,
+              keyboardDismissBehavior: widget.keyboardDismissBehavior,
+              controller: PrimaryScrollController.of(context),
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              // primary: controller == null,
+              // primary: true,
+              slivers: <Widget>[
+                if (!widget.hideAppBar) ...[
+                  if (widget.pageAppBar != null) widget.pageAppBar!,
+                  if (widget.sliverAppBar != null) widget.sliverAppBar!,
+                ],
+                if (widget.onRefresh != null)
+                  cupertino.CupertinoSliverRefreshControl(
+                    onRefresh: widget.onRefresh,
+                    builder: buildSimpleRefreshIndicator,
+                    refreshTriggerPullDistance: 120,
+                  ),
+                ...widget.slivers,
+                if (widget.bodyListDelegate != null && widget.body == null)
+                  SliverSafeArea(
+                    top: false,
+                    sliver: SliverPadding(
+                      padding: (widget.bodyPadding ?? EdgeInsets.zero).add(
+                        const EdgeInsetsDirectional.only(bottom: 100),
+                      ),
+                      sliver: SliverList(delegate: widget.bodyListDelegate!),
                     ),
-                  ...widget.slivers,
-                  if (widget.bodyListDelegate != null && widget.body == null)
-                    SliverSafeArea(
+                  )
+                else
+                  SliverFillRemaining(
+                    hasScrollBody: widget.hasScrollBody,
+                    child: SafeArea(
                       top: false,
-                      sliver: SliverPadding(
-                        padding: (widget.bodyPadding ?? EdgeInsets.zero).add(
-                          const EdgeInsetsDirectional.only(bottom: 100),
-                        ),
-                        sliver: SliverList(delegate: widget.bodyListDelegate!),
-                      ),
-                    )
-                  else
-                    SliverFillRemaining(
-                      hasScrollBody: widget.hasScrollBody,
-                      child: SafeArea(
-                        top: false,
-                        bottom: widget.bottomSafeArea,
-                        child: Padding(
-                          padding: widget.bodyPadding ?? EdgeInsets.zero,
-                          child: widget.body ?? const SizedBox(),
-                        ),
+                      bottom: widget.bottomSafeArea,
+                      child: Padding(
+                        padding: widget.bodyPadding ?? EdgeInsets.zero,
+                        child: widget.body ?? const SizedBox(),
                       ),
                     ),
-                  if (isLoading)
-                    SliverPadding(
-                      padding: const EdgeInsets.only(bottom: 32),
-                      sliver: SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 2,
-                          child: LinearProgressIndicator(
-                            backgroundColor: context.isDark
-                                ? context.theme.colorScheme.secondary
-                                    .withOpacity(0.4)
-                                : context.theme.colorScheme.secondary
-                                    .withOpacity(0.2),
-                            valueColor: AlwaysStoppedAnimation(
-                              context.theme.colorScheme.secondary,
-                            ),
+                  ),
+                if (isLoading)
+                  SliverPadding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    sliver: SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 2,
+                        child: LinearProgressIndicator(
+                          backgroundColor: context.isDark
+                              ? context.theme.colorScheme.secondary
+                                  .withOpacity(0.4)
+                              : context.theme.colorScheme.secondary
+                                  .withOpacity(0.2),
+                          valueColor: AlwaysStoppedAnimation(
+                            context.theme.colorScheme.secondary,
                           ),
                         ),
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         );
