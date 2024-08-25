@@ -5,6 +5,7 @@ import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
+import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/widgets/forms/form_input.dart';
@@ -534,7 +535,8 @@ class _JobCreateState extends State<JobCreate> {
   void submit() async {
     errorMessage = null;
     apiError = null;
-    final userProvider = context.read<CompanyProvider>();
+    final userProvider = context.read<UserProvider>();
+    final companyProvider = context.read<CompanyProvider>();
     final jobProvider = context.read<JobProvider>();
     if (mounted) setState(() {});
     if (!formKey.currentState!.validate()) return;
@@ -571,6 +573,9 @@ class _JobCreateState extends State<JobCreate> {
         formKey.currentState!.validate();
       },
       onSuccess: (context, res) async {
+        final companyId = jobProvider.user?.company?.id;
+        jobProvider.getJobs(mapId: companyId, params: {"company": companyId});
+        if (companyId != null) companyProvider.getCompany(companyId);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Job saved"),
