@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
+import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/ui/company/company_details.dart';
 import 'package:tugela/ui/jobs/job_create.dart';
 import 'package:tugela/utils.dart';
@@ -24,33 +26,22 @@ class JobDetail extends StatelessWidget {
     );
     final textStyle =
         context.textTheme.bodyMedium?.copyWith(height: 1.4, fontSize: 14.5);
-
     return SliverScaffold(
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
-          IconButton(
-            icon: const Icon(PhosphorIconsRegular.dotsThreeCircle),
-            onPressed: () {
-              showAppBottomSheet(
-                context: context,
-                children: (context) {
-                  return [
-                    ListTile(
-                      title: const Text("Edit Job Listing"),
-                      onTap: () {
-                        Navigator.pop(context);
-                        push(
-                          context: context,
-                          builder: (_) => JobCreate(job: job),
-                        );
-                      },
-                    ),
-                  ];
-                },
-              );
-            },
-          ),
+          if (options(context).isNotEmpty)
+            IconButton(
+              icon: const Icon(PhosphorIconsRegular.dotsThreeCircle),
+              onPressed: () {
+                showAppBottomSheet(
+                  context: context,
+                  children: (context) {
+                    return options(context);
+                  },
+                );
+              },
+            ),
           HSizedBox10,
         ],
       ),
@@ -69,15 +60,17 @@ class JobDetail extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          VSizedBox4,
-          Text(
-            job.address ?? '',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 15,
-              color: context.textTheme.bodySmall?.color,
+          if ((job.address ?? '').isNotEmpty) ...[
+            VSizedBox4,
+            Text(
+              job.address ?? '',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: context.textTheme.bodySmall?.color,
+              ),
             ),
-          ),
+          ],
           VSizedBox12,
           Wrap(
             spacing: 8,
@@ -115,13 +108,6 @@ class JobDetail extends StatelessWidget {
                     style: chipStyle,
                   ),
                 ),
-              // if ((job.address ?? '').isNotEmpty)
-              //   Chip(
-              //     label: Text(
-              //       "${job.address}",
-              //       style: const TextStyle(height: 1),
-              //     ),
-              //   ),
             ],
           ),
           if (company != null)
@@ -130,13 +116,14 @@ class JobDetail extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: context.inputTheme.enabledBorder!.borderSide.color,
+                  color: context.inputTheme.enabledBorder!.borderSide.color
+                      .withOpacity(0.6),
                 ),
               ),
               child: ListTile(
                 dense: true,
                 visualDensity: VisualDensity.comfortable,
-                leading: const AppAvatar(radius: 20),
+                leading: const AppAvatar(radius: 22),
                 title: Text(
                   "${company.name}",
                   style: const TextStyle(
@@ -211,5 +198,21 @@ class JobDetail extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<Widget> options(BuildContext context) {
+    return [
+      if (context.read<UserProvider>().user?.company?.id == job.company?.id)
+        ListTile(
+          title: const Text("Edit Job Listing"),
+          onTap: () {
+            Navigator.pop(context);
+            push(
+              context: context,
+              builder: (_) => JobCreate(job: job),
+            );
+          },
+        ),
+    ];
   }
 }
