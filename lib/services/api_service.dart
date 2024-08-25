@@ -450,7 +450,7 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> createFreelancer(Freelancer data) async {
     final res = await post('/freelancers/', data.toJson());
-    return ApiResponse.successful(res.data);
+    return ApiResponse.successful(res);
   }
 
   @override
@@ -497,7 +497,7 @@ class ApiService implements ApiServiceContract {
     PortfolioItem data,
   ) async {
     final res = await post('/freelancers/portfolio-items/', data.toJson());
-    return ApiResponse.successful(res.data);
+    return ApiResponse.successful(res);
   }
 
   @override
@@ -697,10 +697,11 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> deleteJobApplication(String id) async {
     final res = await delete('/jobs/applications/$id/');
-    return ApiResponse.successful(res.data);
+    return ApiResponse.successful(res);
   }
 
   // // ------------------- Jobs Tags endpoints -------------------
+
   // @override
   // Future<ApiResponse<List<Tag>>> getJobsTags({
   //   String? search,
