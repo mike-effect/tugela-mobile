@@ -170,4 +170,8 @@ abstract class ApiServiceContract {
   Future<ApiResponse<List<Job>>> getJobs({
     Map<String, dynamic> params = const {},
   });
+
+  Future<ApiResponse<List<Skill>>> getSkills({
+    Map<String, dynamic> params = const {},
+  });
 }
