@@ -9,8 +9,12 @@ part of 'job_application.dart';
 JobApplication _$JobApplicationFromJson(Map<String, dynamic> json) =>
     JobApplication(
       id: json['id'] as String?,
-      freelancer: json['freelancer'] as String?,
-      job: json['job'] as String?,
+      freelancer: json['freelancer'] == null
+          ? null
+          : Freelancer.fromJson(json['freelancer'] as Map<String, dynamic>),
+      job: json['job'] == null
+          ? null
+          : Job.fromJson(json['job'] as Map<String, dynamic>),
       status: json['status'] as String?,
       createdAt: json['created_at'] == null
           ? null
@@ -30,8 +34,8 @@ Map<String, dynamic> _$JobApplicationToJson(JobApplication instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('freelancer', instance.freelancer);
-  writeNotNull('job', instance.job);
+  writeNotNull('freelancer', instance.freelancer?.toJson());
+  writeNotNull('job', instance.job?.toJson());
   writeNotNull('status', instance.status);
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());

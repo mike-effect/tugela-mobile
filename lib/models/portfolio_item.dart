@@ -38,5 +38,10 @@ class PortfolioItem extends BaseModel {
   factory PortfolioItem.fromJson(Map<String, dynamic> json) =>
       _$PortfolioItemFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PortfolioItemToJson(this);
+  Map<String, dynamic> toJson() {
+    final j = _$PortfolioItemToJson(this);
+    j['start_date'] = startDate?.toIso8601String().split('T').first;
+    j['end_date'] = endDate?.toIso8601String().split('T').first;
+    return j;
+  }
 }

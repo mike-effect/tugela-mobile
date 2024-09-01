@@ -32,5 +32,10 @@ class WorkExperience extends BaseModel {
   factory WorkExperience.fromJson(Map<String, dynamic> json) =>
       _$WorkExperienceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WorkExperienceToJson(this);
+  Map<String, dynamic> toJson() {
+    final j = _$WorkExperienceToJson(this);
+    j['start_date'] = startDate?.toIso8601String().split('T').first;
+    j['end_date'] = endDate?.toIso8601String().split('T').first;
+    return j;
+  }
 }

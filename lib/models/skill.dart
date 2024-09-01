@@ -15,4 +15,7 @@ class Skill extends BaseModel {
   factory Skill.fromJson(Map<String, dynamic> json) => _$SkillFromJson(json);
 
   Map<String, dynamic> toJson() => _$SkillToJson(this);
+
+  @override
+  List<Object?> get props => [id];
 }

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tugela/models/base_model.dart';
+import 'package:tugela/models/job.dart';
 
 part 'freelancer_service.g.dart';
 
@@ -14,7 +15,8 @@ class FreelancerService extends BaseModel {
   final String? deliveryTime;
   final String? startingPrice;
   final String? currency;
-  final String? priceType;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  final PriceType? priceType;
   final String? serviceImage;
   final DateTime? createdAt;
   final DateTime? updatedAt;

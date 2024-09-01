@@ -18,7 +18,8 @@ FreelancerService _$FreelancerServiceFromJson(Map<String, dynamic> json) =>
       deliveryTime: json['delivery_time'] as String?,
       startingPrice: json['starting_price'] as String?,
       currency: json['currency'] as String?,
-      priceType: json['price_type'] as String?,
+      priceType: $enumDecodeNullable(_$PriceTypeEnumMap, json['price_type'],
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
       serviceImage: json['service_image'] as String?,
       createdAt: json['created_at'] == null
           ? null
@@ -46,9 +47,18 @@ Map<String, dynamic> _$FreelancerServiceToJson(FreelancerService instance) {
   writeNotNull('delivery_time', instance.deliveryTime);
   writeNotNull('starting_price', instance.startingPrice);
   writeNotNull('currency', instance.currency);
-  writeNotNull('price_type', instance.priceType);
+  writeNotNull('price_type', _$PriceTypeEnumMap[instance.priceType]);
   writeNotNull('service_image', instance.serviceImage);
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
   return val;
 }
+
+const _$PriceTypeEnumMap = {
+  PriceType.perProject: 'per_project',
+  PriceType.daily: 'per_day',
+  PriceType.hourly: 'per_hour',
+  PriceType.weekly: 'per_week',
+  PriceType.monthly: 'per_month',
+  PriceType.yearly: 'per_year',
+};
