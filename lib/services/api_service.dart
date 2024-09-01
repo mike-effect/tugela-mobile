@@ -94,8 +94,13 @@ class ApiService implements ApiServiceContract {
       } else {}
       return response;
     } on dio.DioException catch (e) {
-      // if (kDebugMode) handleError(e.response?.data);
-      if (e.response?.data == null) rethrow;
+      if (e.response?.statusCode == 401) {
+        _hiveService.logout();
+        _sessionController.sink.add(SessionState.unauthenticated);
+      } else {
+        // if (kDebugMode) handleError(e.response?.data);
+        if (e.response?.data == null) rethrow;
+      }
       return e.response!;
     }
   }
@@ -124,7 +129,7 @@ class ApiService implements ApiServiceContract {
     Map<String, dynamic>? params,
     bool auth = true,
   }) async {
-    params?.removeWhere((k, v) => v == null);
+    params?.removeWhere((k, v) => v == null || v == "");
     return await _makeRequest('GET', url, queryParams: params, auth: auth);
   }
 
@@ -449,7 +454,7 @@ class ApiService implements ApiServiceContract {
 
   @override
   Future<ApiResponse<bool>> createFreelancer(Freelancer data) async {
-    final res = await post('/freelancers/', data.toJson());
+    final res = await post('/freelancers/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -464,7 +469,7 @@ class ApiService implements ApiServiceContract {
     String id,
     Freelancer data,
   ) async {
-    final res = await patch('/freelancers/$id/', data.toJson());
+    final res = await patch('/freelancers/$id/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -482,9 +487,13 @@ class ApiService implements ApiServiceContract {
     required String freelancerId,
     Map<String, dynamic> params = const {},
   }) async {
+    params['ordering'] = "-start_date";
     final res = await get(
       '/freelancers/portfolio-items/',
-      params: {"freelancer": freelancerId, ...params},
+      params: {
+        "freelancer": freelancerId,
+        ...params,
+      },
     );
     return ApiResponse.fromJsonList(
       res.data,
@@ -570,6 +579,7 @@ class ApiService implements ApiServiceContract {
     required String freelancerId,
     Map<String, dynamic> params = const {},
   }) async {
+    params['ordering'] = "-start_date";
     final res = await get(
       '/freelancers/work-experiences/',
       params: {'freelancer': freelancerId, ...params},
@@ -670,7 +680,7 @@ class ApiService implements ApiServiceContract {
 
   @override
   Future<ApiResponse<bool>> createJobApplication(JobApplication data) async {
-    final res = await post('/jobs/applications/', data.toJson());
+    final res = await post('/jobs/applications/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -683,7 +693,7 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> updateJobApplication(
       String id, JobApplication data) async {
-    final res = await put('/jobs/applications/$id/', data.toJson());
+    final res = await put('/jobs/applications/$id/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -853,24 +863,16 @@ class ApiService implements ApiServiceContract {
   // }
 
   // // ------------------- Skill endpoints -------------------
-  // @override
-  // Future<ApiResponse<List<Skill>>> getSkills({
-  //   String? search,
-  //   String? ordering,
-  //   int? page,
-  //   int? pageSize,
-  // }) async {
-  //   return get<List(
-  //     '/skill/',
-  //     params: {
-  //       'search': search,
-  //       'ordering': ordering,
-  //       'page': page?.toString(),
-  //       'page_size': pageSize?.toString(),
-  //     },
-  //     creator: (json) => (json).map((e) => Skill.fromJson(e)).toList(),
-  //   );
-  // }
+  @override
+  Future<ApiResponse<List<Skill>>> getSkills({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/skills/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => Skill.fromJson(e)).toList(),
+    );
+  }
 
   // @override
   // Future<ApiResponse<Skill>> createSkill(Skill data) async {
