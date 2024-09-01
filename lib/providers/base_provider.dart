@@ -25,6 +25,8 @@ abstract class BaseProvider extends ChangeNotifier {
   final localAuthService = sl.get<LocalAuthServiceContract>();
 
   User? get user => apiService.user;
+  bool get isCompany => user?.accountType == AccountType.company;
+  bool get isFreelancer => user?.accountType == AccountType.company;
 
   Future<Paginated<T>?> paginatedQuery<T>({
     PaginatedOptions options = const PaginatedOptions(),
