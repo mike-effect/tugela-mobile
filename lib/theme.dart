@@ -13,7 +13,7 @@ part 'theme/app_colors.dart';
 class AppTheme {
   const AppTheme._();
 
-  static TextTheme get googleFont => GoogleFonts.interTextTheme(
+  static TextTheme get googleFont => GoogleFonts.wixMadeforTextTextTheme(
         const TextTheme(),
       );
 
@@ -120,6 +120,18 @@ class AppTheme {
       secondaryHeaderColor: AppColors.grey.shade50,
       disabledColor: Colors.grey.shade400,
       dividerTheme: DividerThemeData(color: AppColors.dividerColor),
+      tabBarTheme: const TabBarTheme(
+        // labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+        labelColor: Colors.black,
+        indicatorColor: AppColors.primaryColor,
+        // indicator: BoxDecoration(
+        //   border: Border(
+        //     bottom: BorderSide(
+        //       color: Colors.grey.shade600,
+        //     ),
+        //   ),
+        // ),
+      ),
       cupertinoOverrideTheme: CupertinoThemeData(
         primaryColor: AppColors.primaryColor,
         barBackgroundColor: AppColors.white,
