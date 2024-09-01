@@ -76,7 +76,7 @@ class SurfClubApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           builder: (context, child) {
             return MediaQuery.withClampedTextScaling(
-              minScaleFactor: 0.95,
+              minScaleFactor: 1,
               maxScaleFactor: 1.2,
               child: child!,
             );
