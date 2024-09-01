@@ -34,12 +34,12 @@ class AppConfig {
   static const _productionAPI =
       "https://articulate-ego-429522-d4.uc.r.appspot.com/api";
 
-  static const siteUrl = "https://tugela.finance";
-  static const webAppUrl = "";
-  static const supportUrl = "$siteUrl/support";
+  static const siteUrl = "https://tugela.org";
+  static const webAppUrl = siteUrl;
+  static const supportUrl = "$siteUrl/contact";
   static const termsUrl = "$siteUrl/terms";
   static const privacyUrl = "$siteUrl/privacy-policy";
-  static const faqUrl = "$siteUrl/faq";
+  static const faqUrl = "$siteUrl/contact";
   static const appStoreId = "6444046206";
 
   static String get monoKey {
