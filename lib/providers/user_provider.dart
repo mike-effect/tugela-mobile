@@ -139,9 +139,8 @@ class UserProvider extends UserProviderContract {
           email: email,
           password: password,
         ));
-      } else {
-        return null;
       }
+      return null;
     } catch (e, s) {
       handleError(e, stackTrace: s);
       return null;
@@ -214,8 +213,8 @@ class UserProvider extends UserProviderContract {
     }
   }
 
-  String getRouteForUser([User? u]) {
-    u ??= user;
+  String getRouteForUser([User? currentUser]) {
+    final u = currentUser ?? user;
     if (u?.accountType == null) return Routes.onboard;
     return Routes.appIndex;
   }
