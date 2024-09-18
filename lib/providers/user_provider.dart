@@ -20,6 +20,8 @@ class UserProvider extends UserProviderContract {
 
   @override
   void reset() {
+    _balance = null;
+    _paymentServices = null;
     apiService.setUser(null);
   }
 

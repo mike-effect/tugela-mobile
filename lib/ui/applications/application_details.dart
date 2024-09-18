@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as path;
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
@@ -8,6 +9,7 @@ import 'package:tugela/models/job_application.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
+import 'package:tugela/ui/applications/application_submission.dart';
 import 'package:tugela/ui/freelancer/freelancer_details.dart';
 import 'package:tugela/ui/jobs/job_details.dart';
 import 'package:tugela/ui/profile/profile_freelancer.dart';
@@ -292,7 +294,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                     launchUrlString(s.file!);
                                   },
                                   child: Text(
-                                    "File: ${s.file}".trim(),
+                                    "File: ${path.basename(s.file ?? "")}"
+                                        .trim(),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -300,7 +303,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               if ((s.link ?? '').isNotEmpty)
                                 InkWell(
                                   onTap: () {
-                                    launchUrlString(s.file!);
+                                    launchUrlString(s.link!);
                                   },
                                   child: Text(
                                     "Link: ${s.link}".trim(),
@@ -353,7 +356,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                   ),
                 )
               : ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    push(
+                      context: context,
+                      builder: (_) =>
+                          ApplicationSubmission(application: application),
+                    );
+                  },
                   child: const Text("Add Submission"),
                 ),
         ),

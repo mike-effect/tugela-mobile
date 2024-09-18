@@ -30,6 +30,7 @@ class JobProvider extends JobsProviderContract {
     _jobMap.clear();
     _jobsMap.clear();
     _applicationsMap.clear();
+    _submissionsMap.clear();
   }
 
   @override
@@ -246,7 +247,7 @@ class JobProvider extends JobsProviderContract {
         'page_size': defaultPageSize,
         ...params,
       };
-      map["ordering"] = "-created_at";
+      // map["ordering"] = "-created_at";
       final res = await paginatedQuery<JobSubmission>(
         options: options,
         paginated: _submissionsMap[mapId],

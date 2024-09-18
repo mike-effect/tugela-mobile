@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tugela/constants/config.dart';
-import 'package:tugela/providers/user_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SettingsPaymentsTopup extends StatefulWidget {
@@ -41,11 +39,11 @@ class _SettingsPaymentsTopupState extends State<SettingsPaymentsTopup> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserProvider>();
-    final services = userProvider.paymentServices?.data ?? [];
+    // final userProvider = context.watch<UserProvider>();
+    // final services = userProvider.paymentServices?.data ?? [];
     return Scaffold(
       appBar: AppBar(
-        title: Text("XRP Top-up"),
+        title: const Text("XRP Top-up"),
       ),
       body: WebViewWidget(controller: controller),
     );

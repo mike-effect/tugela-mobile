@@ -728,8 +728,6 @@ class ApiService implements ApiServiceContract {
       '/jobs/applications/$id/update-status/',
       {"id": id, "status": status.name},
     );
-    print(res.statusCode);
-    print(res.data);
     return ApiResponse.successful(res);
   }
 
