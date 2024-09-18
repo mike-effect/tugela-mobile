@@ -26,7 +26,7 @@ class FormInput extends StatelessWidget {
             DefaultTextStyle(
               style: DefaultTextStyle.of(context).style.copyWith(
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
               child: title!,
             ),

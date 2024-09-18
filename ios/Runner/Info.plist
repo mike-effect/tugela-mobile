@@ -31,6 +31,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Tugela needs access to the camera to capture photos to upload when submitting your verification form</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enable Face ID to log in automatically</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Tugela needs access to save photos to your device</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Tugela needs access to your library to select photos to upload when submitting your verification form</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

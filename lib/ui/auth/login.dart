@@ -98,7 +98,7 @@ class _LoginState extends State<Login> {
       },
       postRequest: (context) {
         return Future.wait<dynamic>([
-          // context.read<UserProvider>().getProfile(),
+          // context.read<UserProvider>().getUserMe(),
           context.read<AppProvider>().initialize(),
         ]);
       },

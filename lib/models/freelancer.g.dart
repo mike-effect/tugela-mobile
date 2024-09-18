@@ -8,9 +8,6 @@ part of 'freelancer.dart';
 
 Freelancer _$FreelancerFromJson(Map<String, dynamic> json) => Freelancer(
       id: json['id'] as String?,
-      user: json['user'] == null
-          ? null
-          : User.fromJson(json['user'] as Map<String, dynamic>),
       title: json['title'] as String?,
       fullname: json['fullname'] as String?,
       bio: json['bio'] as String?,
@@ -56,7 +53,6 @@ Map<String, dynamic> _$FreelancerToJson(Freelancer instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('user', instance.user?.toJson());
   writeNotNull('title', instance.title);
   writeNotNull('fullname', instance.fullname);
   writeNotNull('bio', instance.bio);
@@ -69,9 +65,6 @@ Map<String, dynamic> _$FreelancerToJson(Freelancer instance) {
   writeNotNull('xrp_seed', instance.xrpSeed);
   val['skills'] = instance.skills.map((e) => e.toJson()).toList();
   writeNotNull('how_you_found_us', instance.howYouFoundUs);
-  val['total_applications'] = instance.totalApplications;
-  val['accepted_applications'] = instance.acceptedApplications;
-  val['rejected_applications'] = instance.rejectedApplications;
   val['work_experiences'] =
       instance.workExperiences.map((e) => e.toJson()).toList();
   val['portfolio_item'] =

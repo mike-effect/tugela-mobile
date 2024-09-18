@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tugela/constants/app_assets.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/utils.dart';
 
@@ -37,7 +38,19 @@ class AppAvatar extends StatelessWidget {
       radius: radius,
       foregroundColor: foregroundColor,
       backgroundColor: backgroundColor,
-      child: child,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: child ??
+            Image.asset(
+              AppAssets.images.appIconForegroundPng,
+              color: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.color
+                  ?.withOpacity(0.2),
+            ),
+      ),
+
       // child: SvgPicture.asset(
       //   AppAssets.svg.ncGlyphSvg,
       //   height: radius * 1.5,
@@ -69,8 +82,8 @@ class AppAvatar extends StatelessWidget {
               backgroundColor: backgroundColor,
               backgroundImage: CachedNetworkImageProvider(
                 imageUrl!,
-                maxHeight: diameter,
-                maxWidth: diameter,
+                maxHeight: diameter * 2,
+                maxWidth: diameter * 2,
                 errorListener: (err) {
                   handleError(err, stackTrace: StackTrace.current);
                 },

@@ -9,12 +9,12 @@ part of 'portfolio_item.dart';
 PortfolioItem _$PortfolioItemFromJson(Map<String, dynamic> json) =>
     PortfolioItem(
       id: json['id'] as String?,
-      freelancer: json['freelancer'] as String?,
       title: json['title'] as String?,
       description: json['description'] as String?,
       category: json['category'] as String?,
-      skills:
-          (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      skills: (json['skills'] as List<dynamic>?)
+          ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
+          .toList(),
       projectUrl: json['project_url'] as String?,
       videoUrl: json['video_url'] as String?,
       startDate: json['start_date'] == null
@@ -42,11 +42,10 @@ Map<String, dynamic> _$PortfolioItemToJson(PortfolioItem instance) {
   }
 
   writeNotNull('id', instance.id);
-  writeNotNull('freelancer', instance.freelancer);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('category', instance.category);
-  writeNotNull('skills', instance.skills);
+  writeNotNull('skills', instance.skills?.map((e) => e.toJson()).toList());
   writeNotNull('project_url', instance.projectUrl);
   writeNotNull('video_url', instance.videoUrl);
   writeNotNull('start_date', instance.startDate?.toIso8601String());

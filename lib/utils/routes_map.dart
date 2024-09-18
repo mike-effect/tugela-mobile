@@ -9,9 +9,10 @@ class RoutesMap {
       Routes.signup: (_) => const SignUp(),
       Routes.profile: (_) => const ProfileEdit(),
       Routes.onboard: (_) => const Onboard(),
-      Routes.freelancerCreate: (_) => const FreelancerSettings(),
+      Routes.freelancerCreate: (_) => const FreelancerCreate(),
       Routes.companyCreate: (_) => const CompanyCreate(),
       Routes.settings: (_) => const Settings(),
+      Routes.settingsPaymentTopup: (_) => const SettingsPaymentsTopup(),
     };
   }
 }

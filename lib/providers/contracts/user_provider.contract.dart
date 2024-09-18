@@ -36,4 +36,8 @@ abstract class UserProviderContract extends BaseProvider {
   Future<ApiResponse?> autoLogin();
 
   Future<bool> logout({String? token});
+
+  Future<ApiResponse<XRPBalance>?> getBalance(String address);
+
+  Future<Paginated<PaymentService>?> getPaymentServices();
 }

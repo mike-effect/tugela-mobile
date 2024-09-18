@@ -297,7 +297,7 @@ class AppTheme {
         ),
       ),
       radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.all(Colors.grey.shade300),
+        fillColor: WidgetStateProperty.all(AppColors.primaryColor),
         overlayColor: WidgetStateProperty.all(Colors.grey.shade800),
       ),
       menuTheme: MenuThemeData(
@@ -407,6 +407,7 @@ class AppTheme {
     final inputDecorationTheme = light.inputDecorationTheme;
     final floatingActionButtonTheme = light.floatingActionButtonTheme;
     final chipTheme = light.chipTheme;
+    final radioTheme = light.radioTheme;
 
     return light.copyWith(
       brightness: Brightness.dark,
@@ -424,6 +425,9 @@ class AppTheme {
       disabledColor: AppColors.grey,
       iconTheme: iconTheme.copyWith(
         color: AppColors.primaryColorDarkDarkTheme,
+      ),
+      radioTheme: radioTheme.copyWith(
+        fillColor: const WidgetStatePropertyAll(AppColors.primaryColorDark),
       ),
       cupertinoOverrideTheme: cupertinoOverrideTheme?.copyWith(
         primaryColor: AppColors.primaryColorDarkTheme,
@@ -529,9 +533,11 @@ class AppTheme {
           disabledForegroundColor: AppColors.grey.shade400,
           padding: AppTheme.buttonPadding,
           textStyle: TextStyle(
-            fontSize: 16,
+            fontSize: 17,
+            height: 1,
+            // letterSpacing: 0.2,
             fontFamily: fontFamily,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w800,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: AppTheme.buttonBorderRadius,

@@ -53,7 +53,6 @@ class EmptyState extends StatelessWidget {
             // textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 15,
-              letterSpacing: 0.2,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -82,11 +82,6 @@ Map<String, dynamic> _$CompanyToJson(Company instance) {
       'how_you_found_us', _$HowYouFoundUsEnumMap[instance.howYouFoundUs]);
   writeNotNull('founded', instance.founded);
   writeNotNull('location', instance.location);
-  val['total_jobs'] = instance.totalJobs;
-  val['active_jobs'] = instance.activeJobs;
-  val['assigned_jobs'] = instance.assignedJobs;
-  val['completed_jobs'] = instance.completedJobs;
-  val['total_applications'] = instance.totalApplications;
   writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());

@@ -157,12 +157,12 @@ class ApiService implements ApiServiceContract {
   @override
   Future<dio.Response> multipartPatch(
     String url, {
-    Map<String, String> fields = const {},
-    List<dio.MultipartFile> files = const [],
+    Map<String, dynamic> fields = const {},
+    Map<String, dio.MultipartFile> files = const {},
   }) async {
     final formData = dio.FormData.fromMap({
       ...fields,
-      'files': files,
+      ...files,
     });
     return await _makeRequest('PATCH', url, formData: formData);
   }
@@ -170,12 +170,12 @@ class ApiService implements ApiServiceContract {
   @override
   Future<dio.Response> multipartPost(
     String url, {
-    Map<String, String> fields = const {},
-    List<dio.MultipartFile> files = const [],
+    Map<String, dynamic> fields = const {},
+    Map<String, dio.MultipartFile> files = const {},
   }) async {
     final formData = dio.FormData.fromMap({
       ...fields,
-      'files': files,
+      ...files,
     });
 
     return await _makeRequest('POST', url, formData: formData);
@@ -367,8 +367,15 @@ class ApiService implements ApiServiceContract {
   }
 
   @override
-  Future<ApiResponse<bool>> createCompany(Company data) async {
-    final res = await post('/companies/', data.toInputJson());
+  Future<ApiResponse<bool>> createCompany(
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
+    final res = await multipartPost(
+      '/companies/',
+      fields: data.toInputJson(),
+      files: {if (imageUpload != null) "logo": imageUpload},
+    );
     return ApiResponse.successful(res);
   }
 
@@ -379,8 +386,16 @@ class ApiService implements ApiServiceContract {
   }
 
   @override
-  Future<ApiResponse<bool>> updateCompany(String id, Company data) async {
-    final res = await patch('/companies/$id/', data.toInputJson());
+  Future<ApiResponse<bool>> updateCompany(
+    String id,
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
+    final res = await multipartPatch(
+      '/companies/$id/',
+      fields: data.toInputJson(),
+      files: {if (imageUpload != null) "logo": imageUpload},
+    );
     return ApiResponse.successful(res);
   }
 
@@ -453,8 +468,15 @@ class ApiService implements ApiServiceContract {
   }
 
   @override
-  Future<ApiResponse<bool>> createFreelancer(Freelancer data) async {
-    final res = await post('/freelancers/', data.toInputJson());
+  Future<ApiResponse<bool>> createFreelancer(
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
+    final res = await multipartPost(
+      '/freelancers/',
+      fields: data.toInputJson(),
+      files: {if (imageUpload != null) "profile_image": imageUpload},
+    );
     return ApiResponse.successful(res);
   }
 
@@ -467,9 +489,14 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> updateFreelancer(
     String id,
-    Freelancer data,
-  ) async {
-    final res = await patch('/freelancers/$id/', data.toInputJson());
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
+    final res = await multipartPatch(
+      '/freelancers/$id/',
+      fields: data.toInputJson(),
+      files: {if (imageUpload != null) "profile_image": imageUpload},
+    );
     return ApiResponse.successful(res);
   }
 
@@ -505,7 +532,7 @@ class ApiService implements ApiServiceContract {
   Future<ApiResponse<bool>> createPortfolioItem(
     PortfolioItem data,
   ) async {
-    final res = await post('/freelancers/portfolio-items/', data.toJson());
+    final res = await post('/freelancers/portfolio-items/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -520,7 +547,8 @@ class ApiService implements ApiServiceContract {
     String id,
     PortfolioItem data,
   ) async {
-    final res = await patch('/freelancers/portfolio-items/$id/', data.toJson());
+    final res =
+        await patch('/freelancers/portfolio-items/$id/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
@@ -648,12 +676,6 @@ class ApiService implements ApiServiceContract {
     return ApiResponse.successful(res);
   }
 
-  // @override
-  // Future<ApiResponse<Job>> partialUpdateJob(String id, Job data) async {
-  //   final res = await patch('/jobs/$id/', data.toJson());
-  //   return ApiResponse.fromJson(res.data, Job.fromJson);
-  // }
-
   @override
   Future<ApiResponse<bool>> deleteJob(String id) async {
     final res = await delete('/jobs/$id/');
@@ -697,6 +719,20 @@ class ApiService implements ApiServiceContract {
     return ApiResponse.successful(res);
   }
 
+  @override
+  Future<ApiResponse<bool>> updateJobApplicationStatus(
+    String id,
+    ApplicationStatus status,
+  ) async {
+    final res = await post(
+      '/jobs/applications/$id/update-status/',
+      {"id": id, "status": status.name},
+    );
+    print(res.statusCode);
+    print(res.data);
+    return ApiResponse.successful(res);
+  }
+
   // @override
   // Future<ApiResponse<JobApplication>> partialUpdateJobApplication(
   //     String id, JobApplication data) async {
@@ -707,6 +743,57 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> deleteJobApplication(String id) async {
     final res = await delete('/jobs/applications/$id/');
+    return ApiResponse.successful(res);
+  }
+
+  // ------------------- Job Submissions endpoints -------------------
+  @override
+  Future<ApiResponse<List<JobSubmission>>> getJobSubmissions({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/jobs/submissions/', params: params);
+    return ApiResponse.fromJsonList(
+      res.data,
+      (json) => (json).map((e) => JobSubmission.fromJson(e)).toList(),
+    );
+  }
+
+  @override
+  Future<ApiResponse<bool>> createJobSubmission(
+    JobSubmission data,
+    dio.MultipartFile? file,
+  ) async {
+    final res = await multipartPost(
+      '/jobs/submissions/',
+      fields: data.toInputJson(),
+      files: {if (file != null) "file": file},
+    );
+    return ApiResponse.successful(res);
+  }
+
+  @override
+  Future<ApiResponse<JobSubmission>> getJobSubmission(String id) async {
+    final res = await get('/jobs/submissions/$id/');
+    return ApiResponse.fromJson(res.data, JobSubmission.fromJson);
+  }
+
+  @override
+  Future<ApiResponse<bool>> updateJobSubmission(
+    String id,
+    JobSubmission data,
+    dio.MultipartFile? file,
+  ) async {
+    final res = await multipartPatch(
+      '/jobs/submissions/$id/',
+      fields: data.toInputJson(),
+      files: {if (file != null) "file": file},
+    );
+    return ApiResponse.successful(res);
+  }
+
+  @override
+  Future<ApiResponse<bool>> deleteJobSubmission(String id) async {
+    final res = await delete('/jobs/submissions/$id/');
     return ApiResponse.successful(res);
   }
 
@@ -983,6 +1070,36 @@ class ApiService implements ApiServiceContract {
     return ApiResponse.fromJsonList(
       res.data,
       (json) => (json).map((e) => CompanyValue.fromJson(e)).toList(),
+    );
+  }
+
+  @override
+  Future<ApiResponse<List<Currency>>> getCurrencies({
+    Map<String, dynamic> params = const {},
+  }) async {
+    final res = await get('/extras/currencies/', params: {"type": "fiat"});
+    return ApiResponse.fromJsonList(
+      res.data,
+      paginated: false,
+      (json) => (json).map((e) => Currency.fromJson(e)).toList(),
+    );
+  }
+
+  @override
+  Future<ApiResponse<XRPBalance>> getBalance(String address) async {
+    final res = await post(
+      '/extras/get-balance/',
+      {"xrp_address": address},
+    );
+    return ApiResponse.fromJson(res.data, XRPBalance.fromJson);
+  }
+
+  @override
+  Future<ApiResponse<List<PaymentService>>> getPaymentServices() async {
+    final res = await get('/extras/get-payment-services/');
+    return ApiResponse.fromJsonList(
+      res.data,
+      (l) => l.map((j) => PaymentService.fromJson(j)).toList(),
     );
   }
 }

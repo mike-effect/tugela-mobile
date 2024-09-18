@@ -12,4 +12,6 @@ abstract class FreelancerProviderContract extends BaseProvider {
     String id,
     Freelancer data,
   );
+
+  Future<ApiResponse<bool>?> deleteFreelancerPortfolioItem(String id);
 }

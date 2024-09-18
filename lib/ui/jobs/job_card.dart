@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/job.dart';
+import 'package:tugela/theme.dart';
 import 'package:tugela/ui/jobs/job_details.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/layout/app_avatar.dart';
@@ -16,6 +16,33 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final company = job.company;
     const chipStyle = TextStyle(height: 1, fontSize: 12.5);
+    final (Color background, Color foreground) statusColors =
+        switch (job.status) {
+      JobStatus.completed => (
+          AppColors.dynamic(
+            context: context,
+            light: Colors.green.shade50.withOpacity(0.7),
+            dark: const Color.fromARGB(255, 21, 69, 24),
+          )!,
+          AppColors.dynamic(
+            context: context,
+            light: Colors.lightGreen.shade900,
+            dark: Colors.green.shade50,
+          )!,
+        ),
+      _ => (
+          AppColors.dynamic(
+            context: context,
+            light: Colors.amber.shade100,
+            dark: Colors.brown.shade800,
+          )!,
+          AppColors.dynamic(
+            context: context,
+            light: Colors.brown.shade800,
+            dark: Colors.amber.shade100,
+          )!,
+        ),
+    };
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -31,7 +58,10 @@ class JobCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AppAvatar(radius: 28),
+            AppAvatar(
+              radius: 28,
+              imageUrl: job.company?.logo,
+            ),
             HSizedBox12,
             Expanded(
               child: Column(
@@ -81,15 +111,9 @@ class JobCard extends StatelessWidget {
                           ),
                           TextSpan(
                             text: "${job.currency ?? ''} ${formatAmount(
-                              job.minPrice,
+                              job.price,
                               factor: 1,
-                              customFormat: NumberFormat.compact(),
                             )}"
-                                    "${job.isCompensationRange ? '–${formatAmount(
-                                        job.maxPrice,
-                                        factor: 1,
-                                        customFormat: NumberFormat.compact(),
-                                      )}' : ''}"
                                     " ${job.priceType?.name.sentenceCase.toLowerCase()}"
                                 .trim(),
                           ),
@@ -121,25 +145,68 @@ class JobCard extends StatelessWidget {
                     ),
                     VSizedBox4,
                   ],
+                  if (job.createdAt != null) ...[
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Icon(
+                                PhosphorIconsRegular.clock,
+                                size: 20,
+                                color: context.textTheme.bodySmall?.color,
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                "Posted on ${formatDate(job.createdAt)}".trim(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    VSizedBox4,
+                  ],
                   VSizedBox8,
                   Wrap(
                     spacing: 5,
                     runSpacing: 0,
                     alignment: WrapAlignment.start,
                     children: [
-                      if (job.createdAt != null)
-                        "Posted on ${formatDate(job.createdAt)}",
-                      if (job.roleType != null)
-                        "${job.roleType?.name.sentenceCase}",
-                      if (job.location != null)
-                        "${job.location?.name.sentenceCase}",
-                    ].map((t) {
-                      return RawChip(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                        label: Text(t, style: chipStyle),
-                      );
-                    }).toList(),
+                      ...[
+                        if (job.roleType != null)
+                          "${job.roleType?.name.sentenceCase}",
+                        if (job.location != null)
+                          "${job.location?.name.sentenceCase}",
+                      ].map((t) {
+                        return RawChip(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          labelPadding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: -2,
+                          ),
+                          label: Text(t, style: chipStyle),
+                        );
+                      }),
+                      if (job.status == JobStatus.assigned ||
+                          job.status == JobStatus.completed)
+                        RawChip(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          labelPadding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: -2,
+                          ),
+                          backgroundColor: statusColors.$1,
+                          label: Text(
+                            "${job.status?.name.sentenceCase}",
+                            style: chipStyle.copyWith(color: statusColors.$2),
+                          ),
+                        )
+                    ],
                   ),
                 ],
               ),

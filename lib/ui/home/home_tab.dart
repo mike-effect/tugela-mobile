@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/app_provider.dart';
-import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/ui/home/home_company.dart';
+import 'package:tugela/ui/home/home_freelancer.dart';
 import 'package:tugela/ui/index/account_type_view.dart';
 import 'package:tugela/ui/index/notification_icon.dart';
 import 'package:tugela/ui/jobs/job_card.dart';
@@ -25,18 +25,22 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  Map<String, dynamic> get params {
+    final jobProvider = context.read<JobProvider>();
+    if (jobProvider.isCompany) {
+      return {"company": jobProvider.user?.company?.id};
+    }
+    return {"freelancer": jobProvider.user?.freelancer?.id};
+  }
+
   @override
   void initState() {
-    final companyProvider = context.read<CompanyProvider>();
-    final companyId = companyProvider.user?.company?.id;
-    if (companyId != null) {
-      companyProvider.getCompany(companyProvider.user!.company!.id!);
-    }
     final jobProvider = context.read<JobProvider>();
-    jobProvider.getJobs(
-      mapId: jobProvider.user?.company?.id,
-      params: {"company": jobProvider.user?.company?.id},
-    );
+    jobProvider.getJobs(mapId: jobProvider.user?.company?.id, params: params);
+    final userProvider = context.read<UserProvider>();
+    if (jobProvider.user?.xrpAddress != null) {
+      userProvider.getBalance(jobProvider.user!.xrpAddress!);
+    }
     super.initState();
   }
 
@@ -44,13 +48,13 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
     final userProvider = context.watch<UserProvider>();
-    final companyProvider = context.watch<CompanyProvider>();
     final user = userProvider.user;
     final jobProvider = context.watch<JobProvider>();
+    final address = userProvider.user?.xrpAddress;
 
     final feed = loadingPlaceholder<Job>(
       context: context,
-      value: jobProvider.jobs[user?.company?.id]?.data,
+      value: jobProvider.jobs[user?.company?.id ?? '']?.data,
       placeholderCount: 10,
       placeholderBuilder: (context) {
         return const JobCardPlaceholder();
@@ -84,17 +88,17 @@ class _HomeTabState extends State<HomeTab> {
     return SliverScaffold(
       scrollController: appProvider.tabScrollControllers[0],
       onRefresh: () => Future.wait([
+        if (address != null) userProvider.getBalance(address),
         jobProvider.getJobs(
           mapId: user?.company?.id,
-          params: {"company": user?.company?.id},
+          params: params,
         ),
-        companyProvider.getCompany(companyProvider.user!.company!.id!),
       ]),
       appBar: AppBar(
         toolbarHeight: AppTheme.largeAppBarHeight,
         centerTitle: false,
         title: Text(
-          "Home",
+          userProvider.isCompany ? "Dashboard" : "Home",
           style: context
               .theme.cupertinoOverrideTheme?.textTheme?.navLargeTitleTextStyle,
         ),
@@ -105,27 +109,30 @@ class _HomeTabState extends State<HomeTab> {
       slivers: [
         SliverToBoxAdapter(
           child: AccountTypeView(
+            freelancer: (context, freelancer) {
+              if (freelancer == null) return const SizedBox.shrink();
+              return HomeFreelancer(freelancer: freelancer);
+            },
             company: (context, company) {
-              return Column(
-                children: [
-                  if (company != null) HomeCompany(company: company),
-                ],
-              );
+              if (company == null) return const SizedBox.shrink();
+              return HomeCompany(company: company);
             },
           ),
         ),
         feed,
       ],
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          push(
-            context: context,
-            builder: (_) => const JobCreate(),
-            rootNavigator: true,
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: userProvider.isCompany
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                push(
+                  context: context,
+                  builder: (_) => const JobCreate(),
+                  rootNavigator: true,
+                );
+              },
+            )
+          : null,
     );
   }
 }

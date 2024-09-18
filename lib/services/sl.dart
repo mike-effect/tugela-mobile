@@ -17,7 +17,11 @@ setupServiceLocator() {
   sl.allowReassignment = true;
   sl.registerLazySingleton<HiveServiceContract>(() => HiveService());
   sl.registerLazySingleton<ApiServiceContract>(() {
-    return ApiService(Dio(BaseOptions(baseUrl: AppConfig.apiHost)));
+    return ApiService(Dio(BaseOptions(
+      baseUrl: AppConfig.apiHost,
+      sendTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 60),
+    )));
   });
   sl.registerLazySingleton<LocalAuthServiceContract>(
       () => LocalAuthService(_localAuth));

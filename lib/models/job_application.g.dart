@@ -15,7 +15,8 @@ JobApplication _$JobApplicationFromJson(Map<String, dynamic> json) =>
       job: json['job'] == null
           ? null
           : Job.fromJson(json['job'] as Map<String, dynamic>),
-      status: json['status'] as String?,
+      status: $enumDecodeNullable(_$ApplicationStatusEnumMap, json['status'],
+          unknownValue: JsonKey.nullForUndefinedEnumValue),
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),
@@ -36,8 +37,14 @@ Map<String, dynamic> _$JobApplicationToJson(JobApplication instance) {
   writeNotNull('id', instance.id);
   writeNotNull('freelancer', instance.freelancer?.toJson());
   writeNotNull('job', instance.job?.toJson());
-  writeNotNull('status', instance.status);
+  writeNotNull('status', _$ApplicationStatusEnumMap[instance.status]);
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
   return val;
 }
+
+const _$ApplicationStatusEnumMap = {
+  ApplicationStatus.pending: 'pending',
+  ApplicationStatus.rejected: 'rejected',
+  ApplicationStatus.accepted: 'accepted',
+};

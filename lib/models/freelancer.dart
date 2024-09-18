@@ -3,15 +3,17 @@ import 'package:tugela/models/base_model.dart';
 import 'package:tugela/models/freelancer_service.dart';
 import 'package:tugela/models/portfolio_item.dart';
 import 'package:tugela/models/skill.dart';
-import 'package:tugela/models/user.dart';
 import 'package:tugela/models/work_experience.dart';
 
 part 'freelancer.g.dart';
 
+enum DeliveryDuration { day, week, month }
+
 @JsonSerializable(includeIfNull: false)
 class Freelancer extends BaseModel {
   final String? id;
-  final User? user;
+  @JsonKey(includeFromJson: false)
+  final String? user;
   final String? title;
   final String? fullname;
   final String? bio;
@@ -24,8 +26,11 @@ class Freelancer extends BaseModel {
   final String? xrpSeed;
   final List<Skill> skills;
   final String? howYouFoundUs;
+  @JsonKey(includeToJson: false)
   final int totalApplications;
+  @JsonKey(includeToJson: false)
   final int acceptedApplications;
+  @JsonKey(includeToJson: false)
   final int rejectedApplications;
   final List<WorkExperience> workExperiences;
   final List<PortfolioItem> portfolioItem;
@@ -62,7 +67,7 @@ class Freelancer extends BaseModel {
   Map<String, dynamic> toInputJson() {
     final j = _$FreelancerToJson(this);
     j['skills'] = skills.map((s) => s.id).toList();
-    j["user"] = user?.id;
+    j["user"] = user;
     j.remove("id");
     j.remove("total_applications");
     j.remove("accepted_applications");

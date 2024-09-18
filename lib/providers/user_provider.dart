@@ -1,18 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:tugela/models/api_response.dart';
-import 'package:tugela/models/auth.dart';
-import 'package:tugela/models/token.dart';
-import 'package:tugela/models/user.dart';
+import 'package:tugela/models.dart';
 import 'package:tugela/providers/contracts/user_provider.contract.dart';
 import 'package:tugela/services/contracts/api_service.contract.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/routes.dart';
 
 class UserProvider extends UserProviderContract {
+  XRPBalance? _balance;
+  Paginated<PaymentService>? _paymentServices;
+
+  XRPBalance? get balance => _balance;
+  Paginated<PaymentService>? get paymentServices => _paymentServices;
+
   @override
   void initialize() {
-    // getUserMe();
+    getPaymentServices();
   }
 
   @override
@@ -131,7 +134,8 @@ class UserProvider extends UserProviderContract {
   @override
   Future<ApiResponse?> autoLogin() async {
     try {
-      if (!await getBioAuth() || !await canAutoLogin()) return null;
+      // if (!await getBioAuth() || !await canAutoLogin()) return null;
+      if (!await canAutoLogin()) return null;
       final email = await hiveService.getEmail();
       final password = await hiveService.getPassword();
       if (email != null && password != null) {
@@ -229,6 +233,39 @@ class UserProvider extends UserProviderContract {
     } catch (e, s) {
       handleError(e, stackTrace: s);
       return false;
+    }
+  }
+
+  @override
+  Future<ApiResponse<XRPBalance>?> getBalance(String address) async {
+    try {
+      final res = await apiService.getBalance(address);
+      if (res.data != null) {
+        _balance = res.data!;
+        notifyListeners();
+      }
+      return res;
+    } catch (e, s) {
+      handleError(e, stackTrace: s);
+      return null;
+    }
+  }
+
+  @override
+  Future<Paginated<PaymentService>?> getPaymentServices() async {
+    try {
+      final res = await paginatedQuery<PaymentService>(
+        options: const PaginatedOptions(),
+        paginated: _paymentServices,
+        initialRequest: () => apiService.getPaymentServices(),
+        loadMoreRequest: () => apiService.getPaymentServices(),
+      );
+      if (res?.data != null) _paymentServices = res!;
+      notifyListeners();
+      return _paymentServices;
+    } catch (e, s) {
+      handleError(e, stackTrace: s);
+      return null;
     }
   }
 }

@@ -2,12 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:tugela/ui/auth/login.dart';
 import 'package:tugela/ui/auth/signup.dart';
 import 'package:tugela/ui/company/company_create.dart';
-import 'package:tugela/ui/freelancer/freelancer_settings.dart';
+import 'package:tugela/ui/freelancer/freelancer_create.dart';
 import 'package:tugela/ui/index/index.dart';
 import 'package:tugela/ui/onboarding/onboard.dart';
 import 'package:tugela/ui/onboarding/profile_edit.dart';
 import 'package:tugela/ui/onboarding/welcome.dart';
 import 'package:tugela/ui/settings/settings.dart';
+import 'package:tugela/ui/settings/settings_payments_topup.dart';
 
 part 'routes_map.dart';
 
@@ -32,4 +33,5 @@ class Routes {
 
   // settings
   static const settings = "/profile/settings";
+  static const settingsPaymentTopup = "/profile/settings/payment-topup";
 }

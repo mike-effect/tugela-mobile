@@ -3,16 +3,16 @@ part of '../theme.dart';
 class AppColors {
   AppColors._();
 
-  static const primaryColor = indigo;
+  static const primaryColor = Color(0xFF004983);
   static const primaryColorLight = black12;
-  static const primaryColorDark = indigo;
+  static const primaryColorDark = Color.fromARGB(255, 24, 117, 193);
 
   static const primaryColorDarkTheme = white;
   static const primaryColorLightDarkTheme = white38;
   static const primaryColorDarkDarkTheme = white24;
 
-  static get secondaryColor => indigo;
-  static get secondaryColorDark => indigo;
+  static get secondaryColor => primaryColor;
+  static get secondaryColorDark => primaryColorDark;
 
   static final tertiaryColor = amber.shade700;
   static final tertiaryColorDark = amber.shade800;
@@ -43,8 +43,8 @@ class AppColors {
   static const onSurface = Colors.black;
   static const onSurfaceDark = Colors.white;
 
-  static final onSecondary = secondaryColor.shade900;
-  static final onSecondaryDark = secondaryColor.shade700;
+  static final onSecondary = secondaryColor;
+  static final onSecondaryDark = secondaryColorDark;
 
   static const Color transparent = Color(0x00000000);
 

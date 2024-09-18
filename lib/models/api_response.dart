@@ -83,7 +83,9 @@ class ApiResponse<T> extends Equatable {
 
   ApiResponse.successful(Response response) {
     final json = response.data;
-    error = json['error'] != null ? ApiError.fromJson(json['error']) : null;
+    if (json is Map) {
+      error = json['error'] != null ? ApiError.fromJson(json['error']) : null;
+    }
     data = ((response.statusCode ?? 0) >= 200 &&
         (response.statusCode ?? 0) < 400) as T?;
   }
@@ -100,6 +102,7 @@ class ApiResponse<T> extends Equatable {
 class ApiError extends Equatable {
   int? statusCode;
   String? message;
+  @JsonKey(fromJson: _errorFromJson)
   Map<String, dynamic>? details;
 
   ApiError({this.details, this.message, this.statusCode});
@@ -115,4 +118,9 @@ class ApiError extends Equatable {
 
   @override
   List<Object?> get props => [statusCode, message, details];
+}
+
+Map<String, dynamic>? _errorFromJson(dynamic v) {
+  if (v is List) return v.asMap().map((k, v) => MapEntry(k.toString(), v));
+  return v;
 }

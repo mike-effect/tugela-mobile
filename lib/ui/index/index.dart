@@ -9,7 +9,7 @@ import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/services/contracts/api_service.contract.dart';
 import 'package:tugela/ui/applications/applications_tab.dart';
-import 'package:tugela/ui/freelancer/freelancer_tab.dart';
+import 'package:tugela/ui/explore/explore_tab.dart';
 import 'package:tugela/ui/home/home_tab.dart';
 import 'package:tugela/ui/profile/profile_tab.dart';
 import 'package:tugela/utils.dart';
@@ -56,7 +56,7 @@ class _IndexState extends State<Index> {
       navigatorKey: navigators[1],
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       routes: {
-        Routes.tabIndex: (_) => const FreelancerTab(),
+        Routes.tabIndex: (_) => const ExploreTab(),
       },
     ),
     CupertinoTabView(
@@ -173,9 +173,9 @@ class _IndexState extends State<Index> {
               label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: PhosphorIcon(PhosphorIconsRegular.magnifyingGlass),
-              activeIcon: PhosphorIcon(PhosphorIconsFill.magnifyingGlass),
-              label: "Talent",
+              icon: PhosphorIcon(PhosphorIconsRegular.compass),
+              activeIcon: PhosphorIcon(PhosphorIconsFill.compass),
+              label: "Explore",
             ),
             BottomNavigationBarItem(
               icon: PhosphorIcon(PhosphorIconsRegular.briefcase),

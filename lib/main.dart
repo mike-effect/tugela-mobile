@@ -47,11 +47,11 @@ void main() async {
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-  ]).then((_) => runApp(const SurfClubApp()));
+  ]).then((_) => runApp(const MyApp()));
 }
 
-class SurfClubApp extends StatelessWidget {
-  const SurfClubApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -73,10 +73,9 @@ class SurfClubApp extends StatelessWidget {
           darkTheme: AppTheme.dark,
           home: const Splash(),
           routes: RoutesMap.map,
-          debugShowCheckedModeBanner: false,
           builder: (context, child) {
             return MediaQuery.withClampedTextScaling(
-              minScaleFactor: 1,
+              minScaleFactor: 0.8,
               maxScaleFactor: 1.2,
               child: child!,
             );

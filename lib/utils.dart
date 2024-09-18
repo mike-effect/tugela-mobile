@@ -1,15 +1,23 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:dio/dio.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mime/mime.dart';
 import 'package:tugela/constants/config.dart';
 import 'package:tugela/services/sl.dart';
+import 'package:tugela/utils/spacing.dart';
+import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -18,6 +26,24 @@ export 'utils/spacing.dart';
 
 final isAndroid = defaultTargetPlatform == TargetPlatform.android;
 final isiOS = defaultTargetPlatform == TargetPlatform.iOS;
+
+const imagesTypeGroup = XTypeGroup(
+  label: 'images',
+  uniformTypeIdentifiers: ['public.image'],
+  extensions: ['jpg', 'png', 'jpeg'],
+);
+
+const docTypeGroup = XTypeGroup(
+  label: 'Word',
+  uniformTypeIdentifiers: ['org.openxmlformats.wordprocessingml.document'],
+  extensions: ['doc', 'docx'],
+);
+
+const pdfTypeGroup = XTypeGroup(
+  label: 'PDFs',
+  uniformTypeIdentifiers: ['com.adobe.pdf'],
+  extensions: ['pdf'],
+);
 
 // part of 'utils.dart';
 final emailRegex = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9\-]+\.[a-zA-Z]+");
@@ -135,19 +161,26 @@ String formatAmount(
   final p = precision ?? sl.get<AppConfig>().currencyPrecision;
   final s = (symbol ?? sl.get<AppConfig>().currencyCode).toUpperCase();
   final v = (double.tryParse(value.toString()) ?? 0.0);
-  if (isCrypto) return "$value $symbol";
+  if (isCrypto) {
+    String r = "${(value ?? 0.00)}";
+    if (truncate && (r.endsWith('.00') || r.endsWith('.0'))) {
+      r = r.replaceAll('.00', '');
+      r = r.replaceAll('.0', '');
+    }
+    return "$r $symbol".trim();
+  }
   if (value == null) return "${s}0.00";
 
   final currency = customFormat ??
       NumberFormat.simpleCurrency(
         decimalDigits: p,
-        name: "$s${s == 'USD' || s == '\$' ? '' : ' '}",
+        name: "$s${s == 'USD' || s == '\$' ? '' : ' '}".trim(),
       );
   final r = currency.format(v / f);
   if (truncate) {
-    return r.endsWith('.00') ? r.replaceAll('.00', '') : r;
+    return r.endsWith('.00') ? r.replaceAll('.00', '').trim() : r.trim();
   } else {
-    return r;
+    return r.trim();
   }
 }
 
@@ -454,4 +487,70 @@ Future<bool> openLink(
     return launchUrlString(hasScheme ? url : "https://$url", mode: mode);
   }
   return false;
+}
+
+Future<XFile?> showImagePickerOptions(
+  BuildContext context, {
+  double imageSize = 720,
+  VoidCallback? onDelete,
+  List<ImageSource> sources = const [ImageSource.camera, ImageSource.gallery],
+}) async {
+  final picker = ImagePicker();
+  final theme = Theme.of(context);
+  return await showAppBottomSheet(
+    context: context,
+    physics: const NeverScrollableScrollPhysics(),
+    padding: ContentPadding,
+    children: (context) {
+      return [
+        if (sources.contains(ImageSource.camera))
+          TextButton(
+            child: const Text("Take Photo"),
+            onPressed: () async {
+              final res = await picker.pickImage(
+                source: ImageSource.camera,
+                maxHeight: imageSize,
+                maxWidth: imageSize,
+                imageQuality: 100,
+              );
+              if (context.mounted) Navigator.pop(context, res);
+            },
+          ),
+        if (sources.contains(ImageSource.gallery))
+          TextButton(
+            child: const Text("Choose from gallery"),
+            onPressed: () async {
+              final res = await picker.pickImage(
+                source: ImageSource.gallery,
+                maxHeight: imageSize,
+                maxWidth: imageSize,
+                imageQuality: 100,
+              );
+              if (context.mounted) Navigator.pop(context, res);
+            },
+          ),
+        if (onDelete != null)
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: theme.colorScheme.error,
+            ),
+            child: const Text("Remove Photo"),
+            onPressed: () {
+              onDelete();
+            },
+          ),
+      ];
+    },
+  );
+}
+
+Future<MultipartFile> multipartFileFromPath(String path,
+    {String? field}) async {
+  final bytes = await File(path).readAsBytes();
+  final m = lookupMimeType(path, headerBytes: [0xFF, 0xD8])?.split('/') ?? [];
+  return MultipartFile.fromBytes(
+    bytes,
+    filename: path.split('/').last,
+    contentType: m.isEmpty ? null : MediaType(m.first, m.last),
+  );
 }

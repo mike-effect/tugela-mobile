@@ -23,11 +23,12 @@ class _SplashState extends State<Splash> {
 
   initialize() async {
     final provider = context.read<UserProvider>();
-    if ((await provider.getEmail()) == null) {
+    if (!(await provider.canAutoLogin())) {
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
       return;
     }
+    await provider.autoLogin();
     if (!mounted) return;
     await ProviderRequest.api(
       context: context,
@@ -106,26 +107,37 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(),
-      body: Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Image.asset(
-            AppAssets.images.appIconPng,
-            width: 150,
-            height: 150,
-          ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: AssetImage(AppAssets.images.appIconBackgroundPng),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 160,
-        alignment: Alignment.center,
-        child: const SafeArea(
-          top: false,
-          child: CircularProgressIndicator(),
+      child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+        ),
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Image.asset(
+              AppAssets.images.appIconForegroundPng,
+              width: 150,
+              height: 150,
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: 160,
+          alignment: Alignment.center,
+          child: const SafeArea(
+            top: false,
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
         ),
       ),
     );

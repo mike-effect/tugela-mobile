@@ -4,14 +4,18 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
+import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
-import 'package:tugela/ui/company/company_details.dart';
+import 'package:tugela/theme.dart';
+import 'package:tugela/ui/company/company_card.dart';
 import 'package:tugela/ui/jobs/job_create.dart';
 import 'package:tugela/utils.dart';
-import 'package:tugela/widgets/icons/right_chevron.dart';
+import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
+import 'package:tugela/widgets/layout/section_header.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class JobDetail extends StatelessWidget {
   final Job job;
@@ -19,25 +23,39 @@ class JobDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final company = job.company;
-    const chipStyle = TextStyle(
-      height: 1,
-      fontSize: 13.5,
-    );
+    final jobProvider = context.watch<JobProvider>();
+    final userProvider = context.watch<UserProvider>();
+    const chipStyle = TextStyle(height: 1, fontSize: 13.5);
     final textStyle =
         context.textTheme.bodyMedium?.copyWith(height: 1.4, fontSize: 14.5);
+    final job = jobProvider.job[this.job.id] ?? this.job;
+
+    int score() {
+      int count = 0;
+      final fs = (jobProvider.user?.freelancer?.skills ?? [])
+          .map((e) => e.name?.toLowerCase() ?? "");
+      final js = job.skills.map((e) => e.name?.toLowerCase() ?? "");
+      for (final j in js) {
+        if (fs.contains(j)) count++;
+      }
+      return count;
+    }
+
     return SliverScaffold(
+      onRefresh: () => Future.wait([
+        jobProvider.getJob(job.id!),
+      ]),
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
-          if (options(context).isNotEmpty)
+          if (options(context, job).isNotEmpty)
             IconButton(
               icon: const Icon(PhosphorIconsRegular.dotsThreeCircle),
               onPressed: () {
                 showAppBottomSheet(
                   context: context,
                   children: (context) {
-                    return options(context);
+                    return options(context, job);
                   },
                 );
               },
@@ -50,7 +68,12 @@ class JobDetail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           VSizedBox8,
-          const AppAvatar(radius: 44),
+          Center(
+            child: AppAvatar(
+              radius: 44,
+              imageUrl: job.company?.logo,
+            ),
+          ),
           VSizedBox24,
           Text(
             job.title ?? '',
@@ -88,16 +111,10 @@ class JobDetail extends StatelessWidget {
                 Chip(
                   label: Text(
                     "${job.currency ?? ''} ${formatAmount(
-                      job.minPrice,
+                      job.price,
                       factor: 1,
                       customFormat: NumberFormat.compact(),
-                    )}"
-                            "–${job.isCompensationRange ? formatAmount(
-                                job.maxPrice,
-                                factor: 1,
-                                customFormat: NumberFormat.compact(),
-                              ) : ''}"
-                            " ${job.priceType?.name.sentenceCase.toLowerCase()}"
+                    )} ${job.priceType?.name.sentenceCase.toLowerCase()}"
                         .trim(),
                   ),
                 ),
@@ -110,7 +127,7 @@ class JobDetail extends StatelessWidget {
                 ),
             ],
           ),
-          if (company != null)
+          if (jobProvider.isFreelancer && (score() > 0))
             Container(
               margin: const EdgeInsets.only(top: 24),
               decoration: BoxDecoration(
@@ -123,9 +140,13 @@ class JobDetail extends StatelessWidget {
               child: ListTile(
                 dense: true,
                 visualDensity: VisualDensity.comfortable,
-                leading: const AppAvatar(radius: 22),
+                minLeadingWidth: 24,
+                leading: const Icon(
+                  PhosphorIconsRegular.sparkle,
+                  color: AppColors.amber,
+                ),
                 title: Text(
-                  "${company.name}",
+                  "${score()} ${pluralFor("skill", count: score())} ${score() == 1 ? 'matches' : 'match'} your profile",
                   style: const TextStyle(
                     fontSize: 14,
                     letterSpacing: 0.2,
@@ -133,28 +154,14 @@ class JobDetail extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  company.industry?.name ?? "View Company",
+                  "You may ${score() < 5 ? 'apply' : 'be a good fit'} for this role",
                   style: const TextStyle(fontSize: 12.5),
                 ),
-                trailing: const RightChevron(),
-                onTap: () {
-                  push(
-                    context: context,
-                    builder: (_) => CompanyDetails(company: company),
-                    rootNavigator: true,
-                  );
-                },
               ),
             ),
           VSizedBox32,
           if ((job.description ?? '').isNotEmpty) ...[
-            const Text(
-              "Overview",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            const SectionHeader(title: "Overview"),
             VSizedBox8,
             Text(
               job.description ?? '',
@@ -164,13 +171,7 @@ class JobDetail extends StatelessWidget {
             VSizedBox32,
           ],
           if ((job.responsibilities ?? '').isNotEmpty) ...[
-            const Text(
-              "Responsibilities",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            const SectionHeader(title: "Responsibilities"),
             VSizedBox8,
             Text(
               job.responsibilities ?? '',
@@ -180,13 +181,7 @@ class JobDetail extends StatelessWidget {
             VSizedBox32,
           ],
           if ((job.experience ?? '').isNotEmpty) ...[
-            const Text(
-              "Experience",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            const SectionHeader(title: "Experience"),
             VSizedBox8,
             Text(
               job.experience ?? '',
@@ -195,14 +190,109 @@ class JobDetail extends StatelessWidget {
             ),
             VSizedBox32,
           ],
+          if (job.skills.isNotEmpty) ...[
+            const SectionHeader(title: "Job Skills"),
+            VSizedBox8,
+            Wrap(
+              spacing: 6,
+              runSpacing: 8,
+              children: job.skills.map((v) {
+                return RawChip(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  label: Text(v.name ?? ''),
+                );
+              }).toList(),
+            ),
+            VSizedBox32,
+          ],
+          if (job.company != null) ...[
+            const SectionHeader(title: "About the company"),
+            VSizedBox12,
+            CompanyCard(company: job.company!),
+          ],
+          VSizedBox40,
         ],
       ),
+      bottomNavigationBar: userProvider.isCompany
+          ? null
+          : (job.status == JobStatus.active &&
+                      (job.applicationType == JobApplicationType.external &&
+                          job.externalApplyLink != null) ||
+                  job.applicationType == JobApplicationType.internal)
+              ? BottomAppBar(
+                  child: ElevatedButton(
+                    onPressed: () => apply(context),
+                    child: const Text("Apply for role"),
+                  ),
+                )
+              : null,
     );
   }
 
-  List<Widget> options(BuildContext context) {
+  void apply(BuildContext context) async {
+    if (job.applicationType == JobApplicationType.external) {
+      try {
+        launchUrlString(job.externalApplyLink ?? "");
+      } catch (e, s) {
+        handleError(e, stackTrace: s);
+      }
+    } else {
+      final res = await showAppBottomSheet(
+        context: context,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: ContentPadding,
+        title: "Apply for role",
+        centerTitleText: true,
+        children: (context) {
+          return [
+            Text(
+              "You are about to apply for ${job.title ?? 'a role'}, ${job.roleType?.name.sentenceCase.toLowerCase()} at ${job.company?.name ?? 'this company'}. "
+              "The recruiter will go through your freelancer profile to see your work experiences, services and portfolio. Always keep your profile detailed and updated for the best outcomes ✨",
+              textAlign: TextAlign.justify,
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(height: 60),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: const Text("Submit Application"),
+            ),
+          ];
+        },
+      );
+      if ((res ?? false) && context.mounted) {
+        final provider = context.read<JobProvider>();
+        ProviderRequest.api(
+          context: context,
+          request: provider.createApplication(JobApplication(
+            freelancer: provider.user?.freelancer,
+            job: job,
+          )),
+          onSuccess: (context, res) {
+            // Navigator.pop(context);
+            provider.getJobApplications(
+              mapId: provider.user?.freelancer?.id,
+              params: {"freelancer": provider.user?.freelancer?.id},
+            );
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Application submitted"),
+              ));
+              // rootNavigator(context).pop();
+            }
+          },
+        );
+      }
+    }
+  }
+
+  List<Widget> options(BuildContext context, Job job) {
+    final user = context.read<UserProvider>().user;
     return [
-      if (context.read<UserProvider>().user?.company?.id == job.company?.id)
+      VSizedBox24,
+      if (user?.accountType == AccountType.company &&
+          user?.company?.id == job.company?.id)
         ListTile(
           title: const Text("Edit Job Listing"),
           onTap: () {
@@ -213,6 +303,7 @@ class JobDetail extends StatelessWidget {
             );
           },
         ),
+      VSizedBox24,
     ];
   }
 }

@@ -188,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, Routes.signup);
+                Navigator.pushReplacementNamed(context, Routes.login);
               },
             ),
           ],

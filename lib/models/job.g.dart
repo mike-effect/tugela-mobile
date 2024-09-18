@@ -26,8 +26,6 @@ Job _$JobFromJson(Map<String, dynamic> json) => Job(
       priceType: $enumDecodeNullable(_$PriceTypeEnumMap, json['price_type'],
           unknownValue: JsonKey.nullForUndefinedEnumValue),
       price: json['price'] as String?,
-      minPrice: json['min_price'] as String?,
-      maxPrice: json['max_price'] as String?,
       currency: json['currency'] as String?,
       applicationType: $enumDecodeNullable(
           _$JobApplicationTypeEnumMap, json['application_type'],
@@ -43,6 +41,10 @@ Job _$JobFromJson(Map<String, dynamic> json) => Job(
           : DateTime.parse(json['updated_at'] as String),
       roleType: $enumDecodeNullable(_$JobRoleTypeEnumMap, json['role_type'],
           unknownValue: JsonKey.nullForUndefinedEnumValue),
+      skills: (json['skills'] as List<dynamic>?)
+              ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$JobToJson(Job instance) {
@@ -66,8 +68,6 @@ Map<String, dynamic> _$JobToJson(Job instance) {
   val['tags'] = instance.tags;
   writeNotNull('price_type', _$PriceTypeEnumMap[instance.priceType]);
   writeNotNull('price', instance.price);
-  writeNotNull('max_price', instance.maxPrice);
-  writeNotNull('min_price', instance.minPrice);
   writeNotNull('currency', instance.currency);
   writeNotNull('application_type',
       _$JobApplicationTypeEnumMap[instance.applicationType]);
@@ -76,6 +76,7 @@ Map<String, dynamic> _$JobToJson(Job instance) {
   writeNotNull('external_apply_link', instance.externalApplyLink);
   writeNotNull('created_at', instance.createdAt?.toIso8601String());
   writeNotNull('updated_at', instance.updatedAt?.toIso8601String());
+  val['skills'] = instance.skills.map((e) => e.toJson()).toList();
   return val;
 }
 

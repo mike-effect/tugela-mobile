@@ -12,7 +12,7 @@ enum ApiEnvironment { staging, production }
 class AppConfig {
   static AppConfig? _instance;
 
-  int currencyFactor = 100;
+  int currencyFactor = 1;
   int currencyPrecision = 2;
   String currencyCode = " ";
   String userUuid = "";
@@ -27,6 +27,13 @@ class AppConfig {
 
   static String get apiHost {
     return _apiHostMap[apiEnvironment]!;
+  }
+
+  static String get paymentsService {
+    if (apiEnvironment == ApiEnvironment.staging) {
+      return "https://dev-tugela-payments.netlify.app";
+    }
+    return "https://tugela-payments.netlify.app";
   }
 
   static const _stagingAPI =

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart' as dio;
 import 'package:tugela/models/api_response.dart';
 import 'package:tugela/models/freelancer.dart';
 import 'package:tugela/models/freelancer_service.dart';
@@ -28,9 +29,15 @@ class FreelancerProvider extends FreelancerProviderContract {
   }
 
   @override
-  Future<ApiResponse<bool>?> createFreelancer(Freelancer data) async {
+  Future<ApiResponse<bool>?> createFreelancer(
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
-      final res = await apiService.createFreelancer(data);
+      final res = await apiService.createFreelancer(
+        data,
+        imageUpload: imageUpload,
+      );
       return res;
     } catch (e, s) {
       handleError(e, stackTrace: s);
@@ -51,10 +58,15 @@ class FreelancerProvider extends FreelancerProviderContract {
   @override
   Future<ApiResponse<bool>?> updateFreelancer(
     String id,
-    Freelancer data,
-  ) async {
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
-      return await apiService.updateFreelancer(id, data);
+      return await apiService.updateFreelancer(
+        id,
+        data,
+        imageUpload: imageUpload,
+      );
     } catch (e, s) {
       handleError(e, stackTrace: s);
       return null;
@@ -134,11 +146,13 @@ class FreelancerProvider extends FreelancerProviderContract {
     }
   }
 
-  Future<void> deleteFreelancerPortfolioItem(String id) async {
+  @override
+  Future<ApiResponse<bool>?> deleteFreelancerPortfolioItem(String id) async {
     try {
-      await apiService.deletePortfolioItem(id);
+      return await apiService.deletePortfolioItem(id);
     } catch (e, s) {
       handleError(e, stackTrace: s);
+      return null;
     }
   }
 
@@ -174,11 +188,9 @@ class FreelancerProvider extends FreelancerProviderContract {
   // ------------------- Service Methods -------------------
 
   Future<ApiResponse<bool>?> createFreelancerService(
-    FreelancerService data,
-    //   {
-    //   PlatformFile? serviceImage,
-    // }
-  ) async {
+    FreelancerService data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
       final res = await apiService.createService(
         data,
@@ -203,11 +215,9 @@ class FreelancerProvider extends FreelancerProviderContract {
 
   Future<ApiResponse<bool>?> updateFreelancerService(
     String id,
-    FreelancerService data,
-    //   {
-    //   PlatformFile? serviceImage,
-    // }
-  ) async {
+    FreelancerService data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
       return await apiService.updateService(
         id,
@@ -220,11 +230,12 @@ class FreelancerProvider extends FreelancerProviderContract {
     }
   }
 
-  Future<void> deleteFreelancerService(String id) async {
+  Future<ApiResponse<bool>?> deleteFreelancerService(String id) async {
     try {
-      await apiService.deleteService(id);
+      return await apiService.deleteService(id);
     } catch (e, s) {
       handleError(e, stackTrace: s);
+      return null;
     }
   }
 
@@ -287,11 +298,12 @@ class FreelancerProvider extends FreelancerProviderContract {
     }
   }
 
-  Future<void> deleteFreelancerWorkExperience(String id) async {
+  Future<ApiResponse<bool>?> deleteFreelancerWorkExperience(String id) async {
     try {
-      await apiService.deleteWorkExperience(id);
+      return await apiService.deleteWorkExperience(id);
     } catch (e, s) {
       handleError(e, stackTrace: s);
+      return null;
     }
   }
 

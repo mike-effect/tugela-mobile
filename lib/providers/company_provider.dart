@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart' as dio;
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/contracts/company_provider.contract.dart';
 import 'package:tugela/utils.dart';
@@ -27,9 +28,15 @@ class CompanyProvider extends CompanyProviderContract {
   }
 
   @override
-  Future<ApiResponse<bool>?> createCompany(Company data) async {
+  Future<ApiResponse<bool>?> createCompany(
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
-      final res = await apiService.createCompany(data);
+      final res = await apiService.createCompany(
+        data,
+        imageUpload: imageUpload,
+      );
       if (user?.id != null) await getCompanies(mapId: user!.id!);
       return res;
     } catch (e, s) {
@@ -99,11 +106,20 @@ class CompanyProvider extends CompanyProviderContract {
   @override
   Future<ApiResponse<bool>?> updateCompany(
     String id,
-    Company data,
-  ) async {
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  }) async {
     try {
-      final res = await apiService.updateCompany(id, data);
+      final res = await apiService.updateCompany(
+        id,
+        data,
+        imageUpload: imageUpload,
+      );
       if (user?.id != null) getCompanies(mapId: user!.id!);
+      getCompanies(
+        mapId: "",
+        options: const PaginatedOptions(refresh: true, keepCount: true),
+      );
       return res;
     } catch (e, s) {
       handleError(e, stackTrace: s);

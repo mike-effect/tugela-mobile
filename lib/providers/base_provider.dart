@@ -26,7 +26,7 @@ abstract class BaseProvider extends ChangeNotifier {
 
   User? get user => apiService.user;
   bool get isCompany => user?.accountType == AccountType.company;
-  bool get isFreelancer => user?.accountType == AccountType.company;
+  bool get isFreelancer => user?.accountType == AccountType.freelancer;
 
   Future<Paginated<T>?> paginatedQuery<T>({
     PaginatedOptions options = const PaginatedOptions(),

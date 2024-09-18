@@ -3,14 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
+import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
+import 'package:tugela/theme.dart';
+import 'package:tugela/ui/freelancer/freelancer_skills.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/widgets/forms/form_input.dart';
 import 'package:tugela/widgets/forms/form_scope.dart';
 import 'package:tugela/widgets/forms/options_field.dart';
+import 'package:tugela/widgets/icons/right_chevron.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
 
@@ -28,8 +32,8 @@ class _JobCreateState extends State<JobCreate> {
   final descriptionController = TextEditingController();
   final externalApplyLinkController = TextEditingController();
   final priceController = TextEditingController();
-  final minPriceController = TextEditingController();
-  final maxPriceController = TextEditingController();
+  // final minPriceController = TextEditingController();
+  // final maxPriceController = TextEditingController();
   final addressController = TextEditingController();
   final responsibilitiesController = TextEditingController();
   final experienceController = TextEditingController();
@@ -41,6 +45,8 @@ class _JobCreateState extends State<JobCreate> {
   List<Tag> selectedTags = [];
   ApiError? apiError;
   String? errorMessage;
+  List<Skill> skills = [];
+  String currency = "USD";
 
   bool get isEditing => widget.job != null;
 
@@ -48,12 +54,14 @@ class _JobCreateState extends State<JobCreate> {
   void initState() {
     if (widget.job != null) {
       final j = widget.job!;
+      skills = j.skills;
       titleController.text = j.title ?? "";
       descriptionController.text = j.description ?? "";
       externalApplyLinkController.text = j.externalApplyLink ?? "";
+      currency = j.currency ?? "USD";
       priceController.text = j.price ?? "";
-      minPriceController.text = j.minPrice ?? "";
-      maxPriceController.text = j.maxPrice ?? "";
+      // minPriceController.text = j.minPrice ?? "";
+      // maxPriceController.text = j.maxPrice ?? "";
       addressController.text = j.address ?? "";
       responsibilitiesController.text = j.responsibilities ?? "";
       experienceController.text = j.experience ?? "";
@@ -72,8 +80,8 @@ class _JobCreateState extends State<JobCreate> {
 
   @override
   Widget build(BuildContext context) {
-    // final jobProvider = context.watch<JobProvider>();
-    // final companyProvider = context.watch<CompanyProvider>();
+    final appProvider = context.watch<AppProvider>();
+    final currencies = appProvider.currencies;
 
     return FormScope(
       formKey: formKey,
@@ -105,6 +113,7 @@ class _JobCreateState extends State<JobCreate> {
               ),
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: FormInput(
@@ -149,7 +158,7 @@ class _JobCreateState extends State<JobCreate> {
                     ),
                   ),
                 ),
-                HSizedBox12,
+                HSizedBox16,
                 Expanded(
                   child: FormInput(
                     title: const Text("Role Type"),
@@ -218,44 +227,84 @@ class _JobCreateState extends State<JobCreate> {
               ),
             FormInput(
               title: const Text("Compensation Frequency"),
-              child: OptionsField(
-                hint: "Select frequency",
-                text: priceType.name.sentenceCase,
-                validator: (value) {
-                  if (value?.isEmpty ?? false) {
-                    return "Select frequency";
-                  }
-                  return apiError?.forKey('price_type');
-                },
-                onTap: () async {
-                  final res = await showAppBottomSheet<PriceType>(
-                    context: context,
-                    title: "Compensation Frequency",
-                    children: (context) {
-                      return [
-                        ...PriceType.values.map((type) {
-                          return RadioListTile<PriceType>(
-                            value: type,
-                            groupValue: priceType,
-                            visualDensity: VisualDensity.compact,
-                            title: Text(type.name.sentenceCase),
-                            activeColor: context.colorScheme.secondary,
-                            onChanged: (value) {
-                              rootNavigator(context).pop(type);
-                            },
-                          );
-                        }),
-                        VSizedBox8,
-                      ];
-                    },
-                  );
-                  if (res != null) {
-                    setState(() {
-                      priceType = res;
-                      apiError?.details?.remove('price');
-                    });
-                  }
-                },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Expanded(
+                  //   child: OptionsField(
+                  //     hint: "Currency",
+                  //     text: currency,
+                  //     autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //     onTap: () async {
+                  //       final res = await showAppBottomSheet<Currency?>(
+                  //         context: context,
+                  //         title: "Currency",
+                  //         children: (context) {
+                  //           return currencies.map((c) {
+                  //             return RadioListTile(
+                  //               title: Text(c.code ?? ""),
+                  //               value: c.code,
+                  //               groupValue: currency,
+                  //               onChanged: (_) {
+                  //                 Navigator.pop(context, c);
+                  //               },
+                  //             );
+                  //           }).toList();
+                  //         },
+                  //       );
+                  //       if (res != null) {
+                  //         setState(() => currency = res.code ?? "");
+                  //       }
+                  //     },
+                  //     validator: (v) {
+                  //       if (v!.isEmpty) return "Currency required";
+                  //       return null;
+                  //     },
+                  //   ),
+                  // ),
+                  // HSizedBox16,
+                  Expanded(
+                    child: OptionsField(
+                      hint: "Select frequency",
+                      text: priceType.name.sentenceCase,
+                      validator: (value) {
+                        if (value?.isEmpty ?? false) {
+                          return "Select frequency";
+                        }
+                        return apiError?.forKey('price_type');
+                      },
+                      onTap: () async {
+                        final res = await showAppBottomSheet<PriceType>(
+                          context: context,
+                          title: "Compensation Frequency",
+                          children: (context) {
+                            return [
+                              ...PriceType.values.map((type) {
+                                return RadioListTile<PriceType>(
+                                  value: type,
+                                  groupValue: priceType,
+                                  visualDensity: VisualDensity.compact,
+                                  title: Text(type.name.sentenceCase),
+                                  activeColor: context.colorScheme.secondary,
+                                  onChanged: (value) {
+                                    rootNavigator(context).pop(type);
+                                  },
+                                );
+                              }),
+                              VSizedBox8,
+                            ];
+                          },
+                        );
+                        if (res != null) {
+                          setState(() {
+                            priceType = res;
+                            apiError?.details?.remove('price');
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             FormInput(
@@ -265,7 +314,7 @@ class _JobCreateState extends State<JobCreate> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: minPriceController,
+                      controller: priceController,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       autocorrect: false,
@@ -273,8 +322,17 @@ class _JobCreateState extends State<JobCreate> {
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'([0-9]+)')),
                       ],
-                      decoration: const InputDecoration(
-                        hintText: "Base amount",
+                      decoration: InputDecoration(
+                        hintText: "0.00",
+                        prefixIcon: Container(
+                          width: 80,
+                          padding: ContentPaddingH,
+                          alignment: Alignment.centerLeft,
+                          child: const Text(
+                            "USD",
+                            textScaler: TextScaler.noScaling,
+                          ),
+                        ),
                       ),
                       validator: (v) {
                         // if (v!.isEmpty) return "Base amount is required";
@@ -285,38 +343,38 @@ class _JobCreateState extends State<JobCreate> {
                       }),
                     ),
                   ),
-                  if (priceType != PriceType.perProject) ...[
-                    HSizedBox8,
-                    const Text(
-                      "–",
-                      style: TextStyle(fontSize: 38, height: 1.2),
-                    ),
-                    HSizedBox8,
-                    Expanded(
-                      child: TextFormField(
-                        enabled: minPriceController.text.isNotEmpty,
-                        controller: maxPriceController,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        autocorrect: false,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'([0-9]+)')),
-                        ],
-                        decoration: const InputDecoration(
-                          hintText: "Max amount",
-                        ),
-                        // validator: (v) {
-                        //   if (v!.isEmpty) return "Amount is required";
-                        //   return null;
-                        // },
-                        onChanged: (_) => setState(() {
-                          errorMessage = null;
-                        }),
-                      ),
-                    ),
-                  ],
+                  // if (priceType != PriceType.perProject) ...[
+                  //   HSizedBox8,
+                  //   const Text(
+                  //     "–",
+                  //     style: TextStyle(fontSize: 38, height: 1.2),
+                  //   ),
+                  //   HSizedBox8,
+                  //   Expanded(
+                  //     child: TextFormField(
+                  //       enabled: minPriceController.text.isNotEmpty,
+                  //       controller: maxPriceController,
+                  //       keyboardType: TextInputType.number,
+                  //       textInputAction: TextInputAction.next,
+                  //       autocorrect: false,
+                  //       autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //       inputFormatters: [
+                  //         FilteringTextInputFormatter.allow(
+                  //             RegExp(r'([0-9]+)')),
+                  //       ],
+                  //       decoration: const InputDecoration(
+                  //         hintText: "Max amount",
+                  //       ),
+                  //       // validator: (v) {
+                  //       //   if (v!.isEmpty) return "Amount is required";
+                  //       //   return null;
+                  //       // },
+                  //       onChanged: (_) => setState(() {
+                  //         errorMessage = null;
+                  //       }),
+                  //     ),
+                  //   ),
+                  // ],
                 ],
               ),
             ),
@@ -475,6 +533,59 @@ class _JobCreateState extends State<JobCreate> {
                   }),
                 ),
               ),
+            FormInput(
+              title: const Text("Skills"),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  width: double.infinity,
+                  padding: ContentPadding,
+                  decoration: BoxDecoration(
+                    borderRadius: AppTheme.formBorderRadius,
+                    border: Border.all(
+                      color: context.inputTheme.enabledBorder!.borderSide.color,
+                    ),
+                  ),
+                  child: skills.isEmpty
+                      ? Row(
+                          children: [
+                            Text(
+                              "Select up to 10 skills",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: context.textTheme.bodySmall?.color,
+                              ),
+                            ),
+                            Space,
+                            const RightChevron(),
+                          ],
+                        )
+                      : Wrap(
+                          spacing: 6,
+                          runSpacing: 8,
+                          children: skills.map((v) {
+                            return RawChip(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              label: Text(v.name ?? ''),
+                            );
+                          }).toList(),
+                        ),
+                ),
+                onTap: () async {
+                  final res = await push(
+                    context: context,
+                    builder: (_) => FreelancerSkills(selected: skills),
+                    rootNavigator: true,
+                  );
+                  if (res != null && res is List<Skill>) {
+                    setState(() {
+                      skills = res;
+                    });
+                  }
+                },
+              ),
+            ),
             if (isEditing)
               FormInput(
                 title: const Text("Status"),
@@ -522,10 +633,8 @@ class _JobCreateState extends State<JobCreate> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: ElevatedButton(
+            onPressed: skills.isEmpty ? null : submit,
             child: const Text("Save"),
-            onPressed: () {
-              submit();
-            },
           ),
         ),
       ),
@@ -547,9 +656,9 @@ class _JobCreateState extends State<JobCreate> {
       description: descriptionController.text.trim(),
       externalApplyLink: externalApplyLinkController.text.trim(),
       priceType: priceType,
-      price: minPriceController.text.trim(),
-      maxPrice: maxPriceController.text.trim(),
-      minPrice: minPriceController.text.trim(),
+      price: double.tryParse(priceController.text.trim())?.toString(),
+      // maxPrice: double.tryParse(maxPriceController.text.trim())?.toString(),
+      // minPrice: double.tryParse(minPriceController.text.trim())?.toString(),
       location: jobLocation,
       applicationType: applicationType,
       status: jobStatus,
@@ -558,6 +667,8 @@ class _JobCreateState extends State<JobCreate> {
       responsibilities: responsibilitiesController.text.trim(),
       experience: experienceController.text.trim(),
       tags: selectedTags.map((e) => e.id!).toList(),
+      skills: skills,
+      currency: currency,
     );
     await ProviderRequest.api(
       context: context,
@@ -574,6 +685,7 @@ class _JobCreateState extends State<JobCreate> {
       },
       onSuccess: (context, res) async {
         final companyId = jobProvider.user?.company?.id;
+        if (isEditing) jobProvider.getJob(widget.job!.id!);
         jobProvider.getJobs(mapId: companyId, params: {"company": companyId});
         if (companyId != null) companyProvider.getCompany(companyId);
         if (mounted) {

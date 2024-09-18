@@ -40,12 +40,20 @@ class _CompanyValuesState extends State<CompanyValues> {
       value: companyProvider.companyValues.data,
       placeholderCount: 10,
       placeholderBuilder: (context) {
-        return const ListTile();
+        return Wrap(
+          spacing: 6,
+          runSpacing: 0,
+          children: [
+            ...List.generate(100, (index) {
+              return RawChip(label: Text("    " * 3));
+            })
+          ],
+        );
       },
       emptyStateBuilder: (context) {
-        return const SliverToBoxAdapter(
+        return SliverToBoxAdapter(
           child: EmptyState(
-            margin: ContentPaddingH,
+            margin: ContentPadding.copyWith(top: 44),
             title: "Nothing here yet 🍃",
             subtitle: "Company values will show up here to choose from",
           ),
@@ -128,7 +136,9 @@ class _CompanyValuesState extends State<CompanyValues> {
           onPressed: () {
             Navigator.pop(context, selected);
           },
-          child: const Text("Save"),
+          child: Text(
+            "Save ${selected.isNotEmpty ? '(${selected.length})' : ''}".trim(),
+          ),
         ),
       ),
     );

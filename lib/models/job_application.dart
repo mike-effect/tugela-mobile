@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tugela/models/base_model.dart';
 import 'package:tugela/models/freelancer.dart';
@@ -10,11 +12,12 @@ class JobApplication extends BaseModel {
   final String? id;
   final Freelancer? freelancer;
   final Job? job;
-  final String? status;
+  @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+  ApplicationStatus? status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  const JobApplication(
+  JobApplication(
       {this.id,
       this.freelancer,
       this.job,
@@ -33,4 +36,10 @@ class JobApplication extends BaseModel {
     j['freelancer'] = freelancer?.id;
     return j;
   }
+}
+
+enum ApplicationStatus {
+  pending,
+  rejected,
+  accepted,
 }

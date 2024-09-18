@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/company_provider.dart';
+import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/ui/company/company_industries.dart';
@@ -13,6 +18,7 @@ import 'package:tugela/widgets/forms/form_input.dart';
 import 'package:tugela/widgets/forms/form_scope.dart';
 import 'package:tugela/widgets/forms/options_field.dart';
 import 'package:tugela/widgets/icons/right_chevron.dart';
+import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
 
@@ -31,6 +37,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final taglineController = TextEditingController();
+  final locationController = TextEditingController();
   final websiteController = TextEditingController();
   final orgController = TextEditingController();
   final sizeController = TextEditingController();
@@ -41,16 +48,16 @@ class _CompanyCreateState extends State<CompanyCreate> {
   Industry? industry;
   ApiError? apiError;
   String? errorMessage;
+  String? avatarUrl;
+  XFile? avatarFile;
 
   bool get isEditing => widget.company != null;
 
   @override
   void initState() {
-    // final companyProvider = context.read<CompanyProvider>();
-    // companyProvider.getCompanyIndustries();
-    // companyProvider.getCompanyValues();
     if (widget.company != null) {
       final c = widget.company!;
+      avatarUrl = c.logo;
       nameController.text = c.name ?? "";
       descriptionController.text = c.description ?? "";
       emailController.text = c.email ?? "";
@@ -58,6 +65,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
       taglineController.text = c.tagline ?? "";
       websiteController.text = c.website ?? "";
       orgController.text = c.organizationType?.name ?? "";
+      locationController.text = c.location ?? "";
       if (c.organizationType != null) organizationType = c.organizationType!;
       sizeController.text = c.companySize?.name ?? "";
       if (c.companySize != null) companySize = c.companySize!;
@@ -80,6 +88,95 @@ class _CompanyCreateState extends State<CompanyCreate> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Center(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () async {
+                  final image = await showImagePickerOptions(
+                    context,
+                    onDelete: (avatarUrl != null || avatarFile != null)
+                        ? () {
+                            setState(() {
+                              avatarUrl = null;
+                              avatarFile = null;
+                            });
+                            Navigator.pop(context);
+                          }
+                        : null,
+                  );
+                  if (context.mounted && image?.path != null) {
+                    await showAppBottomSheet(
+                      context: context,
+                      padding: ContentPadding,
+                      children: (context) {
+                        return [
+                          AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: FileImage(File(image!.path)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          VSizedBox12,
+                          ElevatedButton(
+                            child: const Text("Continue"),
+                            onPressed: () async {
+                              setState(() {
+                                avatarFile = image;
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ];
+                      },
+                    );
+                  }
+                },
+                child: Column(
+                  children: [
+                    avatarFile != null
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundImage: FileImage(
+                              File(avatarFile!.path),
+                            ),
+                          )
+                        : AppAvatar(
+                            radius: 50,
+                            imageUrl: avatarUrl,
+                            overlayWidget: const CircleAvatar(
+                              radius: 18,
+                              backgroundColor: AppColors.black,
+                              child: Icon(
+                                Icons.camera_alt,
+                                size: 17,
+                                color: AppColors.white,
+                              ),
+                            ),
+                            child: Icon(
+                              PhosphorIconsRegular.user,
+                              color: context.primaryColor,
+                              size: 40,
+                            ),
+                          ),
+                    VSizedBox10,
+                    Text(
+                      "Change Picture",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: context.colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            VSizedBox24,
             FormInput(
               title: const Text("Name"),
               child: TextFormField(
@@ -87,6 +184,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 autocorrect: false,
+                textCapitalization: TextCapitalization.words,
                 autofillHints: const [AutofillHints.organizationName],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: const InputDecoration(
@@ -114,6 +212,26 @@ class _CompanyCreateState extends State<CompanyCreate> {
                 ),
                 validator: (v) {
                   if (v!.isEmpty) return "Tagline is required";
+                  return null;
+                },
+                onChanged: (_) => setState(() {
+                  errorMessage = null;
+                }),
+              ),
+            ),
+            FormInput(
+              title: const Text("Location"),
+              child: TextFormField(
+                controller: locationController,
+                keyboardType: TextInputType.text,
+                autocorrect: false,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                autofillHints: const [AutofillHints.location],
+                decoration: const InputDecoration(
+                  hintText: "Headquarters city and country",
+                ),
+                validator: (v) {
+                  if (v!.isEmpty) return "Location is required";
                   return null;
                 },
                 onChanged: (_) => setState(() {
@@ -284,10 +402,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
                         )
                       : Wrap(
                           spacing: 6,
-                          runSpacing: 0,
-                          children: companyValues
-                              .map((v) => RawChip(label: Text(v.name ?? '')))
-                              .toList(),
+                          runSpacing: 8,
+                          children: companyValues.map((v) {
+                            return RawChip(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              label: Text(v.name ?? ''),
+                            );
+                          }).toList(),
                         ),
                 ),
                 onTap: () async {
@@ -392,7 +514,6 @@ class _CompanyCreateState extends State<CompanyCreate> {
     if (!formKey.currentState!.validate()) return;
     final input = Company(
       id: widget.company?.id,
-      xrpAddress: companyProvider.user?.id,
       name: nameController.text,
       description: descriptionController.text,
       email: emailController.text,
@@ -404,13 +525,23 @@ class _CompanyCreateState extends State<CompanyCreate> {
       howYouFoundUs: howYouFoundUs,
       values: companyValues,
       industry: industry,
+      location: locationController.text,
     );
+
+    final multipart = avatarFile == null
+        ? null
+        : await multipartFileFromPath(avatarFile!.path, field: "logo");
+    if (!mounted) return;
     await ProviderRequest.api(
       context: context,
-      loadingMessage: "Setting up",
+      loadingMessage: "Saving",
       request: isEditing
-          ? companyProvider.updateCompany(widget.company!.id!, input)
-          : companyProvider.createCompany(input),
+          ? companyProvider.updateCompany(
+              widget.company!.id!,
+              input,
+              imageUpload: multipart,
+            )
+          : companyProvider.createCompany(input, imageUpload: multipart),
       onError: (context) {
         setState(() => errorMessage = 'An error occurred');
       },
@@ -419,11 +550,18 @@ class _CompanyCreateState extends State<CompanyCreate> {
         formKey.currentState!.validate();
       },
       onSuccess: (context, res) async {
+        context.read<JobProvider>().getJobs(
+              mapId: "",
+              options: const PaginatedOptions(refresh: true, keepCount: true),
+            );
         ProviderRequest.api(
           context: context,
           request: userProvider.getUserMe(),
           onSuccess: (context, res) {
             if (isEditing) {
+              ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
+                content: Text("Saved"),
+              ));
               Navigator.pop(context);
             } else {
               rootNavigator(context).pushNamedAndRemoveUntil(

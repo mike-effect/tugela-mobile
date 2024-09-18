@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
-import 'package:tugela/models/freelancer.dart';
-import 'package:tugela/providers/freelancer_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/utils.dart';
-import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/utils/routes.dart';
 import 'package:tugela/widgets/icons/right_chevron.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
@@ -24,16 +21,16 @@ class Onboard extends StatelessWidget {
       bodyPadding: ContentPadding,
       body: Column(
         children: [
-          // card(
-          //   context: context,
-          //   title: "Freelancer",
-          //   subtitle: "Finish setting up your profile",
-          //   onTap: () {
-          //     createFreelancer(context);
-          //   },
-          //   icon: const Icon(PhosphorIconsRegular.userCircle, size: 44),
-          // ),
-          // VSizedBox16,
+          card(
+            context: context,
+            title: "Freelancer",
+            subtitle: "Finish setting up your profile",
+            onTap: () {
+              pushNamed(context, Routes.freelancerCreate);
+            },
+            icon: const Icon(PhosphorIconsRegular.userCircle, size: 44),
+          ),
+          VSizedBox16,
           card(
             context: context,
             title: "Company",
@@ -62,26 +59,26 @@ class Onboard extends StatelessWidget {
     );
   }
 
-  void createFreelancer(BuildContext context) async {
-    final freelancerProvider = context.read<FreelancerProvider>();
-    final userProvider = context.read<UserProvider>();
-    ProviderRequest.api(
-      context: context,
-      request: freelancerProvider.createFreelancer(Freelancer(
-        user: userProvider.user?.id,
-      )),
-      onSuccess: (context, res) {
-        ProviderRequest.api(
-          context: context,
-          request: userProvider.getUserMe(),
-          onSuccess: (context, res) {
-            rootNavigator(context).pushNamedAndRemoveUntil(
-                userProvider.getRouteForUser(res.data), (_) => false);
-          },
-        );
-      },
-    );
-  }
+  // void createFreelancer(BuildContext context) async {
+  //   final freelancerProvider = context.read<FreelancerProvider>();
+  //   final userProvider = context.read<UserProvider>();
+  //   ProviderRequest.api(
+  //     context: context,
+  //     request: freelancerProvider.createFreelancer(Freelancer(
+  //       user: userProvider.user,
+  //     )),
+  //     onSuccess: (context, res) {
+  //       ProviderRequest.api(
+  //         context: context,
+  //         request: userProvider.getUserMe(),
+  //         onSuccess: (context, res) {
+  //           rootNavigator(context).pushNamedAndRemoveUntil(
+  //               userProvider.getRouteForUser(res.data), (_) => false);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget card({
     required BuildContext context,

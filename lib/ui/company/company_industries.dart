@@ -6,6 +6,7 @@ import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/layout/empty_state.dart';
 import 'package:tugela/widgets/layout/loading_placeholder.dart';
+import 'package:tugela/widgets/layout/skeleton.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
 
 class CompanyIndustries extends StatefulWidget {
@@ -36,7 +37,9 @@ class _CompanyIndustriesState extends State<CompanyIndustries> {
       value: companyProvider.industries.data,
       placeholderCount: 10,
       placeholderBuilder: (context) {
-        return const ListTile();
+        return ListTile(
+          title: Skeleton(context).rect(height: 12, width: 80),
+        );
       },
       emptyStateBuilder: (context) {
         return const SliverToBoxAdapter(

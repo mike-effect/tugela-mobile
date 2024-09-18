@@ -1,6 +1,9 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tugela/models/base_model.dart';
 import 'package:tugela/models/company.dart';
+import 'package:tugela/models/skill.dart';
 
 part 'job.g.dart';
 
@@ -20,20 +23,21 @@ class Job extends BaseModel {
   @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final PriceType? priceType;
   final String? price;
-  final String? maxPrice;
-  final String? minPrice;
+  // final String? maxPrice;
+  // final String? minPrice;
   final String? currency;
   @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final JobApplicationType? applicationType;
   @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
-  final JobStatus? status;
+  JobStatus? status;
   @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
   final JobRoleType? roleType;
   final String? externalApplyLink;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final List<Skill> skills;
 
-  const Job({
+  Job({
     this.id,
     this.title,
     this.company,
@@ -46,8 +50,8 @@ class Job extends BaseModel {
     this.tags = const [],
     this.priceType,
     this.price,
-    this.minPrice,
-    this.maxPrice,
+    // this.minPrice,
+    // this.maxPrice,
     this.currency,
     this.applicationType,
     this.status,
@@ -55,16 +59,17 @@ class Job extends BaseModel {
     this.createdAt,
     this.updatedAt,
     this.roleType,
+    this.skills = const [],
   });
 
   double get compensation {
-    return double.tryParse(minPrice ?? "") ?? 0;
+    return double.tryParse(price ?? "") ?? 0;
   }
 
-  bool get isCompensationRange {
-    return (double.tryParse(maxPrice ?? '') ?? 0) >
-        (double.tryParse(minPrice ?? '') ?? 0);
-  }
+  // bool get isCompensationRange {
+  //   return (double.tryParse(maxPrice ?? '') ?? 0) >
+  //       (double.tryParse(minPrice ?? '') ?? 0);
+  // }
 
   bool get canHaveCompensationRange {
     return priceType != PriceType.perProject;
@@ -79,6 +84,7 @@ class Job extends BaseModel {
   Map<String, dynamic> toJson() {
     final json = _$JobToJson(this);
     json['company'] = company?.id;
+    json['skills'] = skills.map((s) => s.id).toList();
     return json;
   }
 }

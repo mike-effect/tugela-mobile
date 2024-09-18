@@ -39,13 +39,13 @@ abstract class ApiServiceContract {
   Future<dio.Response> multipartPost(
     String url, {
     Map<String, String> fields = const {},
-    List<dio.MultipartFile> files = const [],
+    Map<String, dio.MultipartFile> files = const {},
   });
 
   Future<dio.Response> multipartPatch(
     String url, {
     Map<String, String> fields = const {},
-    List<dio.MultipartFile> files = const [],
+    Map<String, dio.MultipartFile> files = const {},
   });
 
   Future<ApiResponse<TokenObtainPairResponse>> login(
@@ -70,22 +70,33 @@ abstract class ApiServiceContract {
     Map<String, dynamic> params = const {},
   });
 
-  Future<ApiResponse<bool>> createCompany(Company data);
+  Future<ApiResponse<bool>> createCompany(
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  });
 
   Future<ApiResponse<Company>> getCompany(String id);
 
-  Future<ApiResponse<bool>> updateCompany(String id, Company data);
+  Future<ApiResponse<bool>> updateCompany(
+    String id,
+    Company data, {
+    dio.MultipartFile? imageUpload,
+  });
 
   Future<ApiResponse<bool>> deleteCompany(String id);
 
-  Future<ApiResponse<bool>> createFreelancer(Freelancer data);
+  Future<ApiResponse<bool>> createFreelancer(
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  });
 
   Future<ApiResponse<Freelancer>> getFreelancer(String id);
 
   Future<ApiResponse<bool>> updateFreelancer(
     String id,
-    Freelancer data,
-  );
+    Freelancer data, {
+    dio.MultipartFile? imageUpload,
+  });
 
   Future<ApiResponse<List<Freelancer>>> getFreelancers({
     Map<String, dynamic> params = const {},
@@ -100,6 +111,11 @@ abstract class ApiServiceContract {
   Future<ApiResponse<bool>> updateJobApplication(
     String jobApplicationId,
     JobApplication data,
+  );
+
+  Future<ApiResponse<bool>> updateJobApplicationStatus(
+    String id,
+    ApplicationStatus status,
   );
 
   Future<ApiResponse<bool>> deleteJobApplication(String jobApplicationId);
@@ -171,7 +187,34 @@ abstract class ApiServiceContract {
     Map<String, dynamic> params = const {},
   });
 
+  Future<ApiResponse<List<JobSubmission>>> getJobSubmissions({
+    Map<String, dynamic> params = const {},
+  });
+
+  Future<ApiResponse<bool>> createJobSubmission(
+    JobSubmission data,
+    dio.MultipartFile? file,
+  );
+
+  Future<ApiResponse<JobSubmission>> getJobSubmission(String id);
+
+  Future<ApiResponse<bool>> updateJobSubmission(
+    String id,
+    JobSubmission data,
+    dio.MultipartFile? file,
+  );
+
+  Future<ApiResponse<bool>> deleteJobSubmission(String id);
+
   Future<ApiResponse<List<Skill>>> getSkills({
     Map<String, dynamic> params = const {},
   });
+
+  Future<ApiResponse<List<Currency>>> getCurrencies({
+    Map<String, dynamic> params = const {},
+  });
+
+  Future<ApiResponse<XRPBalance>> getBalance(String address);
+
+  Future<ApiResponse<List<PaymentService>>> getPaymentServices();
 }

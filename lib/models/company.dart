@@ -28,10 +28,15 @@ class Company extends BaseModel {
   final HowYouFoundUs? howYouFoundUs;
   final String? founded;
   final String? location;
+  @JsonKey(includeToJson: false)
   final int totalJobs;
+  @JsonKey(includeToJson: false)
   final int activeJobs;
+  @JsonKey(includeToJson: false)
   final int assignedJobs;
+  @JsonKey(includeToJson: false)
   final int completedJobs;
+  @JsonKey(includeToJson: false)
   final int totalApplications;
   final DateTime? date;
   final DateTime? createdAt;

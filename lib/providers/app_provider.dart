@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tugela/models/currency.dart';
 import 'package:tugela/models/paginated.dart';
 import 'package:tugela/models/skill.dart';
 import 'package:tugela/providers/contracts/app_provider.contract.dart';
@@ -17,6 +18,18 @@ class AppProvider extends AppProviderContract {
 
   @override
   ThemeMode get themeMode => _themeMode;
+
+  final List<Currency> currencies = [
+    "USD",
+    "GHS",
+    "GBP",
+    "NGN",
+    "KES",
+    "ZAR",
+    "EUR",
+    "CAD",
+    "XRP"
+  ].map((c) => Currency(code: c)).toList();
 
   final walkthroughKeys = [
     GlobalKey(),
@@ -47,6 +60,7 @@ class AppProvider extends AppProviderContract {
       _themeMode = value;
       notifyListeners();
     });
+    getCurrencies();
   }
 
   @override
@@ -76,7 +90,9 @@ class AppProvider extends AppProviderContract {
   }
 
   @override
-  void reset() {}
+  void reset() {
+    appTabController.reset();
+  }
 
   Future<Paginated<Skill>?> getSkills({
     Map<String, dynamic> params = const {},
@@ -95,6 +111,21 @@ class AppProvider extends AppProviderContract {
       if (res?.data != null) skills = res!;
       notifyListeners();
       return skills;
+    } catch (e, s) {
+      handleError(e, stackTrace: s);
+      return null;
+    }
+  }
+
+  Future<List<Currency>?> getCurrencies() async {
+    try {
+      final res = await apiService.getCurrencies();
+      if (res.data != null) {
+        currencies.clear();
+        currencies.addAll(res.data ?? []);
+        notifyListeners();
+      }
+      return res.data;
     } catch (e, s) {
       handleError(e, stackTrace: s);
       return null;

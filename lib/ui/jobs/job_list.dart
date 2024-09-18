@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/job.dart';
 import 'package:tugela/models/paginated.dart';
-import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/ui/jobs/job_card.dart';
+import 'package:tugela/ui/jobs/job_create.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/layout/empty_state.dart';
 import 'package:tugela/widgets/layout/loading_placeholder.dart';
@@ -36,7 +36,6 @@ class _JobListState extends State<JobList> {
 
   @override
   Widget build(BuildContext context) {
-    final appProvider = context.watch<AppProvider>();
     final jobProvider = context.watch<JobProvider>();
 
     final feed = loadingPlaceholder<Job>(
@@ -73,7 +72,6 @@ class _JobListState extends State<JobList> {
     );
 
     return SliverScaffold(
-      scrollController: appProvider.tabScrollControllers[0],
       onRefresh: () => Future.wait([
         jobProvider.getJobs(
           mapId: widget.mapId,
@@ -94,6 +92,18 @@ class _JobListState extends State<JobList> {
       slivers: [
         feed,
       ],
+      floatingActionButton: jobProvider.isCompany
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                push(
+                  context: context,
+                  builder: (_) => const JobCreate(),
+                  rootNavigator: true,
+                );
+              },
+            )
+          : null,
     );
   }
 }

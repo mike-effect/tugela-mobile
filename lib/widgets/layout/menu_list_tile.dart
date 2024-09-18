@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tugela/extensions.dart';
-import 'package:tugela/theme.dart';
 import 'package:tugela/utils/spacing.dart';
 import 'package:tugela/widgets/icons/right_chevron.dart';
 
@@ -36,21 +35,21 @@ class MenuListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasSubtitle = subtitle != null;
-    final iconSize = this.iconSize ?? (hasSubtitle ? 19 : 18);
-    return Container(
-      decoration: BoxDecoration(
-        color: context.theme.colorScheme.surface,
-        borderRadius: AppTheme.cardBorderRadius,
-        // border: hasBorder
-        //     ? Border.all(
-        //         color: AppColors.dynamic(
-        //           context: context,
-        //           light: context.inputTheme.disabledBorder!.borderSide.color,
-        //           dark: context.inputTheme.disabledBorder!.borderSide.color,
-        //         )!,
-        //       )
-        //     : null,
-      ),
+    final iconSize = this.iconSize ?? (hasSubtitle ? 24 : 22);
+    return SizedBox(
+      // decoration: BoxDecoration(
+      // color: context.theme.colorScheme.surface,
+      // borderRadius: AppTheme.cardBorderRadius,
+      // border: hasBorder
+      //     ? Border.all(
+      //         color: AppColors.dynamic(
+      //           context: context,
+      //           light: context.inputTheme.disabledBorder!.borderSide.color,
+      //           dark: context.inputTheme.disabledBorder!.borderSide.color,
+      //         )!,
+      //       )
+      //     : null,
+      // ),
       child: ListTile(
         onTap: onTap,
         minLeadingWidth: 16,
@@ -58,19 +57,17 @@ class MenuListTile extends StatelessWidget {
           left: iconData == null ? ContentPadding.left : 0,
           right: 8,
         ),
+        splashColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
         leading: iconData == null
             ? null
             : Padding(
                 padding: iconPadding ?? EdgeInsets.zero,
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor:
-                      AppColors.greyElevatedBackgroundColor(context),
-                  child: Icon(
-                    iconData,
-                    size: iconSize,
-                    color: color ?? context.theme.colorScheme.primary,
-                  ),
+                child: Icon(
+                  iconData,
+                  size: iconSize,
+                  color: color ?? context.theme.colorScheme.primary,
                 ),
               ),
         // : Container(
