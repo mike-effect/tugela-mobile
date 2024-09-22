@@ -7,7 +7,7 @@ part 'portfolio_item.g.dart';
 @JsonSerializable()
 class PortfolioItem extends BaseModel {
   final String? id;
-  @JsonKey(includeFromJson: false)
+  @JsonKey(fromJson: idFromJson)
   final String? freelancer;
   final String? title;
   final String? description;
@@ -44,7 +44,7 @@ class PortfolioItem extends BaseModel {
 
   Map<String, dynamic> toInputJson() {
     final j = _$PortfolioItemToJson(this);
-    // j['freelancer'] = freelancer?.id;
+    j['freelancer'] = freelancer;
     j['start_date'] = startDate?.toIso8601String().split('T').first;
     j['end_date'] = endDate?.toIso8601String().split('T').first;
     j['skills'] = (skills ?? [])

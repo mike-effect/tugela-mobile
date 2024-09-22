@@ -66,6 +66,7 @@ class CompanyProvider extends CompanyProviderContract {
     try {
       final map = {
         'page_size': defaultPageSize,
+        'ordering': '-created_at',
         ...params,
       };
       final res = await paginatedQuery<Company>(

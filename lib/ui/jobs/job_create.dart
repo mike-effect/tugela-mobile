@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
-import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
@@ -80,8 +79,8 @@ class _JobCreateState extends State<JobCreate> {
 
   @override
   Widget build(BuildContext context) {
-    final appProvider = context.watch<AppProvider>();
-    final currencies = appProvider.currencies;
+    // final appProvider = context.watch<AppProvider>();
+    // final currencies = appProvider.currencies;
 
     return FormScope(
       formKey: formKey,
@@ -676,13 +675,13 @@ class _JobCreateState extends State<JobCreate> {
       request: isEditing
           ? jobProvider.updateJob(widget.job!.id!, input)
           : jobProvider.createJob(input),
-      onError: (context) {
-        setState(() => errorMessage = 'An error occurred');
-      },
-      onApiError: (context, error) {
-        setState(() => apiError = error);
-        formKey.currentState!.validate();
-      },
+      // onError: (context) {
+      //   setState(() => errorMessage = 'An error occurred');
+      // },
+      // onApiError: (context, error) {
+      //   setState(() => apiError = error);
+      //   formKey.currentState!.validate();
+      // },
       onSuccess: (context, res) async {
         final companyId = jobProvider.user?.company?.id;
         if (isEditing) jobProvider.getJob(widget.job!.id!);

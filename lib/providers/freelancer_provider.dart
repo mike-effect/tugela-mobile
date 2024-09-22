@@ -298,7 +298,7 @@ class FreelancerProvider extends FreelancerProviderContract {
     }
   }
 
-  Future<ApiResponse<bool>?> deleteFreelancerWorkExperience(String id) async {
+  Future<ApiResponse<bool>?> deleteWorkExperience(String id) async {
     try {
       return await apiService.deleteWorkExperience(id);
     } catch (e, s) {

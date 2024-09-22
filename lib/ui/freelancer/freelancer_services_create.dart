@@ -490,13 +490,13 @@ class _FreelancerServiceCreateState extends State<FreelancerServiceCreate> {
               input,
               // serviceImage: serviceImage,
             ),
-      onError: (context) {
-        setState(() => errorMessage = 'An error occurred');
-      },
-      onApiError: (context, error) {
-        setState(() => apiError = error);
-        formKey.currentState!.validate();
-      },
+      // onError: (context) {
+      //   setState(() => errorMessage = 'An error occurred');
+      // },
+      // onApiError: (context, error) {
+      //   setState(() => apiError = error);
+      //   formKey.currentState!.validate();
+      // },
       onSuccess: (context, res) async {
         context.read<UserProvider>().getUserMe();
         Navigator.pop(context, true);

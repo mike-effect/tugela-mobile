@@ -22,7 +22,7 @@ class HomeFreelancer extends StatelessWidget {
     final portfolio = freelancer.portfolioItem;
     final services = freelancer.services;
     final userProvider = context.watch<UserProvider>();
-    final address = userProvider.user?.xrpAddress ?? "";
+    // final address = userProvider.user?.xrpAddress ?? "";
     final balance = userProvider.balance?.xrpBalance;
     final boxDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(12),

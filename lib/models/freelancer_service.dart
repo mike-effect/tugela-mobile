@@ -7,6 +7,7 @@ part 'freelancer_service.g.dart';
 @JsonSerializable()
 class FreelancerService extends BaseModel {
   final String? id;
+  @JsonKey(fromJson: idFromJson)
   final String? freelancer;
   final String? title;
   final String? description;

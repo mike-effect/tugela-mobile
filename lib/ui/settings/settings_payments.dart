@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
-import 'package:tugela/providers/company_provider.dart';
 import 'package:tugela/providers/freelancer_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/utils.dart';
-import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/utils/routes.dart';
 import 'package:tugela/widgets/forms/form_input.dart';
 import 'package:tugela/widgets/forms/form_scope.dart';
@@ -116,7 +114,9 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
                 child: TextFormField(
                   readOnly: false,
                   canRequestFocus: false,
-                  controller: xrpAddressController,
+                  controller: TextEditingController(
+                    text: userProvider.user?.xrpAddress,
+                  ),
                   keyboardType: TextInputType.text,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -226,71 +226,71 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
     );
   }
 
-  void submit() async {
-    errorMessage = null;
-    apiError = null;
-    if (mounted) setState(() {});
-    if (!formKey.currentState!.validate()) return;
+  // void submit() async {
+  //   errorMessage = null;
+  //   apiError = null;
+  //   if (mounted) setState(() {});
+  //   if (!formKey.currentState!.validate()) return;
 
-    if (widget.accountType == AccountType.freelancer) {
-      final provider = context.read<FreelancerProvider>();
-      final freelancer = context.read<UserProvider>().user?.freelancer;
-      if (freelancer != null) {
-        final input = Freelancer(
-          id: freelancer.id,
-          user: freelancer.user,
-          xrpAddress: xrpAddressController.text,
-          xrpSeed: xrpSeedController.text,
-        );
-        await ProviderRequest.api(
-          context: context,
-          loadingMessage: "Saving",
-          request: provider.updateFreelancer(freelancer.id!, input),
-          onError: (context) {
-            setState(() => errorMessage = 'An error occurred');
-          },
-          onApiError: (context, error) {
-            setState(() => apiError = error);
-            formKey.currentState!.validate();
-          },
-          onSuccess: (context, res) async {
-            ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
-              content: Text("Saved"),
-            ));
-            context.read<UserProvider>().getUserMe();
-            Navigator.pop(context);
-          },
-        );
-      }
-    } else if (widget.accountType == AccountType.company) {
-      final provider = context.read<CompanyProvider>();
-      final company = context.read<UserProvider>().user?.company;
-      if (company != null) {
-        final input = Company(
-          id: company.id,
-          xrpAddress: xrpAddressController.text,
-          xrpSeed: xrpSeedController.text,
-        );
-        await ProviderRequest.api(
-          context: context,
-          loadingMessage: "Saving",
-          request: provider.updateCompany(company.id!, input),
-          onError: (context) {
-            setState(() => errorMessage = 'An error occurred');
-          },
-          onApiError: (context, error) {
-            setState(() => apiError = error);
-            formKey.currentState!.validate();
-          },
-          onSuccess: (context, res) async {
-            ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
-              content: Text("Saved"),
-            ));
-            context.read<UserProvider>().getUserMe();
-            Navigator.pop(context);
-          },
-        );
-      }
-    }
-  }
+  //   if (widget.accountType == AccountType.freelancer) {
+  //     final provider = context.read<FreelancerProvider>();
+  //     final freelancer = context.read<UserProvider>().user?.freelancer;
+  //     if (freelancer != null) {
+  //       final input = Freelancer(
+  //         id: freelancer.id,
+  //         user: freelancer.user,
+  //         xrpAddress: xrpAddressController.text,
+  //         xrpSeed: xrpSeedController.text,
+  //       );
+  //       await ProviderRequest.api(
+  //         context: context,
+  //         loadingMessage: "Saving",
+  //         request: provider.updateFreelancer(freelancer.id!, input),
+  //         onError: (context) {
+  //           setState(() => errorMessage = 'An error occurred');
+  //         },
+  //         onApiError: (context, error) {
+  //           setState(() => apiError = error);
+  //           formKey.currentState!.validate();
+  //         },
+  //         onSuccess: (context, res) async {
+  //           ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
+  //             content: Text("Saved"),
+  //           ));
+  //           context.read<UserProvider>().getUserMe();
+  //           Navigator.pop(context);
+  //         },
+  //       );
+  //     }
+  //   } else if (widget.accountType == AccountType.company) {
+  //     final provider = context.read<CompanyProvider>();
+  //     final company = context.read<UserProvider>().user?.company;
+  //     if (company != null) {
+  //       final input = Company(
+  //         id: company.id,
+  //         xrpAddress: xrpAddressController.text,
+  //         xrpSeed: xrpSeedController.text,
+  //       );
+  //       await ProviderRequest.api(
+  //         context: context,
+  //         loadingMessage: "Saving",
+  //         request: provider.updateCompany(company.id!, input),
+  //         onError: (context) {
+  //           setState(() => errorMessage = 'An error occurred');
+  //         },
+  //         onApiError: (context, error) {
+  //           setState(() => apiError = error);
+  //           formKey.currentState!.validate();
+  //         },
+  //         onSuccess: (context, res) async {
+  //           ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
+  //             content: Text("Saved"),
+  //           ));
+  //           context.read<UserProvider>().getUserMe();
+  //           Navigator.pop(context);
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
 }

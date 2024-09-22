@@ -22,7 +22,7 @@ class AppTheme {
   static final formBorderRadius = BorderRadius.circular(12);
   static final buttonBorderRadius = BorderRadius.circular(100);
   static final cardBorderRadius = BorderRadius.circular(12);
-  static final avatarBorderRadius = BorderRadius.circular(12);
+  static final avatarBorderRadius = BorderRadius.circular(8);
   static const textfieldPadding = EdgeInsets.all(16);
   static const buttonPadding = EdgeInsets.symmetric(
     vertical: 18,

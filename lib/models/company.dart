@@ -44,6 +44,8 @@ class Company extends BaseModel {
   final List<CompanyManager> managers;
   final Industry? industry;
   final List<CompanyValue> values;
+  @JsonKey(includeFromJson: false)
+  final User? user;
 
   const Company({
     this.id,
@@ -73,6 +75,7 @@ class Company extends BaseModel {
     this.managers = const [],
     this.industry,
     this.values = const [],
+    this.user,
   });
 
   factory Company.fromJson(Map<String, dynamic> json) =>
@@ -84,6 +87,7 @@ class Company extends BaseModel {
     final j = _$CompanyToJson(this);
     j['values'] = values.map((c) => c.id).toList();
     j['industry'] = industry?.id;
+    j['user'] = user?.id;
     return j;
   }
 }

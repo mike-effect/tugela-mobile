@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
-import 'package:tugela/models/work_experience.dart';
+import 'package:tugela/models.dart';
+import 'package:tugela/providers/freelancer_provider.dart';
+import 'package:tugela/providers/user_provider.dart';
+import 'package:tugela/theme.dart';
+import 'package:tugela/ui/freelancer/freelancer_experience_create.dart';
 import 'package:tugela/utils.dart';
+import 'package:tugela/utils/provider_request.dart';
+import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/skeleton.dart';
 
 class FreelancerExperienceCard extends StatelessWidget {
@@ -13,19 +20,80 @@ class FreelancerExperienceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<UserProvider>();
+    final isOwner = provider.user?.accountType == AccountType.freelancer &&
+        provider.user?.freelancer?.id == experience.freelancer;
+
     return Container(
       padding: ContentPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "${formatDate(experience.startDate, format: 'y')} – "
-            "${experience.endDate != null ? formatDate(experience.endDate) : 'Now'}",
-            style: TextStyle(
-              fontSize: 14,
-              color: context.textTheme.bodySmall?.color,
-            ),
+          Row(
+            children: [
+              Text(
+                "${formatDate(experience.startDate, format: 'y')} – "
+                "${experience.endDate != null ? formatDate(experience.endDate) : 'Now'}",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.textTheme.bodySmall?.color,
+                ),
+              ),
+              Space,
+              if (isOwner)
+                InkWell(
+                  child: Icon(
+                    Icons.more_horiz,
+                    color: context.textTheme.bodySmall?.color,
+                  ),
+                  onTap: () {
+                    showAppBottomSheet(
+                      context: context,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: (context) {
+                        return [
+                          Container(
+                            padding: ContentPadding,
+                            margin: ContentPadding,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.greyBackgroundColor(context),
+                            ),
+                            child: Text(
+                              experience.jobTitle ?? '',
+                              style: TextStyle(
+                                color: context.textTheme.bodySmall?.color,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            title: const Text("Edit"),
+                            onTap: () async {
+                              Navigator.pop(context);
+                              push(
+                                context: context,
+                                rootNavigator: true,
+                                builder: (_) => FreelancerExperienceCreate(
+                                  workExperience: experience,
+                                ),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            textColor: context.colorScheme.error,
+                            title: const Text("Delete"),
+                            onTap: () {
+                              delete(context);
+                            },
+                          ),
+                        ];
+                      },
+                    );
+                  },
+                ),
+            ],
           ),
+          if (!isOwner) VSizedBox4,
           VSizedBox4,
           Text(
             [
@@ -49,6 +117,25 @@ class FreelancerExperienceCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void delete(BuildContext context) async {
+    final freelancerProvider = context.read<FreelancerProvider>();
+    Navigator.pop(context);
+    await ProviderRequest.api(
+      context: context,
+      loadingMessage: "Deleting",
+      request: freelancerProvider.deleteWorkExperience(experience.id!),
+      onSuccess: (context, res) async {
+        context.read<UserProvider>().getUserMe();
+        freelancerProvider.getWorkExperiences(
+          freelancerId: freelancerProvider.user?.freelancer?.id ?? '',
+        );
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(
+          content: Text("Deleted"),
+        ));
+      },
     );
   }
 }

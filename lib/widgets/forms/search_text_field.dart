@@ -43,10 +43,10 @@ class SearchTextField extends StatelessWidget {
         onSubmitted: onSubmitted,
         placeholder: placeholder,
         placeholderStyle: placeholderTextStyle,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(9),
         prefixIcon: prefixIcon ??
             const Icon(
-              Icons.search,
+              CupertinoIcons.search,
               color: Colors.grey,
             ),
         prefixInsets: EdgeInsets.fromLTRB(ContentPadding.left, 0, 0, 0),

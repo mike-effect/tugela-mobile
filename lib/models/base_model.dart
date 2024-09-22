@@ -6,3 +6,8 @@ abstract class BaseModel extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
+String idFromJson(dynamic json) {
+  if (json is Map) return json['id'];
+  return json.toString();
+}

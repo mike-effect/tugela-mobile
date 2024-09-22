@@ -9,6 +9,7 @@ part of 'portfolio_item.dart';
 PortfolioItem _$PortfolioItemFromJson(Map<String, dynamic> json) =>
     PortfolioItem(
       id: json['id'] as String?,
+      freelancer: idFromJson(json['freelancer']),
       title: json['title'] as String?,
       description: json['description'] as String?,
       category: json['category'] as String?,
@@ -42,6 +43,7 @@ Map<String, dynamic> _$PortfolioItemToJson(PortfolioItem instance) {
   }
 
   writeNotNull('id', instance.id);
+  writeNotNull('freelancer', instance.freelancer);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('category', instance.category);

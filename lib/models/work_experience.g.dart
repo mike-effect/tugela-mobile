@@ -9,7 +9,7 @@ part of 'work_experience.dart';
 WorkExperience _$WorkExperienceFromJson(Map<String, dynamic> json) =>
     WorkExperience(
       id: json['id'] as String?,
-      freelancer: json['freelancer'] as String?,
+      freelancer: idFromJson(json['freelancer']),
       jobTitle: json['job_title'] as String?,
       jobDescription: json['job_description'] as String?,
       companyName: json['company_name'] as String?,

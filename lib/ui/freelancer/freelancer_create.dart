@@ -418,13 +418,13 @@ class _FreelancerCreateState extends State<FreelancerCreate> {
               imageUpload: multipart,
             )
           : freelancerProvider.createFreelancer(input, imageUpload: multipart),
-      onError: (context) {
-        setState(() => errorMessage = 'An error occurred');
-      },
-      onApiError: (context, error) {
-        setState(() => apiError = error);
-        formKey.currentState!.validate();
-      },
+      // onError: (context) {
+      //   setState(() => errorMessage = 'An error occurred');
+      // },
+      // onApiError: (context, error) {
+      //   setState(() => apiError = error);
+      //   formKey.currentState!.validate();
+      // },
       onSuccess: (context, res) async {
         ProviderRequest.api(
           context: context,

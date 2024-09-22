@@ -9,7 +9,7 @@ part of 'freelancer_service.dart';
 FreelancerService _$FreelancerServiceFromJson(Map<String, dynamic> json) =>
     FreelancerService(
       id: json['id'] as String?,
-      freelancer: json['freelancer'] as String?,
+      freelancer: idFromJson(json['freelancer']),
       title: json['title'] as String?,
       description: json['description'] as String?,
       category: json['category'] as String?,

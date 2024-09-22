@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tugela/constants/config.dart';
+import 'package:tugela/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SettingsPaymentsTopup extends StatefulWidget {
@@ -19,17 +20,17 @@ class _SettingsPaymentsTopupState extends State<SettingsPaymentsTopup> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {
+            handleError(url);
           },
-          onPageStarted: (String url) {},
           onPageFinished: (String url) {},
           onHttpError: (HttpResponseError error) {},
-          onWebResourceError: (WebResourceError error) {},
+          onWebResourceError: (WebResourceError error) {
+            handleError(error.url);
+            handleError(error.description);
+          },
           onNavigationRequest: (NavigationRequest request) {
-            // if (request.url.startsWith('https://www.youtube.com/')) {
-            //   return NavigationDecision.prevent;
-            // }
             return NavigationDecision.navigate;
           },
         ),

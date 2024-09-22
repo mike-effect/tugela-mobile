@@ -77,7 +77,7 @@ class FreelancerPortfolioCard extends StatelessWidget {
                               ),
                             ),
                             ListTile(
-                              title: const Text("Edit work experience"),
+                              title: const Text("Edit"),
                               onTap: () async {
                                 Navigator.pop(context);
                                 push(

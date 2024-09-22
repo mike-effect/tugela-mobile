@@ -5,6 +5,7 @@ import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/utils.dart';
+import 'package:tugela/widgets/forms/search_text_field.dart';
 import 'package:tugela/widgets/layout/empty_state.dart';
 import 'package:tugela/widgets/layout/loading_placeholder.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
@@ -18,6 +19,7 @@ class FreelancerSkills extends StatefulWidget {
 }
 
 class _FreelancerSkillsState extends State<FreelancerSkills> {
+  final searchController = TextEditingController();
   List<Skill> selected = [];
 
   @override
@@ -32,8 +34,12 @@ class _FreelancerSkillsState extends State<FreelancerSkills> {
 
   @override
   Widget build(BuildContext context) {
-    const maxSelect = 10;
     final appProvider = context.watch<AppProvider>();
+    final searchResults = [
+      ...(appProvider.skills.data ?? []).where((s) => (s.name ?? '')
+          .toLowerCase()
+          .contains(searchController.text.toLowerCase())),
+    ];
     final feed = loadingPlaceholder<Skill>(
       context: context,
       value: appProvider.skills.data,
@@ -44,7 +50,7 @@ class _FreelancerSkillsState extends State<FreelancerSkills> {
           runSpacing: 0,
           children: [
             ...List.generate(100, (index) {
-              return RawChip(label: Text("    " * 3));
+              return RawChip(label: Text("    " * 6));
             })
           ],
         );
@@ -59,61 +65,10 @@ class _FreelancerSkillsState extends State<FreelancerSkills> {
         );
       },
       builder: (context, list) {
-        return SliverToBoxAdapter(
-          child: Padding(
-            padding: ContentPadding,
-            child: Wrap(
-              spacing: 8,
-              children: list.map((option) {
-                final isSelected = selected.contains(option);
-                return RawChip(
-                  backgroundColor:
-                      isSelected ? context.textTheme.bodyMedium?.color : null,
-                  labelStyle: isSelected
-                      ? TextStyle(color: context.colorScheme.surface)
-                      : null,
-                  iconTheme: isSelected
-                      ? IconThemeData(color: context.colorScheme.surface)
-                      : null,
-                  label: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      isSelected
-                          ? Text(
-                              "${(selected.indexWhere((o) => option.id == o.id) + 1)} ",
-                              style: const TextStyle(
-                                height: 1.1,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          : const Icon(
-                              PhosphorIconsRegular.plus,
-                              size: 13,
-                              opticalSize: 13,
-                            ),
-                      HSizedBox4,
-                      Text(
-                        option.name ?? '',
-                        style: const TextStyle(height: 1.1),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (isSelected) {
-                        selected.remove(option);
-                      } else {
-                        if (maxSelect > selected.length) selected.add(option);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        );
+        return SliverToBoxAdapter(child: chips(list));
       },
     );
+
     return SliverScaffold(
       onRefresh: () => Future.wait([
         appProvider.getSkills(
@@ -128,8 +83,26 @@ class _FreelancerSkillsState extends State<FreelancerSkills> {
       },
       appBar: AppBar(
         title: const Text("Skills"),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(40),
+          child: SearchTextField(
+            margin: ContentPaddingH.copyWith(bottom: 4),
+            controller: searchController,
+            placeholder: "Search for a skill",
+            onChanged: (value) {
+              setState(() {});
+            },
+          ),
+        ),
       ),
-      slivers: [feed],
+      slivers: [
+        if (searchController.text.isEmpty)
+          feed
+        else
+          SliverToBoxAdapter(
+            child: chips(searchResults),
+          ),
+      ],
       bottomNavigationBar: BottomAppBar(
         child: ElevatedButton(
           onPressed: () {
@@ -139,6 +112,61 @@ class _FreelancerSkillsState extends State<FreelancerSkills> {
             "Save ${selected.isNotEmpty ? '(${selected.length})' : ''}".trim(),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget chips(List<Skill> list) {
+    const maxSelect = 10;
+    return Padding(
+      padding: ContentPadding,
+      child: Wrap(
+        spacing: 8,
+        children: list.map((option) {
+          final isSelected = selected.contains(option);
+          return RawChip(
+            backgroundColor:
+                isSelected ? context.textTheme.bodyMedium?.color : null,
+            labelStyle: isSelected
+                ? TextStyle(color: context.colorScheme.surface)
+                : null,
+            iconTheme: isSelected
+                ? IconThemeData(color: context.colorScheme.surface)
+                : null,
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                isSelected
+                    ? Text(
+                        "${(selected.indexWhere((o) => option.id == o.id) + 1)} ",
+                        style: const TextStyle(
+                          height: 1.1,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )
+                    : const Icon(
+                        PhosphorIconsRegular.plus,
+                        size: 13,
+                        opticalSize: 13,
+                      ),
+                HSizedBox4,
+                Text(
+                  option.name ?? '',
+                  style: const TextStyle(height: 1.1),
+                ),
+              ],
+            ),
+            onPressed: () {
+              setState(() {
+                if (isSelected) {
+                  selected.remove(option);
+                } else {
+                  if (maxSelect > selected.length) selected.add(option);
+                }
+              });
+            },
+          );
+        }).toList(),
       ),
     );
   }

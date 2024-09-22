@@ -6,6 +6,7 @@ part 'work_experience.g.dart';
 @JsonSerializable()
 class WorkExperience extends BaseModel {
   final String? id;
+  @JsonKey(fromJson: idFromJson)
   final String? freelancer;
   final String? jobTitle;
   final String? jobDescription;

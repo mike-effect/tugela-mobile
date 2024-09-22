@@ -514,6 +514,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
     if (!formKey.currentState!.validate()) return;
     final input = Company(
       id: widget.company?.id,
+      user: userProvider.user,
       name: nameController.text,
       description: descriptionController.text,
       email: emailController.text,
@@ -542,13 +543,13 @@ class _CompanyCreateState extends State<CompanyCreate> {
               imageUpload: multipart,
             )
           : companyProvider.createCompany(input, imageUpload: multipart),
-      onError: (context) {
-        setState(() => errorMessage = 'An error occurred');
-      },
-      onApiError: (context, error) {
-        setState(() => apiError = error);
-        formKey.currentState!.validate();
-      },
+      // onError: (context) {
+      //   setState(() => errorMessage = 'An error occurred');
+      // },
+      // onApiError: (context, error) {
+      //   setState(() => apiError = error);
+      //   formKey.currentState!.validate();
+      // },
       onSuccess: (context, res) async {
         context.read<JobProvider>().getJobs(
               mapId: "",
