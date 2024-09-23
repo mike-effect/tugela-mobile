@@ -185,7 +185,7 @@ class _ExploreTabState extends State<ExploreTab> {
                   },
                 ),
                 SizedBox(
-                  height: 160,
+                  height: 145,
                   width: context.mediaWidth,
                   child: ListView.separated(
                     itemCount: (companies ?? []).length,

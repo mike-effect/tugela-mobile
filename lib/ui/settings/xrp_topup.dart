@@ -1,16 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tugela/constants/config.dart';
 import 'package:tugela/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SettingsPaymentsTopup extends StatefulWidget {
-  const SettingsPaymentsTopup({super.key});
+class XRPTopup extends StatefulWidget {
+  const XRPTopup({super.key});
 
   @override
-  State<SettingsPaymentsTopup> createState() => _SettingsPaymentsTopupState();
+  State<XRPTopup> createState() => _XRPTopupState();
 }
 
-class _SettingsPaymentsTopupState extends State<SettingsPaymentsTopup> {
+class _XRPTopupState extends State<XRPTopup> {
   late WebViewController controller;
 
   @override
@@ -22,7 +23,7 @@ class _SettingsPaymentsTopupState extends State<SettingsPaymentsTopup> {
         NavigationDelegate(
           onProgress: (int progress) {},
           onPageStarted: (String url) {
-            handleError(url);
+            if (kDebugMode) debugPrint(url);
           },
           onPageFinished: (String url) {},
           onHttpError: (HttpResponseError error) {},

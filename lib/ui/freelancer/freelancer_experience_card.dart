@@ -33,10 +33,10 @@ class FreelancerExperienceCard extends StatelessWidget {
             children: [
               Text(
                 "${formatDate(experience.startDate, format: 'y')} – "
-                "${experience.endDate != null ? formatDate(experience.endDate) : 'Now'}",
-                style: TextStyle(
+                "${experience.endDate != null ? formatDate(experience.endDate, format: 'y') : 'Now'}",
+                style: const TextStyle(
                   fontSize: 14,
-                  color: context.textTheme.bodySmall?.color,
+                  // color: context.textTheme.bodySmall?.color,
                 ),
               ),
               Space,

@@ -8,12 +8,14 @@ class SectionHeader<T> extends StatelessWidget {
   final Function(BuildContext context)? onViewAll;
   final List<T> list;
   final EdgeInsets? padding;
+  final int maxLength;
   const SectionHeader({
     super.key,
     required this.title,
     this.onViewAll,
     this.list = const [],
     this.padding,
+    this.maxLength = 3,
   });
 
   @override
@@ -33,7 +35,7 @@ class SectionHeader<T> extends StatelessWidget {
             ),
           ),
           Space,
-          if (list.length > 3)
+          if (list.length > maxLength)
             GestureDetector(
               onTap: () {
                 onViewAll?.call(context);

@@ -8,7 +8,8 @@ import 'package:tugela/ui/onboarding/onboard.dart';
 import 'package:tugela/ui/onboarding/profile_edit.dart';
 import 'package:tugela/ui/onboarding/welcome.dart';
 import 'package:tugela/ui/settings/settings.dart';
-import 'package:tugela/ui/settings/settings_payments_topup.dart';
+import 'package:tugela/ui/settings/xrp_topup.dart';
+import 'package:tugela/ui/settings/xrp_withdrawal.dart';
 
 part 'routes_map.dart';
 
@@ -33,5 +34,6 @@ class Routes {
 
   // settings
   static const settings = "/profile/settings";
-  static const settingsPaymentTopup = "/profile/settings/payment-topup";
+  static const xrpTopup = "/profile/settings/xrp-topup";
+  static const xrpWithdrawal = "/profile/settings/xrp-withdrawal";
 }

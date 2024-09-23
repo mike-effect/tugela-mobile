@@ -285,7 +285,7 @@ class AppTheme {
           padding: AppTheme.buttonPadding,
           shadowColor: Colors.transparent,
           textStyle: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             height: 1,
             // letterSpacing: 0.2,
             fontFamily: fontFamily,

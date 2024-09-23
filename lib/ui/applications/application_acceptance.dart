@@ -5,7 +5,7 @@ import 'package:tugela/models.dart';
 import 'package:tugela/providers/job_provider.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
-import 'package:tugela/ui/settings/settings_payments_topup.dart';
+import 'package:tugela/ui/settings/xrp_topup.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/provider_request.dart';
 import 'package:tugela/widgets/forms/form_scope.dart';
@@ -116,7 +116,7 @@ class _ApplicationAcceptanceState extends State<ApplicationAcceptance> {
                         push(
                           context: context,
                           rootNavigator: true,
-                          builder: (_) => const SettingsPaymentsTopup(),
+                          builder: (_) => const XRPTopup(),
                         );
                       },
                       child: const Text(

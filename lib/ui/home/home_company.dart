@@ -3,9 +3,11 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/company.dart';
+import 'package:tugela/models/user.dart';
 import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/ui/jobs/job_list.dart';
+import 'package:tugela/ui/settings/settings_payments.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/routes.dart';
 import 'package:tugela/widgets/layout/section_header.dart';
@@ -44,77 +46,90 @@ class HomeCompany extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          margin: ContentPaddingH,
-          padding: ContentPadding,
-          decoration: boxDecoration,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              VSizedBox16,
-              Text(
-                "Wallet Balance",
-                style: TextStyle(
-                  color: context.textTheme.bodySmall?.color,
-                ),
+        GestureDetector(
+          onTap: () async {
+            await push(
+              context: context,
+              rootNavigator: true,
+              builder: (_) => const SettingsPayments(
+                accountType: AccountType.company,
               ),
-              VSizedBox12,
-              Text(
-                formatAmount(
-                  (balance ?? 0),
-                  symbol: "XRP",
-                  isCrypto: true,
-                  truncate: true,
-                ),
-                textScaler: maxTextScale(context, 1),
-                style: const TextStyle(
-                  height: 1,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    style: AppTheme.compactTextButtonStyle(context),
-                    onPressed: () async {
-                      await pushNamed(
-                        context,
-                        Routes.settingsPaymentTopup,
-                        rootNavigator: true,
-                      );
-                      userProvider.getBalance(address!);
-                    },
-                    child: Text(
-                      "Top Up".toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+            );
+            userProvider.getBalance(address!);
+          },
+          child: Container(
+            margin: ContentPaddingH,
+            padding: ContentPadding,
+            decoration: boxDecoration,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                VSizedBox16,
+                Text(
+                  "Wallet Balance",
+                  style: TextStyle(
+                    color: context.textTheme.bodySmall?.color,
                   ),
-                  TextButton(
-                    style: AppTheme.compactTextButtonStyle(context),
-                    onPressed: () async {
-                      if (address != null) await copyToClipboard(address);
-                      if (context.mounted) {
-                        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                          const SnackBar(content: Text("Copied")),
+                ),
+                VSizedBox12,
+                Text(
+                  formatAmount(
+                    (balance ?? 0),
+                    symbol: "XRP",
+                    isCrypto: true,
+                    truncate: true,
+                  ),
+                  textScaler: maxTextScale(context, 1),
+                  style: const TextStyle(
+                    height: 1,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      style: AppTheme.compactTextButtonStyle(context),
+                      onPressed: () async {
+                        await pushNamed(
+                          context,
+                          Routes.xrpTopup,
+                          rootNavigator: true,
                         );
-                      }
-                    },
-                    child: Text(
-                      "COPY ADDRESS".toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
+                        userProvider.getBalance(address!);
+                      },
+                      icon: const Icon(PhosphorIconsRegular.wallet, size: 20),
+                      label: Text(
+                        "Top Up".toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    // TextButton(
+                    //   style: AppTheme.compactTextButtonStyle(context),
+                    //   onPressed: () async {
+                    //     if (address != null) await copyToClipboard(address);
+                    //     if (context.mounted) {
+                    //       ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                    //         const SnackBar(content: Text("Copied")),
+                    //       );
+                    //     }
+                    //   },
+                    //   child: Text(
+                    //     "COPY ADDRESS".toUpperCase(),
+                    //     style: const TextStyle(
+                    //       fontSize: 13,
+                    //       fontWeight: FontWeight.w600,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         VSizedBox12,

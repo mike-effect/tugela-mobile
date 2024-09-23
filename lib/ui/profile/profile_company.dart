@@ -161,7 +161,7 @@ class ProfileCompany extends StatelessWidget {
             ),
           )
         else
-          ...jobs.take(3).map((job) {
+          ...jobs.take(6).map((job) {
             final sub = [
               (job.roleType?.name ?? ''),
               (job.location?.name ?? '').toLowerCase()

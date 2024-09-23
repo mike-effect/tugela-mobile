@@ -212,11 +212,17 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
                   onPressed: () {
                     pushNamed(
                       context,
-                      Routes.settingsPaymentTopup,
+                      widget.accountType == AccountType.freelancer
+                          ? Routes.xrpWithdrawal
+                          : Routes.xrpTopup,
                       rootNavigator: true,
                     );
                   },
-                  child: const Text("Top up"),
+                  child: Text(
+                    widget.accountType == AccountType.freelancer
+                        ? "Withdraw"
+                        : "Top up",
+                  ),
                 ),
               ),
             ],

@@ -52,6 +52,8 @@ class _FreelancerExperienceCreateState
       jobTitleController.text = w.jobTitle ?? "";
       companyNameController.text = w.companyName ?? "";
       jobDescriptionController.text = w.jobDescription ?? "";
+      startDate = w.startDate;
+      endDate = w.endDate;
       startDateController.text = w.startDate?.toIso8601String() ?? "";
       endDateController.text = w.endDate?.toIso8601String() ?? "";
       currentlyWorkingHere = w.currentlyWorkingHere ?? false;

@@ -114,9 +114,9 @@ class ProfileFreelancer extends StatelessWidget {
         ),
         const Divider(height: 48),
         if (freelancer.services.isNotEmpty) ...[
-          SectionHeader(
+          const SectionHeader(
             title: "Services",
-            list: freelancer.services,
+            // list: freelancer.services,
           ),
           ...freelancer.services.map((data) {
             return FreelancerServiceCard(service: data);
@@ -124,9 +124,9 @@ class ProfileFreelancer extends StatelessWidget {
           const Divider(height: 48),
         ],
         if (freelancer.workExperiences.isNotEmpty) ...[
-          SectionHeader(
+          const SectionHeader(
             title: "Work Experience",
-            list: freelancer.workExperiences,
+            // list: freelancer.workExperiences,
           ),
           ...freelancer.workExperiences.map((data) {
             return FreelancerExperienceCard(experience: data);
@@ -136,7 +136,7 @@ class ProfileFreelancer extends StatelessWidget {
         if (freelancer.portfolioItem.isNotEmpty) ...[
           SectionHeader(
             title: "Portfolio",
-            list: freelancer.portfolioItem,
+            // list: freelancer.portfolioItem,
             onViewAll: (context) {
               push(
                 context: context,

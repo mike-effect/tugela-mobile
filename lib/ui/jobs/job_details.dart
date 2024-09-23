@@ -11,6 +11,7 @@ import 'package:tugela/ui/company/company_card.dart';
 import 'package:tugela/ui/jobs/job_create.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/utils/provider_request.dart';
+import 'package:tugela/widgets/feedback/dialog.dart';
 import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/section_header.dart';
@@ -288,13 +289,15 @@ class JobDetail extends StatelessWidget {
   }
 
   List<Widget> options(BuildContext context, Job job) {
-    final user = context.read<UserProvider>().user;
+    final userProvider = context.read<UserProvider>();
+    final jobProvider = context.read<JobProvider>();
+    final user = userProvider.user;
     return [
-      VSizedBox24,
       if (user?.accountType == AccountType.company &&
-          user?.company?.id == job.company?.id)
+          user?.company?.id == job.company?.id) ...[
+        VSizedBox24,
         ListTile(
-          title: const Text("Edit Job Listing"),
+          title: const Text("Edit job listing"),
           onTap: () {
             Navigator.pop(context);
             push(
@@ -303,7 +306,40 @@ class JobDetail extends StatelessWidget {
             );
           },
         ),
-      VSizedBox24,
+        ListTile(
+          textColor: context.colorScheme.error,
+          title: const Text("Delete this job"),
+          onTap: () async {
+            Navigator.pop(context);
+            final res = await showAppDialog(
+              context,
+              title: "Delete Job",
+              message:
+                  "Are you sure you want to continue? Deleting a job is permanent and cannot be reversed.",
+              confirmationText: Text(
+                "Yes, delete",
+                style: TextStyle(color: context.colorScheme.error),
+              ),
+              onConfirm: (context) {
+                Navigator.pop(context, true);
+              },
+            );
+            if ((res ?? false) && context.mounted) {
+              ProviderRequest.api(
+                context: context,
+                request: jobProvider.deleteJob(job.id!),
+                onSuccess: (context, res) {
+                  if (res.data ?? false) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                        const SnackBar(content: Text("Job deleted")));
+                  }
+                },
+              );
+            }
+          },
+        ),
+      ]
     ];
   }
 }

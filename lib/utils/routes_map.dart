@@ -12,7 +12,8 @@ class RoutesMap {
       Routes.freelancerCreate: (_) => const FreelancerCreate(),
       Routes.companyCreate: (_) => const CompanyCreate(),
       Routes.settings: (_) => const Settings(),
-      Routes.settingsPaymentTopup: (_) => const SettingsPaymentsTopup(),
+      Routes.xrpTopup: (_) => const XRPTopup(),
+      Routes.xrpWithdrawal: (_) => const XRPWithdrawal(),
     };
   }
 }
