@@ -216,5 +216,10 @@ abstract class ApiServiceContract {
 
   Future<ApiResponse<XRPBalance>> getBalance(String address);
 
+  Future<ApiResponse<bool>> withdrawXrp({
+    required String address,
+    required String amount,
+  });
+
   Future<ApiResponse<List<PaymentService>>> getPaymentServices();
 }

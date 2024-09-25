@@ -46,13 +46,20 @@ class CompanyCard extends StatelessWidget {
                     children: [
                       Text(
                         company.name ?? 'Company',
+                        textScaler: maxTextScale(context, 1),
                         style: context.textTheme.titleLarge?.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       if ((company.location ?? '').isNotEmpty) ...[
                         VSizedBox4,
                         Text(
-                          company.location ?? '',
+                          ((company.location ?? '').isNotEmpty
+                                  ? company.location
+                                  : company.industry?.name) ??
+                              '',
+                          textScaler: maxTextScale(context, 1),
                           style: TextStyle(
                             fontSize: 13.5,
                             color: context.textTheme.bodySmall?.color,
@@ -70,7 +77,7 @@ class CompanyCard extends StatelessWidget {
                 company.description ?? '',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
-                textScaler: TextScaler.noScaling,
+                textScaler: maxTextScale(context, 1),
               ),
             ],
             // if (company.industry?.name != null) ...[

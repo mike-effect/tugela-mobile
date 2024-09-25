@@ -270,4 +270,22 @@ class UserProvider extends UserProviderContract {
       return null;
     }
   }
+
+  @override
+  Future<ApiResponse<bool>?> withdrawXrp({
+    required String address,
+    required String amount,
+  }) async {
+    try {
+      final res = await apiService.withdrawXrp(
+        address: address,
+        amount: amount,
+      );
+      if (user?.xrpAddress != null) await getBalance(user!.xrpAddress!);
+      return res;
+    } catch (e, s) {
+      handleError(e, stackTrace: s);
+      return null;
+    }
+  }
 }

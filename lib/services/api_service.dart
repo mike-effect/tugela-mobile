@@ -1100,4 +1100,22 @@ class ApiService implements ApiServiceContract {
       (l) => l.map((j) => PaymentService.fromJson(j)).toList(),
     );
   }
+
+  @override
+  Future<ApiResponse<bool>> withdrawXrp({
+    required String address,
+    required String amount,
+  }) async {
+    final type = user?.accountType;
+    final res = await post('/extras/withdraw-xrp/', {
+      "xrp_address": address,
+      "xrp_amount": amount,
+      if (type != null)
+        type == AccountType.freelancer ? 'freelancer' : 'company':
+            type == AccountType.freelancer
+                ? user?.freelancer?.id
+                : user?.company?.id,
+    });
+    return ApiResponse.successful(res);
+  }
 }

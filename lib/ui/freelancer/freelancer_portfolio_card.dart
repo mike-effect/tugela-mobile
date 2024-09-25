@@ -44,9 +44,9 @@ class FreelancerPortfolioCard extends StatelessWidget {
               children: [
                 Text(
                   formatDate(portfolio.startDate, format: 'y'),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
-                    color: context.textTheme.bodySmall?.color,
+                    // color: context.textTheme.bodySmall?.color,
                   ),
                 ),
                 Space,
