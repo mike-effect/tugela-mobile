@@ -75,6 +75,23 @@ class AppConfig {
     final eKey = e.Key.fromUtf8("kXp2s5v8x/A?D(G+7w!z%C*F-JaNdRgU");
     return e.Encrypter(e.AES(eKey)).decrypt(value, iv: e.IV.fromLength(16));
   }
+
+  static String transakUrl({
+    required String action,
+    required String walletAddress,
+    required String email,
+    required Map<String, dynamic> userData,
+  }) {
+    final user = Uri.encodeComponent(jsonEncode(userData));
+    final api = (apiEnvironment == ApiEnvironment.staging
+        ? AppConfig().remotePlatformConfig?.transak?.staging
+        : AppConfig().remotePlatformConfig?.transak?.production);
+    final url = (action == "topup" ? api?.topup : api?.withdrawal)
+        ?.replaceAll('{address}', walletAddress)
+        .replaceAll('{email}', email)
+        .replaceAll('{userData}', user);
+    return url ?? "";
+  }
 }
 
 Future<AppRemoteConfig?> getRemoteAppConfig() async {

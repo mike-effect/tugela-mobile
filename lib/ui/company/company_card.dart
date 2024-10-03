@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugela/constants/app_assets.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/company.dart';
 import 'package:tugela/theme.dart';
@@ -38,6 +39,17 @@ class CompanyCard extends StatelessWidget {
                   height: 58,
                   borderRadius: AppTheme.avatarBorderRadius,
                   imageUrl: company.logo,
+                  child: (company.logo ?? "").isNotEmpty
+                      ? null
+                      : Image.asset(
+                          AppAssets.images.appIconForegroundPng,
+                          height: 44,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.color
+                              ?.withOpacity(0.2),
+                        ),
                 ),
                 HSizedBox12,
                 Expanded(

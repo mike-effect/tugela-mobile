@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tugela/constants/app_assets.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/job_provider.dart';
@@ -73,6 +74,17 @@ class JobDetail extends StatelessWidget {
             child: AppAvatar(
               radius: 44,
               imageUrl: job.company?.logo,
+              child: (job.company?.logo ?? "").isNotEmpty
+                  ? null
+                  : Image.asset(
+                      AppAssets.images.appIconForegroundPng,
+                      height: 30,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.color
+                          ?.withOpacity(0.2),
+                    ),
             ),
           ),
           VSizedBox24,

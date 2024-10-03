@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tugela/constants/config.dart';
+import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -17,6 +19,7 @@ class _XRPTopupState extends State<XRPTopup> {
   @override
   void initState() {
     super.initState();
+    final provider = context.read<UserProvider>();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -36,13 +39,20 @@ class _XRPTopupState extends State<XRPTopup> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(AppConfig.paymentsService));
+      ..loadRequest(
+        Uri.parse(AppConfig.transakUrl(
+          action: "topup",
+          walletAddress: provider.user?.xrpAddress ?? "",
+          email: provider.user?.company?.email ?? "",
+          userData: {
+            "mobileNumber": provider.user?.company?.phoneNumber ?? "",
+          },
+        )),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
-    // final userProvider = context.watch<UserProvider>();
-    // final services = userProvider.paymentServices?.data ?? [];
     return Scaffold(
       appBar: AppBar(
         title: const Text("XRP Top-up"),

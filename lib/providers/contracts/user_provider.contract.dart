@@ -40,4 +40,9 @@ abstract class UserProviderContract extends BaseProvider {
   Future<ApiResponse<XRPBalance>?> getBalance(String address);
 
   Future<Paginated<PaymentService>?> getPaymentServices();
+
+  Future<ApiResponse<bool>?> withdrawXrp({
+    required String address,
+    required String amount,
+  });
 }

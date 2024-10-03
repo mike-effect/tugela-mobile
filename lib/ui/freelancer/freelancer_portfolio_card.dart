@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/portfolio_item.dart';
@@ -28,10 +29,16 @@ class FreelancerPortfolioCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () async {
-        final u = Uri.tryParse(portfolio.projectUrl ?? "");
-        if (u == null) return;
-        if (await canLaunchUrl(u)) {
-          launchUrl(u);
+        String url = portfolio.projectUrl ?? "";
+        // print(url);
+        try {
+          final u = Uri.tryParse(url);
+          if (u == null || u.host.isEmpty) return;
+          if (await canLaunchUrl(u)) {
+            launchUrl(u);
+          }
+        } on PlatformException catch (e, s) {
+          handleError(e, stackTrace: s);
         }
       },
       child: Container(

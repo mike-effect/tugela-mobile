@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:recase/recase.dart';
+import 'package:tugela/constants/app_assets.dart';
 import 'package:tugela/extensions/build_context.extension.dart';
 import 'package:tugela/models/company.dart';
 import 'package:tugela/providers/job_provider.dart';
@@ -36,6 +37,16 @@ class ProfileCompany extends StatelessWidget {
               height: 110,
               borderRadius: AppTheme.avatarBorderRadius,
               imageUrl: company.logo,
+              child: (company.logo ?? "").isNotEmpty
+                  ? null
+                  : Image.asset(
+                      AppAssets.images.appIconForegroundPng,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.color
+                          ?.withOpacity(0.2),
+                    ),
             ),
             HSizedBox16,
             Expanded(

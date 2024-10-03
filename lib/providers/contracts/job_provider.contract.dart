@@ -58,4 +58,9 @@ abstract class JobsProviderContract extends BaseProvider {
     JobSubmission data,
     dio.MultipartFile? file,
   );
+
+  Future<ApiResponse<bool>?> updateApplicationStatus(
+    String id,
+    ApplicationStatus status,
+  );
 }

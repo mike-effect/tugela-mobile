@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tugela/constants/app_assets.dart';
 import 'package:tugela/extensions.dart';
 import 'package:tugela/models/job_application.dart';
 import 'package:tugela/providers/job_provider.dart';
@@ -19,6 +20,9 @@ class ApplicationCard extends StatelessWidget {
     final job = application.job;
     final company = job?.company;
     final freelancer = application.freelancer;
+    final avatarUrl = provider.isFreelancer
+        ? job?.company?.logo
+        : application.freelancer?.profileImage;
     const chipStyle = TextStyle(height: 1, fontSize: 12.5);
     final (Color background, Color foreground) colors =
         switch (application.status) {
@@ -76,9 +80,18 @@ class ApplicationCard extends StatelessWidget {
           children: [
             AppAvatar(
               radius: 24,
-              imageUrl: provider.isFreelancer
-                  ? job?.company?.logo
-                  : application.freelancer?.profileImage,
+              imageUrl: avatarUrl,
+              child: (avatarUrl ?? "").isNotEmpty
+                  ? null
+                  : Image.asset(
+                      AppAssets.images.appIconForegroundPng,
+                      height: 30,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.color
+                          ?.withOpacity(0.2),
+                    ),
             ),
             HSizedBox12,
             Expanded(

@@ -37,13 +37,14 @@ class RemotePlatformConfig extends BaseModel {
   final String stagingUrl;
   final String productionUrl;
   final String environment;
-  // final bool useStagingApi;
+  final TransakConfig? transak;
+
   const RemotePlatformConfig({
     this.storeUrl = "",
     this.stagingUrl = "",
     this.productionUrl = "",
     this.environment = "",
-    // this.useStagingApi = false,
+    this.transak,
   });
 
   factory RemotePlatformConfig.fromJson(Map<String, dynamic> json) =>
@@ -57,6 +58,41 @@ class RemotePlatformConfig extends BaseModel {
         stagingUrl,
         productionUrl,
         environment,
-        // useStagingApi,
+        transak,
       ];
+}
+
+@JsonSerializable()
+class TransakConfig extends BaseModel {
+  final TransakEnvConfig? staging;
+  final TransakEnvConfig? production;
+
+  const TransakConfig({this.staging, this.production});
+
+  factory TransakConfig.fromJson(Map<String, dynamic> json) =>
+      _$TransakConfigFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TransakConfigToJson(this);
+
+  @override
+  List<Object?> get props => [staging, production];
+}
+
+@JsonSerializable()
+class TransakEnvConfig extends BaseModel {
+  final String withdrawal;
+  final String topup;
+
+  const TransakEnvConfig({
+    this.withdrawal = "",
+    this.topup = "",
+  });
+
+  factory TransakEnvConfig.fromJson(Map<String, dynamic> json) =>
+      _$TransakEnvConfigFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TransakEnvConfigToJson(this);
+
+  @override
+  List<Object?> get props => [withdrawal, topup];
 }
