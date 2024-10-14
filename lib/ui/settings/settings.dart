@@ -14,6 +14,7 @@ import 'package:tugela/ui/settings/settings_payments.dart';
 import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/layout/menu_list_tile.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Settings extends StatelessWidget {
@@ -174,6 +175,46 @@ class Settings extends StatelessWidget {
             title: "App version",
             showChevron: false,
             trailing: _VersionNumber(),
+          ),
+          VSizedBox24,
+          Text(
+            "ACCOUNT".toUpperCase(),
+            style: TextStyle(
+              fontSize: 13,
+              letterSpacing: 0.4,
+              color: context.textTheme.bodySmall?.color,
+            ),
+          ),
+          MenuListTile(
+            color: context.colorScheme.error,
+            iconData: PhosphorIconsRegular.trashSimple,
+            title: "Permanently Delete Account",
+            onTap: () async {
+              String supportEmail = "info@tugela.co";
+              String subject =
+                  Uri.encodeComponent("Request for Account Deletion");
+              String body = Uri.encodeComponent(
+                "Hello Support,"
+                "\n\nI would like to request the deletion of my "
+                "account associated with this ${userProvider.user?.email ?? 'email address'}. "
+                "Please confirm once the deletion has been completed."
+                "\n\nThank you."
+                "\n\nBest regards,"
+                "\n${(userProvider.user?.freelancer?.fullname ?? userProvider.user?.company?.name ?? '')}",
+              );
+
+              final Uri emailUri = Uri(
+                scheme: 'mailto',
+                path: supportEmail,
+                query: 'subject=$subject&body=$body',
+              );
+
+              if (await canLaunchUrl(emailUri)) {
+                await launchUrl(emailUri);
+              } else {
+                launchUrlString("https://tugela.co/delete-my-data/");
+              }
+            },
           ),
         ],
       ),
