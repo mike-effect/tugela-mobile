@@ -99,12 +99,11 @@ class HomeCompany extends StatelessWidget {
                         );
                         userProvider.getBalance(address!);
                       },
-                      icon: const Icon(PhosphorIconsRegular.wallet, size: 20),
+                      icon: const Icon(PhosphorIconsRegular.wallet),
                       label: Text(
                         "Top Up".toUpperCase(),
                         style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
                         ),
                       ),
                     ),

@@ -83,12 +83,11 @@ class HomeFreelancer extends StatelessWidget {
                   );
                   if (address != null) userProvider.getBalance(address);
                 },
-                icon: const Icon(PhosphorIconsRegular.wallet, size: 20),
+                icon: const Icon(PhosphorIconsRegular.wallet),
                 label: const Text(
                   "Withdraw",
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
                   ),
                 ),
               ),
@@ -143,7 +142,7 @@ class HomeFreelancer extends StatelessWidget {
                     experiences.isNotEmpty
                         ? PhosphorIconsFill.checkCircle
                         : PhosphorIconsRegular.circle,
-                    color: services.isNotEmpty
+                    color: experiences.isNotEmpty
                         ? AppColors.green
                         : context.textTheme.bodySmall?.color?.withOpacity(0.3),
                   ),
@@ -161,7 +160,7 @@ class HomeFreelancer extends StatelessWidget {
                   minLeadingWidth: 18,
                   title: const Text("Add projects to your portfolio"),
                   leading: Icon(
-                    services.isNotEmpty
+                    portfolio.isNotEmpty
                         ? PhosphorIconsFill.checkCircle
                         : PhosphorIconsRegular.circle,
                     color: portfolio.isNotEmpty

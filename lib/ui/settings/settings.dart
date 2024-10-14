@@ -15,7 +15,6 @@ import 'package:tugela/utils.dart';
 import 'package:tugela/widgets/layout/menu_list_tile.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -153,21 +152,21 @@ class Settings extends StatelessWidget {
             iconData: PhosphorIconsRegular.link,
             title: "Visit website",
             onTap: () {
-              launchUrlString(AppConfig.siteUrl);
+              openLink(AppConfig.siteUrl);
             },
           ),
           MenuListTile(
             iconData: PhosphorIconsRegular.shieldCheck,
             title: "Privacy Policy",
             onTap: () {
-              launchUrlString(AppConfig.privacyUrl);
+              openLink(AppConfig.privacyUrl);
             },
           ),
           MenuListTile(
             iconData: PhosphorIconsRegular.info,
             title: "Terms of Service",
             onTap: () {
-              launchUrlString(AppConfig.termsUrl);
+              openLink(AppConfig.termsUrl);
             },
           ),
           const MenuListTile(
@@ -212,7 +211,7 @@ class Settings extends StatelessWidget {
               if (await canLaunchUrl(emailUri)) {
                 await launchUrl(emailUri);
               } else {
-                launchUrlString("https://tugela.co/delete-my-data/");
+                openLink("https://tugela.co/delete-my-data/");
               }
             },
           ),

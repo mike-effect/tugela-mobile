@@ -19,7 +19,6 @@ import 'package:tugela/widgets/forms/form_input.dart';
 import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/empty_state.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class ApplicationDetails extends StatefulWidget {
   final JobApplication application;
@@ -31,6 +30,10 @@ class ApplicationDetails extends StatefulWidget {
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
   JobApplication get application => widget.application;
+
+  bool get isCompleted {
+    return widget.application.job?.status == JobStatus.completed;
+  }
 
   @override
   void initState() {
@@ -291,11 +294,23 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               if ((s.file ?? '').isNotEmpty)
                                 InkWell(
                                   onTap: () {
-                                    launchUrlString(s.file!);
+                                    openLink(s.file!);
                                   },
-                                  child: Text(
-                                    "File: ${path.basename(s.file ?? "")}"
-                                        .trim(),
+                                  child: Text.rich(
+                                    TextSpan(children: [
+                                      WidgetSpan(
+                                        child: Icon(
+                                          PhosphorIconsRegular.file,
+                                          size: 20,
+                                          color: context.colorScheme.primary,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            "  ${path.basename(s.file ?? "")}",
+                                        style: const TextStyle(height: 1),
+                                      ),
+                                    ]),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -303,10 +318,22 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               if ((s.link ?? '').isNotEmpty)
                                 InkWell(
                                   onTap: () {
-                                    launchUrlString(s.link!);
+                                    openLink(s.link!);
                                   },
-                                  child: Text(
-                                    "Link: ${s.link}".trim(),
+                                  child: Text.rich(
+                                    TextSpan(children: [
+                                      WidgetSpan(
+                                        child: Icon(
+                                          PhosphorIconsRegular.link,
+                                          size: 20,
+                                          color: context.colorScheme.primary,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "  ${(s.link ?? "")}",
+                                        style: const TextStyle(height: 1),
+                                      ),
+                                    ]),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -324,46 +351,24 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         bottomNavigationBar: BottomAppBar(
           child: jobProvider.isCompany
               ? ElevatedButton(
-                  onPressed: job?.status == JobStatus.completed
-                      ? null
-                      : () {
-                          ProviderRequest.api(
-                            context: context,
-                            request: jobProvider.updateJob(
-                              job!.id!,
-                              job..status = JobStatus.completed,
-                            ),
-                            onSuccess: (context, result) {
-                              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                                  const SnackBar(content: Text("Job updated")));
-                              final mapId = jobProvider.user?.company?.id;
-                              context.read<UserProvider>().getUserMe();
-                              jobProvider.getJobs(
-                                mapId: mapId ?? "",
-                                params: {"company": mapId},
-                              );
-                              jobProvider.getJobApplications(
-                                mapId: mapId ?? "",
-                                params: {"company": mapId ?? ""},
-                              );
-                            },
-                          );
-                        },
+                  onPressed: isCompleted ? null : markAsCompleted,
                   child: Text(
-                    job?.status == JobStatus.completed
-                        ? "Job Completed"
-                        : "Mark as completed",
+                    isCompleted ? "Job Completed" : "Mark as completed",
                   ),
                 )
               : ElevatedButton(
-                  onPressed: () async {
-                    push(
-                      context: context,
-                      builder: (_) =>
-                          ApplicationSubmission(application: application),
-                    );
-                  },
-                  child: const Text("Add Submission"),
+                  onPressed: isCompleted
+                      ? null
+                      : () async {
+                          push(
+                            context: context,
+                            builder: (_) =>
+                                ApplicationSubmission(application: application),
+                          );
+                        },
+                  child: Text(
+                    isCompleted ? "Job Completed" : "Add Submission",
+                  ),
                 ),
         ),
       );
@@ -578,6 +583,63 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
     );
   }
 
+  void markAsCompleted() {
+    final jobProvider = context.read<JobProvider>();
+    final job = application.job;
+    showAppBottomSheet(
+      context: context,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: ContentPadding,
+      title: "Mark as Completed",
+      centerTitleText: true,
+      children: (context) {
+        return [
+          const Text(
+            "By confirming, you acknowledge that the job has been successfully "
+            "completed and authorize the automatic release of payment to the freelancer from the escrow account.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15),
+          ),
+          const SizedBox(height: 60),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ProviderRequest.api(
+                context: context,
+                request: jobProvider.updateJob(
+                  job!.id!,
+                  job..status = JobStatus.completed,
+                ),
+                onSuccess: (context, result) {
+                  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                      const SnackBar(content: Text("Job updated")));
+                  final mapId = jobProvider.user?.company?.id;
+                  final p = context.read<UserProvider>();
+                  p.getUserMe();
+                  if (p.user?.xrpAddress != null) {
+                    p.getBalance(p.user!.xrpAddress!);
+                  }
+                  jobProvider.getJobs(
+                    mapId: mapId ?? "",
+                    params: {"company": mapId},
+                  );
+                  jobProvider.getJobApplications(
+                    mapId: mapId ?? "",
+                    params: {"company": mapId ?? ""},
+                  );
+                  if (result.data ?? false) {
+                    Navigator.pop(context);
+                  }
+                },
+              );
+            },
+            child: const Text("Update Application"),
+          ),
+        ];
+      },
+    );
+  }
+
   void changeStatus(ApplicationStatus status) async {
     final application = widget.application;
     if (status == ApplicationStatus.rejected) {
@@ -592,7 +654,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
             Text(
               "You are about to reject the submission by ${application.freelancer?.fullname ?? 'this freelancer'} for ${application.job?.title ?? 'this job'}. "
               "They will be notified about the status of their application",
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 60),
@@ -644,7 +706,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
           return [
             Text(
               "Proceed to assign the job to ${application.freelancer?.fullname ?? 'the freelancer'}. The escrow will be created from your wallet balance.",
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 60),

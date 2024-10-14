@@ -92,7 +92,7 @@ class _XRPWithdrawalState extends State<XRPWithdrawal> {
                         text: "Tap here to use our provider.\n\n",
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            launchUrlString(transakUrl,
+                            openLink(transakUrl,
                                 mode: LaunchMode.externalApplication);
                           },
                         style: TextStyle(

@@ -17,7 +17,6 @@ import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/section_header.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class JobDetail extends StatelessWidget {
   final Job job;
@@ -245,7 +244,7 @@ class JobDetail extends StatelessWidget {
   void apply(BuildContext context) async {
     if (job.applicationType == JobApplicationType.external) {
       try {
-        launchUrlString(job.externalApplyLink ?? "");
+        openLink(job.externalApplyLink ?? "");
       } catch (e, s) {
         handleError(e, stackTrace: s);
       }

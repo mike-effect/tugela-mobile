@@ -41,7 +41,7 @@ class AppConfig {
   static const _productionAPI =
       "https://articulate-ego-429522-d4.uc.r.appspot.com/api";
 
-  static const siteUrl = "https://tugela.org";
+  static const siteUrl = "https://tugela.co";
   static const webAppUrl = siteUrl;
   static const supportUrl = "$siteUrl/contact";
   static const termsUrl = "$siteUrl/terms";

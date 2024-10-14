@@ -19,7 +19,6 @@ import 'package:tugela/services/sl.dart';
 import 'package:tugela/utils/spacing.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 export 'utils/amount_input_formatter.dart';
 export 'utils/spacing.dart';
@@ -482,9 +481,17 @@ Future<bool> openLink(
 }) async {
   final uri = Uri.tryParse(url);
   if (uri == null) return false;
-  final hasScheme = uri.hasScheme;
-  if (await canLaunchUrl(uri)) {
-    return launchUrlString(hasScheme ? url : "https://$url", mode: mode);
+  final newUri = Uri(
+    scheme: uri.scheme.isNotEmpty ? uri.scheme : "https",
+    host: uri.host,
+    path: uri.path,
+    query: uri.query,
+    userInfo: uri.userInfo,
+    // port: uri.port,
+    // fragment: uri.fragment,
+  );
+  if (await canLaunchUrl(newUri)) {
+    return launchUrl(newUri, mode: mode);
   }
   return false;
 }

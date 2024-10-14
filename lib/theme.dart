@@ -265,7 +265,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           splashFactory: NoSplash.splashFactory,
           padding: AppTheme.buttonPadding,
-          side: BorderSide(color: AppColors.grey.shade300, width: 1),
+          side: BorderSide(color: AppColors.grey.shade200, width: 1),
           textStyle: TextStyle(
             fontSize: 16,
             fontFamily: fontFamily,

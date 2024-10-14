@@ -135,6 +135,7 @@ class _ApplicationSubmissionState extends State<ApplicationSubmission> {
                   JobSubmission(
                     application: application,
                     freelancer: application.freelancer,
+                    link: projectUrlController.text,
                   ),
                   multipart,
                 ),
