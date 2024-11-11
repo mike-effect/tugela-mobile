@@ -8,11 +8,15 @@ class JobProvider extends JobsProviderContract {
   final Map<String?, Job> _jobMap = {};
   final Map<String?, Paginated<JobApplication>> _applicationsMap = {};
   final Map<String?, Paginated<JobSubmission>> _submissionsMap = {};
+  final Map<String, JobScore> _jobScores = {};
 
   @override
   Map<String?, Paginated<Job>> get jobs => _jobsMap;
 
   Map<String?, Job> get job => _jobMap;
+
+  @override
+  Map<String?, JobScore> get jobScores => _jobScores;
 
   @override
   Map<String?, Paginated<JobApplication>> get applications => _applicationsMap;
@@ -31,6 +35,7 @@ class JobProvider extends JobsProviderContract {
     _jobsMap.clear();
     _applicationsMap.clear();
     _submissionsMap.clear();
+    _jobScores.clear();
   }
 
   @override
@@ -288,6 +293,27 @@ class JobProvider extends JobsProviderContract {
     try {
       final res = await apiService.updateJobSubmission(id, data, file);
       getJobSubmission(id);
+      return res;
+    } catch (e, s) {
+      handleError(e, stackTrace: s);
+      return null;
+    }
+  }
+
+  @override
+  Future<ApiResponse<JobScore>?> getJobScore({
+    required String freelancerId,
+    required String jobId,
+  }) async {
+    try {
+      final res = await apiService.getJobScore(
+        freelancerId: freelancerId,
+        jobId: jobId,
+      );
+      if (res?.data != null) {
+        _jobScores[jobId] = res!.data!;
+        notifyListeners();
+      }
       return res;
     } catch (e, s) {
       handleError(e, stackTrace: s);

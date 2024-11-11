@@ -5,6 +5,7 @@ export 'package:tugela/models/freelancer_service.dart';
 export 'package:tugela/models/company_manager.dart';
 export 'package:tugela/models/auth.dart';
 export 'package:tugela/models/freelancer.dart';
+export 'package:tugela/models/job_score.dart';
 export 'package:tugela/models/skill.dart';
 export 'package:tugela/models/profile.dart';
 export 'package:tugela/models/api_response.dart';

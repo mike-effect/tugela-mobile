@@ -16,11 +16,34 @@ import 'package:tugela/widgets/feedback/dialog.dart';
 import 'package:tugela/widgets/layout/app_avatar.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:tugela/widgets/layout/section_header.dart';
+import 'package:tugela/widgets/layout/skeleton.dart';
 import 'package:tugela/widgets/layout/sliver_scaffold.dart';
 
-class JobDetail extends StatelessWidget {
+class JobDetail extends StatefulWidget {
   final Job job;
   const JobDetail({super.key, required this.job});
+
+  @override
+  State<JobDetail> createState() => _JobDetailState();
+}
+
+class _JobDetailState extends State<JobDetail> {
+  int? get score {
+    final provider = context.read<JobProvider>();
+    return provider.jobScores[widget.job.id]?.probabilityOfJobSuccess?.toInt();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = context.read<JobProvider>();
+    if (provider.user!.freelancer!.id != null && widget.job.id != null) {
+      provider.getJobScore(
+        freelancerId: provider.user!.freelancer!.id!,
+        jobId: widget.job.id!,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +52,18 @@ class JobDetail extends StatelessWidget {
     const chipStyle = TextStyle(height: 1, fontSize: 13.5);
     final textStyle =
         context.textTheme.bodyMedium?.copyWith(height: 1.4, fontSize: 14.5);
-    final job = jobProvider.job[this.job.id] ?? this.job;
+    final job = jobProvider.job[widget.job.id] ?? widget.job;
 
-    int score() {
-      int count = 0;
-      final fs = (jobProvider.user?.freelancer?.skills ?? [])
-          .map((e) => e.name?.toLowerCase() ?? "");
-      final js = job.skills.map((e) => e.name?.toLowerCase() ?? "");
-      for (final j in js) {
-        if (fs.contains(j)) count++;
-      }
-      return count;
-    }
+    // int score() {
+    //   int count = 0;
+    //   final fs = (jobProvider.user?.freelancer?.skills ?? [])
+    //       .map((e) => e.name?.toLowerCase() ?? "");
+    //   final js = job.skills.map((e) => e.name?.toLowerCase() ?? "");
+    //   for (final j in js) {
+    //     if (fs.contains(j)) count++;
+    //   }
+    //   return count;
+    // }
 
     return SliverScaffold(
       onRefresh: () => Future.wait([
@@ -139,7 +162,7 @@ class JobDetail extends StatelessWidget {
                 ),
             ],
           ),
-          if (jobProvider.isFreelancer && (score() > 0))
+          if (jobProvider.isFreelancer)
             Container(
               margin: const EdgeInsets.only(top: 24),
               decoration: BoxDecoration(
@@ -157,18 +180,28 @@ class JobDetail extends StatelessWidget {
                   PhosphorIconsRegular.sparkle,
                   color: AppColors.amber,
                 ),
-                title: Text(
-                  "${score()} ${pluralFor("skill", count: score())} ${score() == 1 ? 'matches' : 'match'} your profile",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    letterSpacing: 0.2,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                subtitle: Text(
-                  "You may ${score() < 5 ? 'apply' : 'be a good fit'} for this role",
-                  style: const TextStyle(fontSize: 12.5),
-                ),
+                title: score == null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Skeleton(context).rect(width: 210, height: 10),
+                      )
+                    : Text(
+                        "$score% probability of job success",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                subtitle: score == null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Skeleton(context).rect(width: 160, height: 8),
+                      )
+                    : Text(
+                        "You may ${(score ?? 0) < 50 ? 'apply' : 'be a good fit'} for this role",
+                        style: const TextStyle(fontSize: 12.5),
+                      ),
               ),
             ),
           VSizedBox32,
@@ -242,9 +275,9 @@ class JobDetail extends StatelessWidget {
   }
 
   void apply(BuildContext context) async {
-    if (job.applicationType == JobApplicationType.external) {
+    if (widget.job.applicationType == JobApplicationType.external) {
       try {
-        openLink(job.externalApplyLink ?? "");
+        openLink(widget.job.externalApplyLink ?? "");
       } catch (e, s) {
         handleError(e, stackTrace: s);
       }
@@ -258,7 +291,7 @@ class JobDetail extends StatelessWidget {
         children: (context) {
           return [
             Text(
-              "You are about to apply for ${job.title ?? 'a role'}, ${job.roleType?.name.sentenceCase.toLowerCase()} at ${job.company?.name ?? 'this company'}. "
+              "You are about to apply for ${widget.job.title ?? 'a role'}, ${widget.job.roleType?.name.sentenceCase.toLowerCase()} at ${widget.job.company?.name ?? 'this company'}. "
               "The recruiter will go through your freelancer profile to see your work experiences, services and portfolio. Always keep your profile detailed and updated for the best outcomes ✨",
               textAlign: TextAlign.justify,
               style: const TextStyle(fontSize: 15),
@@ -279,7 +312,7 @@ class JobDetail extends StatelessWidget {
           context: context,
           request: provider.createApplication(JobApplication(
             freelancer: provider.user?.freelancer,
-            job: job,
+            job: widget.job,
           )),
           onSuccess: (context, res) {
             // Navigator.pop(context);

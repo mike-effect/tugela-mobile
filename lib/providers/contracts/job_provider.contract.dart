@@ -4,6 +4,7 @@ import 'package:tugela/providers/base_provider.dart';
 
 abstract class JobsProviderContract extends BaseProvider {
   Map<String?, Paginated<Job>> get jobs;
+  Map<String?, JobScore> get jobScores;
 
   Map<String?, Paginated<JobApplication>> get applications;
 
@@ -63,4 +64,9 @@ abstract class JobsProviderContract extends BaseProvider {
     String id,
     ApplicationStatus status,
   );
+
+  Future<ApiResponse<JobScore>?> getJobScore({
+    required String freelancerId,
+    required String jobId,
+  });
 }

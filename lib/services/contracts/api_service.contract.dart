@@ -222,4 +222,9 @@ abstract class ApiServiceContract {
   });
 
   Future<ApiResponse<List<PaymentService>>> getPaymentServices();
+
+  Future<ApiResponse<JobScore>?> getJobScore({
+    required String freelancerId,
+    required String jobId,
+  });
 }
