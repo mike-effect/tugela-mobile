@@ -49,13 +49,6 @@ class AppConfig {
   static const faqUrl = "$siteUrl/contact";
   static const appStoreId = "6444046206";
 
-  static String get monoKey {
-    final encryptedValue = apiEnvironment == ApiEnvironment.production
-        ? "7c826b632ee6385187b91be16215fab27ed3696198079c62340bdeb81571025d"
-        : "7c826b632ee6385187b91be16215fab27ed3696198079c62340bdeb81571025d";
-    return _decrypt(e.Encrypted.fromBase16(encryptedValue));
-  }
-
   AppConfig._internal() {
     _instance = this;
   }

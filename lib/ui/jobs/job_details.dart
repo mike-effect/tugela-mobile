@@ -37,7 +37,7 @@ class _JobDetailState extends State<JobDetail> {
   void initState() {
     super.initState();
     final provider = context.read<JobProvider>();
-    if (provider.user!.freelancer!.id != null && widget.job.id != null) {
+    if (provider.user?.freelancer?.id != null && widget.job.id != null) {
       provider.getJobScore(
         freelancerId: provider.user!.freelancer!.id!,
         jobId: widget.job.id!,
