@@ -29,12 +29,17 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = 'com.tugelatech.tugela'
-    compileSdk = 34
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -66,7 +71,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled true
+        }
         release {
+            minifyEnabled true
             signingConfig signingConfigs.release
         }
     }
@@ -78,4 +87,5 @@ flutter {
 
 dependencies {
     implementation 'com.android.support:multidex:2.0.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }
