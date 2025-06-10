@@ -63,7 +63,7 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
       formKey: formKey,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Tugela Wallet"),
+          title: const Text("Zynara Wallet"),
         ),
         body: SingleChildScrollView(
           padding: ContentPadding,
@@ -105,7 +105,7 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
               VSizedBox12,
 
               // Text(
-              //   "Below is your XRP information to receive payments on Tugela.",
+              //   "Below is your XRP information to receive payments on Zynara.",
               //   style: context.textTheme.bodyMedium,
               // ),
               const SizedBox(height: 32),
@@ -183,7 +183,7 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
               //       ),
               //       VSizedBox12,
               //       const Text(
-              //         "Store your secret seed securely. Losing it means losing access to your funds. Tugela does not store your secret seed.",
+              //         "Store your secret seed securely. Losing it means losing access to your funds. Zynara does not store your secret seed.",
               //       ),
               //     ],
               //   ),

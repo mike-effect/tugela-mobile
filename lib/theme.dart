@@ -120,7 +120,7 @@ class AppTheme {
       secondaryHeaderColor: AppColors.grey.shade50,
       disabledColor: Colors.grey.shade400,
       dividerTheme: DividerThemeData(color: AppColors.dividerColor),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         // labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
         labelColor: Colors.black,
         indicatorColor: AppColors.primaryColor,
