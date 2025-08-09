@@ -22,7 +22,7 @@ class JobCard extends StatelessWidget {
       JobStatus.completed => (
           AppColors.dynamic(
             context: context,
-            light: Colors.green.shade50.withOpacity(0.7),
+            light: Colors.green.shade50.withValues(alpha: 0.7),
             dark: const Color.fromARGB(255, 21, 69, 24),
           )!,
           AppColors.dynamic(
@@ -71,7 +71,7 @@ class JobCard extends StatelessWidget {
                           .textTheme
                           .bodySmall
                           ?.color
-                          ?.withOpacity(0.2),
+                          ?.withValues(alpha: 0.2),
                     ),
             ),
             HSizedBox12,
