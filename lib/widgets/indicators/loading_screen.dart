@@ -44,7 +44,7 @@ class LoadingScreen extends ModalRoute<void> {
         padding: const EdgeInsets.all(30),
         margin: const EdgeInsets.all(30),
         decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
+          color: Theme.of(context).dialogTheme.backgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
