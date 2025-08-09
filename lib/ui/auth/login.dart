@@ -214,8 +214,8 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(8),
                   color: AppColors.dynamic(
                     context: context,
-                    light: AppColors.red.shade50.withOpacity(0.5),
-                    dark: AppColors.red.shade900,
+                    light: AppColors.red.shade50.withValues(alpha: 0.5),
+                    dark: AppColors.red.shade900.withValues(alpha: 0.5),
                   ),
                 ),
                 child: Row(
@@ -223,7 +223,7 @@ class _LoginState extends State<Login> {
                     Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: context.theme.colorScheme.error,
+                      color: context.theme.colorScheme.onError,
                     ),
                     HSizedBox4,
                     Text(
@@ -231,7 +231,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: context.theme.colorScheme.error,
+                        color: context.theme.colorScheme.onError,
                       ),
                     ),
                   ],
