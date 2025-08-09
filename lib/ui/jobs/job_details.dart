@@ -105,7 +105,7 @@ class _JobDetailState extends State<JobDetail> {
                           .textTheme
                           .bodySmall
                           ?.color
-                          ?.withOpacity(0.2),
+                          ?.withValues(alpha: 0.2),
                     ),
             ),
           ),
@@ -169,7 +169,7 @@ class _JobDetailState extends State<JobDetail> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: context.inputTheme.enabledBorder!.borderSide.color
-                      .withOpacity(0.6),
+                      .withValues(alpha: 0.6),
                 ),
               ),
               child: ListTile(
