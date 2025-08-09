@@ -48,7 +48,7 @@ class CompanyCard extends StatelessWidget {
                               .textTheme
                               .bodySmall
                               ?.color
-                              ?.withOpacity(0.2),
+                              ?.withValues(alpha: 0.2),
                         ),
                 ),
                 HSizedBox12,
