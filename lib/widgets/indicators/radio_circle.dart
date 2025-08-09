@@ -16,7 +16,9 @@ class RadioCircle extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isActive ? context.colorScheme.secondary.withOpacity(0.5) : null,
+        color: isActive
+            ? context.colorScheme.secondary.withValues(alpha: 0.5)
+            : null,
         border: isActive
             ? null
             : Border.all(
