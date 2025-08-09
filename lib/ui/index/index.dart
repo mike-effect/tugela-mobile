@@ -139,7 +139,7 @@ class _IndexState extends State<Index> {
           iconSize: 22,
           border: Border(
             top: BorderSide(
-              color: context.theme.dividerColor.withOpacity(0.3),
+              color: context.theme.dividerColor.withValues(alpha: 0.3),
             ),
           ),
           activeColor: context.secondaryColor,
