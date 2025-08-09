@@ -86,7 +86,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       ),
                       backgroundColor: AppColors.dynamic(
                         context: context,
-                        light: Colors.green.shade50.withOpacity(0.7),
+                        light: Colors.green.shade50.withValues(alpha: 0.7),
                         dark: const Color.fromARGB(255, 21, 69, 24),
                       )!,
                       label: Row(
