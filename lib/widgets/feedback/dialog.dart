@@ -122,7 +122,7 @@ class AppDialog<T> extends ModalRoute<T> {
           constraints: const BoxConstraints(maxWidth: 480),
           margin: const EdgeInsets.all(60),
           decoration: BoxDecoration(
-            color: theme.dialogBackgroundColor,
+            color: theme.dialogTheme.backgroundColor,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
