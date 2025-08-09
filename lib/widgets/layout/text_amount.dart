@@ -85,7 +85,7 @@ class TextAmount extends StatelessWidget {
               style: whole.style?.copyWith(
                 fontWeight: FontWeight.w200,
                 fontSize: whole.style!.fontSize! / 1.3,
-                color: whole.style!.color?.withOpacity(0.6),
+                color: whole.style!.color?.withValues(alpha: 0.6),
               ),
             ),
           ]
