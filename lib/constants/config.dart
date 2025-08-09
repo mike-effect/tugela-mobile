@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/services/sl.dart';
@@ -17,7 +18,7 @@ class AppConfig {
   String userUuid = "";
   RemotePlatformConfig? remotePlatformConfig;
 
-  static ApiEnvironment apiEnvironment = ApiEnvironment.staging;
+  static ApiEnvironment apiEnvironment = ApiEnvironment.production;
 
   static final _apiHostMap = {
     ApiEnvironment.staging: _stagingAPI,
@@ -25,6 +26,7 @@ class AppConfig {
   };
 
   static String get apiHost {
+    if (kReleaseMode) return _productionAPI;
     return _apiHostMap[apiEnvironment]!;
   }
 
