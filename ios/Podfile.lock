@@ -291,7 +291,7 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
+  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5
 
