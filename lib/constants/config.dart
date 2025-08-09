@@ -18,7 +18,7 @@ class AppConfig {
   String userUuid = "";
   RemotePlatformConfig? remotePlatformConfig;
 
-  static ApiEnvironment apiEnvironment = ApiEnvironment.production;
+  static ApiEnvironment apiEnvironment = ApiEnvironment.staging;
 
   static final _apiHostMap = {
     ApiEnvironment.staging: _stagingAPI,
