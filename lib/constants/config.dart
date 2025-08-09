@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:encrypt/encrypt.dart' as e;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tugela/models.dart';
@@ -39,7 +38,7 @@ class AppConfig {
   static const _stagingAPI =
       "https://articulate-ego-429522-d4.uc.r.appspot.com/api";
   static const _productionAPI =
-      "https://articulate-ego-429522-d4.uc.r.appspot.com/api";
+      "https://prod-dot-articulate-ego-429522-d4.uc.r.appspot.com/api";
 
   static const siteUrl = "https://tugela.co";
   static const webAppUrl = siteUrl;
@@ -64,10 +63,10 @@ class AppConfig {
   //   return e.Encrypter(e.AES(eKey)).encrypt(value, iv: e.IV.fromLength(16));
   // }
 
-  static String _decrypt(e.Encrypted value) {
-    final eKey = e.Key.fromUtf8("kXp2s5v8x/A?D(G+7w!z%C*F-JaNdRgU");
-    return e.Encrypter(e.AES(eKey)).decrypt(value, iv: e.IV.fromLength(16));
-  }
+  // static String _decrypt(e.Encrypted value) {
+  //   final eKey = e.Key.fromUtf8("kXp2s5v8x/A?D(G+7w!z%C*F-JaNdRgU");
+  //   return e.Encrypter(e.AES(eKey)).decrypt(value, iv: e.IV.fromLength(16));
+  // }
 
   static String transakUrl({
     required String action,
