@@ -56,8 +56,8 @@ Widget buildSimpleRefreshIndicator(
       height: 2,
       child: LinearProgressIndicator(
         backgroundColor: context.isDark
-            ? context.theme.colorScheme.secondary.withOpacity(0.4)
-            : context.theme.colorScheme.secondary.withOpacity(0.2),
+            ? context.theme.colorScheme.secondary.withValues(alpha: 0.4)
+            : context.theme.colorScheme.secondary.withValues(alpha: 0.2),
         valueColor: AlwaysStoppedAnimation(
           context.theme.colorScheme.secondary,
         ),
@@ -249,9 +249,9 @@ class _SliverScaffoldState extends cupertino.State<SliverScaffold> {
                         child: LinearProgressIndicator(
                           backgroundColor: context.isDark
                               ? context.theme.colorScheme.secondary
-                                  .withOpacity(0.4)
+                                  .withValues(alpha: 0.4)
                               : context.theme.colorScheme.secondary
-                                  .withOpacity(0.2),
+                                  .withValues(alpha: 0.2),
                           valueColor: AlwaysStoppedAnimation(
                             context.theme.colorScheme.secondary,
                           ),
