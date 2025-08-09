@@ -67,10 +67,10 @@ class _XRPWithdrawalState extends State<XRPWithdrawal> {
               margin: ContentPaddingV,
               padding: ContentPadding,
               decoration: BoxDecoration(
-                color: context.theme.dividerColor.withOpacity(0.08),
+                color: context.theme.dividerColor.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: context.theme.dividerColor.withOpacity(0.4),
+                  color: context.theme.dividerColor.withValues(alpha: 0.4),
                 ),
               ),
               child: Column(
