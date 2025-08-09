@@ -123,7 +123,8 @@ class HomeFreelancer extends StatelessWidget {
                         : PhosphorIconsRegular.circle,
                     color: services.isNotEmpty
                         ? AppColors.green
-                        : context.textTheme.bodySmall?.color?.withOpacity(0.3),
+                        : context.textTheme.bodySmall?.color
+                            ?.withValues(alpha: 0.3),
                   ),
                   trailing: const RightChevron(),
                   onTap: () {
@@ -144,7 +145,8 @@ class HomeFreelancer extends StatelessWidget {
                         : PhosphorIconsRegular.circle,
                     color: experiences.isNotEmpty
                         ? AppColors.green
-                        : context.textTheme.bodySmall?.color?.withOpacity(0.3),
+                        : context.textTheme.bodySmall?.color
+                            ?.withValues(alpha: 0.3),
                   ),
                   trailing: const RightChevron(),
                   onTap: () {
@@ -165,7 +167,8 @@ class HomeFreelancer extends StatelessWidget {
                         : PhosphorIconsRegular.circle,
                     color: portfolio.isNotEmpty
                         ? AppColors.green
-                        : context.textTheme.bodySmall?.color?.withOpacity(0.3),
+                        : context.textTheme.bodySmall?.color
+                            ?.withValues(alpha: 0.3),
                   ),
                   trailing: const RightChevron(),
                   onTap: () {
