@@ -66,8 +66,9 @@ class MyApp extends StatelessWidget {
       ],
       child: Builder(builder: (context) {
         return MaterialApp(
-          title: 'Tugela',
+          title: 'Zynara',
           color: AppColors.black,
+          debugShowCheckedModeBanner: false,
           themeMode: context.read<AppProvider>().themeMode,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
