@@ -167,10 +167,11 @@ class AppTabBar extends StatelessWidget implements PreferredSizeWidget {
         CupertinoDynamicColor.resolve(inactiveColor, context);
     late Widget result;
     final media = MediaQuery.of(context);
-    if (media.size.width >= 768) {
+    if (media.size.width >= 768 && resolvedBorder != null) {
       result = DecoratedBox(
         decoration: BoxDecoration(
-          border: resolvedBorder?.add(
+          border: Border.merge(
+            resolvedBorder,
             Border(
               right: BorderSide(
                 color: resolvedBorder.top.color.withValues(alpha: .1),
