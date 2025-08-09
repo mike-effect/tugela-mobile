@@ -171,7 +171,7 @@ class _SettingsPaymentsState extends State<SettingsPayments> {
               //     borderRadius: AppTheme.cardBorderRadius,
               //     color: AppColors.dynamic(
               //       context: context,
-              //       light: Colors.amber.withOpacity(0.15),
+              //       light: Colors.amber.withValues(alpha: 0.15),
               //     ),
               //   ),
               //   child: Column(
