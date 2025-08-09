@@ -109,6 +109,7 @@ class AppTheme {
       useMaterial3: false,
       brightness: Brightness.light,
       fontFamily: fontFamily,
+      primarySwatch: Colors.blue,
       primaryColor: AppColors.primaryColorDark,
       primaryColorLight: AppColors.primaryColorLight,
       primaryColorDark: AppColors.primaryColorDark,
@@ -161,6 +162,7 @@ class AppTheme {
         ),
       ),
       iconTheme: const IconThemeData(size: 24),
+      dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
       appBarTheme: AppBarTheme(
         elevation: 0,
         color: AppColors.scaffoldbackgroundColor,
@@ -408,6 +410,7 @@ class AppTheme {
     final floatingActionButtonTheme = light.floatingActionButtonTheme;
     final chipTheme = light.chipTheme;
     final radioTheme = light.radioTheme;
+    final dialogTheme = light.dialogTheme;
 
     return light.copyWith(
       brightness: Brightness.dark,
@@ -421,7 +424,6 @@ class AppTheme {
       dividerColor: Colors.grey.shade500,
       dividerTheme: DividerThemeData(color: Colors.grey.shade500),
       secondaryHeaderColor: AppColors.grey.shade900,
-      dialogBackgroundColor: Colors.grey.shade900,
       disabledColor: AppColors.grey,
       iconTheme: iconTheme.copyWith(
         color: AppColors.primaryColorDarkDarkTheme,
@@ -447,6 +449,9 @@ class AppTheme {
               .copyWith(color: Colors.white),
         ),
       ),
+      dialogTheme: dialogTheme.copyWith(
+        backgroundColor: Colors.grey.shade900,
+      ),
       appBarTheme: appBarTheme.copyWith(
         color: AppColors.scaffoldbackgroundColorDark,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -468,7 +473,7 @@ class AppTheme {
         backgroundColor: AppColors.green.shade800,
       ),
       textSelectionTheme: textSelectionTheme.copyWith(
-        cursorColor: AppColors.primaryColorDarkDarkTheme,
+        cursorColor: AppColors.primaryColorDarkTheme,
         selectionHandleColor: AppColors.grey.shade400,
         selectionColor: AppColors.grey.shade600,
       ),
@@ -519,7 +524,7 @@ class AppTheme {
           side: WidgetStateProperty.all(
             BorderSide(
               width: 2,
-              color: AppColors.primaryColorDarkTheme.withOpacity(0.7),
+              color: AppColors.primaryColorDarkTheme.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -599,7 +604,8 @@ class AppTheme {
             tertiary: AppColors.tertiaryColorDark,
           )
           .copyWith(surface: AppColors.backgroundColorDark)
-          .copyWith(error: AppColors.red.shade300),
+          .copyWith(
+              error: AppColors.red.shade300, onError: AppColors.red.shade50),
       chipTheme: chipTheme.copyWith(
         backgroundColor: const Color.fromARGB(255, 31, 31, 31),
       ),
