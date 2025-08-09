@@ -78,6 +78,8 @@ class _FreelancersListState extends State<FreelancersList> {
                   (freelancer.title ?? ''),
                   (freelancer.location ?? '').titleCase,
                 ].join(' in '),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               onTap: () {
                 push(
