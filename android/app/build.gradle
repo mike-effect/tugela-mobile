@@ -30,7 +30,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     namespace = 'com.tugelatech.tugela'
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
