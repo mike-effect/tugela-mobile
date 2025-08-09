@@ -46,7 +46,7 @@ class SectionHeader<T> extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(32),
                   border: Border.all(
-                    color: context.theme.dividerColor.withOpacity(0.4),
+                    color: context.theme.dividerColor.withValues(alpha: 0.4),
                   ),
                 ),
                 child: const Text(
