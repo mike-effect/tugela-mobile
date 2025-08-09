@@ -125,6 +125,8 @@ class _ExploreTabState extends State<ExploreTab> {
                   (freelancer.title ?? ''),
                   (freelancer.location ?? '').titleCase,
                 ].join(' in '),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               onTap: () {
                 push(
