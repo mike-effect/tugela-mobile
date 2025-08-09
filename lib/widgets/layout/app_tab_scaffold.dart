@@ -444,7 +444,12 @@ class _AppTabScaffoldState extends State<AppTabScaffold> with RestorationMixin {
       data: newMediaQuery,
       child: Padding(
         padding: contentPadding,
-        child: content,
+        child: SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          child: content,
+        ),
       ),
     );
 
