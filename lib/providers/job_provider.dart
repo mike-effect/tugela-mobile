@@ -305,6 +305,7 @@ class JobProvider extends JobsProviderContract {
     required String freelancerId,
     required String jobId,
   }) async {
+    if (_jobScores[jobId] != null) return ApiResponse(data: _jobScores[jobId]);
     try {
       final res = await apiService.getJobScore(
         freelancerId: freelancerId,
