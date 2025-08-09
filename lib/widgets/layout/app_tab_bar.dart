@@ -131,8 +131,7 @@ class AppTabBar extends StatelessWidget implements PreferredSizeWidget {
   bool opaque(BuildContext context) {
     final Color backgroundColor =
         this.backgroundColor ?? CupertinoTheme.of(context).barBackgroundColor;
-    return CupertinoDynamicColor.resolve(backgroundColor, context).alpha ==
-        0xFF;
+    return CupertinoDynamicColor.resolve(backgroundColor, context).a == 0xFF;
   }
 
   @override
@@ -174,7 +173,7 @@ class AppTabBar extends StatelessWidget implements PreferredSizeWidget {
           border: resolvedBorder?.add(
             Border(
               right: BorderSide(
-                color: resolvedBorder.top.color.withOpacity(.1),
+                color: resolvedBorder.top.color.withValues(alpha: .1),
               ),
             ),
           ),
