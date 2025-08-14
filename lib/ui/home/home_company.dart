@@ -139,7 +139,11 @@ class HomeCompany extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    navigate(company.id, null, "My Jobs");
+                    navigate(
+                      "${company.id}",
+                      {"company": company.id},
+                      "My Jobs",
+                    );
                   },
                   child: Container(
                     padding: ContentPadding,
