@@ -25,8 +25,8 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     final jobProvider = context.read<JobProvider>();
     if ((jobProvider.jobs[widget.company.id]?.data ?? []).isEmpty) {
       jobProvider.getJobs(
-        mapId: widget.company.id!,
-        params: {"company": widget.company.id!},
+        mapId: "${widget.company.id!}_active",
+        params: {"company": widget.company.id!, "status": "active"},
       );
     }
     super.initState();
@@ -34,7 +34,14 @@ class _CompanyDetailsState extends State<CompanyDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<JobProvider>();
     return SliverScaffold(
+      onRefresh: () => Future.wait([
+        provider.getJobs(
+          mapId: "${widget.company.id!}_active",
+          params: {"company": widget.company.id!, "status": "active"},
+        ),
+      ]),
       appBar: AppBar(
           // title: const Text("Company"),
           ),
