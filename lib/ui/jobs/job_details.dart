@@ -37,6 +37,7 @@ class _JobDetailState extends State<JobDetail> {
   void initState() {
     super.initState();
     final provider = context.read<JobProvider>();
+    provider.getJob(widget.job.id!);
     if (provider.user?.freelancer?.id != null && widget.job.id != null) {
       provider.getJobScore(
         freelancerId: provider.user!.freelancer!.id!,
@@ -72,7 +73,8 @@ class _JobDetailState extends State<JobDetail> {
       appBar: AppBar(
         title: const Text("Job Details"),
         actions: [
-          if (options(context, job).isNotEmpty)
+          if (options(context, job).isNotEmpty &&
+              job.status == JobStatus.active)
             IconButton(
               icon: const Icon(PhosphorIconsRegular.dotsThreeCircle),
               onPressed: () {
