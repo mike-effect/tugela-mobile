@@ -4,6 +4,7 @@ import 'package:tugela/extensions.dart';
 import 'package:tugela/models.dart';
 import 'package:tugela/providers/app_provider.dart';
 import 'package:tugela/providers/job_provider.dart';
+import 'package:tugela/providers/user_provider.dart';
 import 'package:tugela/theme.dart';
 import 'package:tugela/ui/applications/application_card.dart';
 import 'package:tugela/ui/applications/applications_company.dart';
@@ -51,7 +52,7 @@ class _ApplicationsTabState extends State<ApplicationsTab> {
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
     final jobProvider = context.watch<JobProvider>();
-    // final userProvider = context.watch<UserProvider>();
+    final userProvider = context.watch<UserProvider>();
     // final user = userProvider.user;
 
     final feed = loadingPlaceholder<JobApplication>(
@@ -88,6 +89,7 @@ class _ApplicationsTabState extends State<ApplicationsTab> {
 
     return SliverScaffold(
       onRefresh: () => Future.wait([
+        userProvider.getUserMe(),
         jobProvider.getJobApplications(
           mapId: mapId,
           params: params,
