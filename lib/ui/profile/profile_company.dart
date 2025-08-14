@@ -25,7 +25,7 @@ class ProfileCompany extends StatelessWidget {
     final jobProvider = context.watch<JobProvider>();
     // ignore: no_leading_underscores_for_local_identifiers
     const chipStyle = TextStyle(height: 1.2, fontSize: 13);
-    final jobs = (jobProvider.jobs[company.id]?.data ?? []);
+    final jobs = (jobProvider.jobs["${company.id}_active"]?.data ?? []);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
