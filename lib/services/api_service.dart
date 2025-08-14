@@ -468,7 +468,7 @@ class ApiService implements ApiServiceContract {
 
   @override
   Future<ApiResponse<bool>> updateJob(String id, Job data) async {
-    final res = await put('/jobs/$id/', data.toJson());
+    final res = await patch('/jobs/$id/', data.toJson());
     return ApiResponse.successful(res);
   }
 
@@ -510,7 +510,7 @@ class ApiService implements ApiServiceContract {
   @override
   Future<ApiResponse<bool>> updateJobApplication(
       String id, JobApplication data) async {
-    final res = await put('/jobs/applications/$id/', data.toInputJson());
+    final res = await patch('/jobs/applications/$id/', data.toInputJson());
     return ApiResponse.successful(res);
   }
 
