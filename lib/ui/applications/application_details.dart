@@ -29,26 +29,24 @@ class ApplicationDetails extends StatefulWidget {
 }
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
-  JobApplication get application => widget.application;
-
-  bool get isCompleted {
-    return widget.application.job?.status == JobStatus.completed;
-  }
-
   @override
   void initState() {
     super.initState();
     final provider = context.read<JobProvider>();
+    provider.getApplication(widget.application.id!);
+    provider.getJob(widget.application.job?.id ?? "");
     provider.getJobSubmissions(
-      mapId: application.id!,
-      params: {"application": application.id},
+      mapId: widget.application.id!,
+      params: {"application": widget.application.id},
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final jobProvider = context.watch<JobProvider>();
-    final application = widget.application;
+    final application =
+        jobProvider.application[widget.application.id] ?? widget.application;
+    final isCompleted = application.job?.status == JobStatus.completed;
     const chipStyle = TextStyle(height: 1, fontSize: 13.5);
     final textStyle =
         context.textTheme.bodyMedium?.copyWith(height: 1.4, fontSize: 14.5);
@@ -315,7 +313,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                              if ((s.link ?? '').isNotEmpty)
+                              if ((s.link ?? '').isNotEmpty) ...[
+                                VSizedBox4,
                                 InkWell(
                                   onTap: () {
                                     openLink(s.link!);
@@ -337,7 +336,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
+                                )
+                              ],
                             ],
                           ),
                         );
@@ -351,7 +351,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         bottomNavigationBar: BottomAppBar(
           child: jobProvider.isCompany
               ? ElevatedButton(
-                  onPressed: isCompleted ? null : markAsCompleted,
+                  onPressed:
+                      isCompleted ? null : () => markAsCompleted(context),
                   child: Text(
                     isCompleted ? "Job Completed" : "Mark as completed",
                   ),
@@ -540,7 +541,10 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         ]),
         bottomNavigationBar: BottomAppBar(
           child: (jobProvider.isCompany &&
-                  application.status == ApplicationStatus.pending)
+                  application.status == ApplicationStatus.pending &&
+                  ((jobProvider.job[application.job?.id] ?? application.job)
+                          ?.status !=
+                      JobStatus.completed))
               ? ElevatedButton(
                   onPressed: () async {
                     final res = await showAppBottomSheet<ApplicationStatus>(
@@ -583,16 +587,16 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
     );
   }
 
-  void markAsCompleted() {
+  void markAsCompleted(BuildContext context) {
     final jobProvider = context.read<JobProvider>();
-    final job = application.job;
+    final job = widget.application.job;
     showAppBottomSheet(
       context: context,
       physics: const NeverScrollableScrollPhysics(),
       padding: ContentPadding,
       title: "Mark as Completed",
       centerTitleText: true,
-      children: (context) {
+      children: (ctx) {
         return [
           const Text(
             "By confirming, you acknowledge that the job has been successfully "
@@ -603,7 +607,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
           const SizedBox(height: 60),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(ctx);
               ProviderRequest.api(
                 context: context,
                 request: jobProvider.updateJob(
