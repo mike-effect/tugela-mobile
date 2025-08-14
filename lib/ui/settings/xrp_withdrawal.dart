@@ -34,7 +34,7 @@ class _XRPWithdrawalState extends State<XRPWithdrawal> {
     final userProvider = context.watch<UserProvider>();
     final balance = userProvider.balance?.xrpBalance ?? 0;
     final amount = double.tryParse(amountController.text) ?? 0;
-    final transakUrl = AppConfig.transakUrl(
+    final transakUrl = AppConfig.instance.transakUrl(
       action: "withdrawal",
       walletAddress: userProvider.user?.xrpAddress ?? "",
       email: userProvider.user?.email ?? "",
