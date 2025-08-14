@@ -37,13 +37,18 @@ Future<void> _initializeFirebase() async {
       minimumFetchInterval: Duration.zero,
     ));
     final config = (await getRemoteAppConfig())?.forPlatform();
-    if (config != null) sl.get<AppConfig>().remotePlatformConfig = config;
+    if (config != null) AppConfig.instance.remotePlatformConfig = config;
     if (kDebugMode) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       FirebaseCrashlytics
           .instance.pluginConstants['isCrashlyticsCollectionEnabled'] = false;
     } else {
+      if (config?.environment == "staging") {
+        AppConfig.instance.apiEnvironment = ApiEnvironment.staging;
+      } else if (config?.environment == "production") {
+        AppConfig.instance.apiEnvironment = ApiEnvironment.production;
+      }
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
