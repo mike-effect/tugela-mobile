@@ -684,6 +684,7 @@ class _JobCreateState extends State<JobCreate> {
       // },
       onSuccess: (context, res) async {
         final companyId = jobProvider.user?.company?.id;
+        userProvider.getUserMe();
         if (isEditing) jobProvider.getJob(widget.job!.id!);
         jobProvider.getJobs(mapId: companyId, params: {"company": companyId});
         if (companyId != null) companyProvider.getCompany(companyId);
