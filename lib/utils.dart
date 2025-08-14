@@ -15,7 +15,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:tugela/constants/config.dart';
-import 'package:tugela/services/sl.dart';
 import 'package:tugela/utils/spacing.dart';
 import 'package:tugela/widgets/layout/bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -143,7 +142,6 @@ String osNameForPlatform(TargetPlatform platform) {
 
 double parseAmount(Object? value, {int? factor}) {
   if (value == null) return 0.0;
-  // final f = factor ?? sl.get<AppConfig>().currencyFactor;
   return (double.tryParse(value.toString()) ?? 0.0);
 }
 
@@ -156,9 +154,9 @@ String formatAmount(
   bool isCrypto = false,
   bool truncate = true,
 }) {
-  final f = factor ?? sl.get<AppConfig>().currencyFactor;
-  final p = precision ?? sl.get<AppConfig>().currencyPrecision;
-  final s = (symbol ?? sl.get<AppConfig>().currencyCode).toUpperCase();
+  final f = factor ?? AppConfig.instance.currencyFactor;
+  final p = precision ?? AppConfig.instance.currencyPrecision;
+  final s = (symbol ?? AppConfig.instance.currencyCode).toUpperCase();
   final v = (double.tryParse(value.toString()) ?? 0.0);
   if (isCrypto) {
     String r = "${(value ?? 0.00)}";
