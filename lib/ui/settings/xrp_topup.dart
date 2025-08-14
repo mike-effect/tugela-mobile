@@ -40,7 +40,7 @@ class _XRPTopupState extends State<XRPTopup> {
         ),
       )
       ..loadRequest(
-        Uri.parse(AppConfig.transakUrl(
+        Uri.parse(AppConfig.instance.transakUrl(
           action: "topup",
           walletAddress: provider.user?.xrpAddress ?? "",
           email: provider.user?.company?.email ?? "",
