@@ -18,9 +18,9 @@ setupServiceLocator() {
   sl.registerLazySingleton<HiveServiceContract>(() => HiveService());
   sl.registerLazySingleton<ApiServiceContract>(() {
     return ApiService(Dio(BaseOptions(
-      baseUrl: AppConfig.apiHost,
+      baseUrl: AppConfig.instance.apiHost,
       sendTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 30),
     )));
   });
   sl.registerLazySingleton<LocalAuthServiceContract>(
