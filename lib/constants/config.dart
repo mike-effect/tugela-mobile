@@ -4,43 +4,51 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tugela/models.dart';
-import 'package:tugela/services/sl.dart';
 import 'package:tugela/utils.dart';
 
 enum ApiEnvironment { staging, production }
 
-class AppConfig {
-  static AppConfig? _instance;
+class ApiConfig {
+  final String baseUrl, paymentsUrl;
+  const ApiConfig({required this.baseUrl, required this.paymentsUrl});
+}
 
+class AppConfig {
+  static final AppConfig instance = AppConfig._internal();
+  AppConfig._internal();
+
+  ApiEnvironment apiEnvironment = ApiEnvironment.production;
   int currencyFactor = 1;
   int currencyPrecision = 2;
-  String currencyCode = " ";
+  String currencyCode = "";
   String userUuid = "";
   RemotePlatformConfig? remotePlatformConfig;
 
-  static ApiEnvironment apiEnvironment = ApiEnvironment.staging;
-
-  static final _apiHostMap = {
-    ApiEnvironment.staging: _stagingAPI,
-    ApiEnvironment.production: _productionAPI,
+  static const _apiConfigs = {
+    ApiEnvironment.staging: ApiConfig(
+      baseUrl: "https://articulate-ego-429522-d4.uc.r.appspot.com/api",
+      paymentsUrl: "https://dev-tugela-payments.netlify.app",
+    ),
+    ApiEnvironment.production: ApiConfig(
+      baseUrl: "https://prod-dot-articulate-ego-429522-d4.uc.r.appspot.com/api",
+      paymentsUrl: "https://tugela-payments.netlify.app",
+    ),
   };
 
-  static String get apiHost {
-    if (kReleaseMode) return _productionAPI;
-    return _apiHostMap[apiEnvironment]!;
+  String get remoteApiUrl {
+    return apiEnvironment == ApiEnvironment.staging
+        ? remotePlatformConfig?.stagingUrl ?? ""
+        : remotePlatformConfig?.productionUrl ?? "";
   }
 
-  static String get paymentsService {
-    if (apiEnvironment == ApiEnvironment.staging) {
-      return "https://dev-tugela-payments.netlify.app";
+  String get apiHost {
+    if (kReleaseMode && remoteApiUrl.isNotEmpty) {
+      return remoteApiUrl;
     }
-    return "https://tugela-payments.netlify.app";
+    return _apiConfigs[apiEnvironment]!.baseUrl;
   }
 
-  static const _stagingAPI =
-      "https://articulate-ego-429522-d4.uc.r.appspot.com/api";
-  static const _productionAPI =
-      "https://prod-dot-articulate-ego-429522-d4.uc.r.appspot.com/api";
+  String get paymentsService => _apiConfigs[apiEnvironment]!.paymentsUrl;
 
   static const siteUrl = "https://tugela.co";
   static const webAppUrl = siteUrl;
@@ -50,15 +58,9 @@ class AppConfig {
   static const faqUrl = "$siteUrl/contact";
   static const appStoreId = "6444046206";
 
-  AppConfig._internal() {
-    _instance = this;
-  }
-
-  factory AppConfig() => _instance ?? AppConfig._internal();
-
-  static void ensureInitialized() {
-    sl.registerLazySingleton<AppConfig>(() => AppConfig());
-  }
+  // static void ensureInitialized() {
+  //   sl.registerLazySingleton<AppConfig>(() => AppConfig.instance);
+  // }
 
   // static e.Encrypted _encrypt(String value) {
   //   final eKey = e.Key.fromUtf8("kXp2s5v8x/A?D(G+7w!z%C*F-JaNdRgU");
@@ -70,7 +72,7 @@ class AppConfig {
   //   return e.Encrypter(e.AES(eKey)).decrypt(value, iv: e.IV.fromLength(16));
   // }
 
-  static String transakUrl({
+  String transakUrl({
     required String action,
     required String walletAddress,
     required String email,
@@ -78,8 +80,8 @@ class AppConfig {
   }) {
     final user = Uri.encodeComponent(jsonEncode(userData));
     final api = (apiEnvironment == ApiEnvironment.staging
-        ? AppConfig().remotePlatformConfig?.transak?.staging
-        : AppConfig().remotePlatformConfig?.transak?.production);
+        ? remotePlatformConfig?.transak?.staging
+        : remotePlatformConfig?.transak?.production);
     final url = (action == "topup" ? api?.topup : api?.withdrawal)
         ?.replaceAll('{address}', walletAddress)
         .replaceAll('{email}', email)
