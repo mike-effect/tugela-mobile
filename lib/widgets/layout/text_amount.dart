@@ -28,7 +28,7 @@ class TextAmount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s = (symbol ?? AppConfig().currencyCode).toUpperCase();
+    final s = (symbol ?? AppConfig.instance.currencyCode).toUpperCase();
     final amount = formatAmount(
       value ?? 0.0,
       symbol: s,
