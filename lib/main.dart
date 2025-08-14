@@ -28,7 +28,6 @@ part 'main.part.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AppConfig.ensureInitialized();
 
   setupServiceLocator();
 
@@ -65,18 +64,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => JobProvider()),
       ],
       child: Builder(builder: (context) {
+        final p = context.watch<AppProvider>();
         return MaterialApp(
           title: 'Zynara',
           color: AppColors.black,
-          debugShowCheckedModeBanner: false,
-          themeMode: context.read<AppProvider>().themeMode,
+          debugShowCheckedModeBanner:
+              p.config.apiEnvironment == ApiEnvironment.staging,
+          themeMode: p.themeMode,
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           home: const Splash(),
           routes: RoutesMap.map,
           builder: (context, child) {
             return MediaQuery.withClampedTextScaling(
-              minScaleFactor: 0.8,
+              minScaleFactor: 0.9,
               maxScaleFactor: 1.2,
               child: child!,
             );
