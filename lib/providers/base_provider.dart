@@ -19,7 +19,7 @@ abstract class BaseProvider extends ChangeNotifier {
   /// Method for resetting the state of the provider
   void reset();
 
-  final config = sl.get<AppConfig>();
+  final config = AppConfig.instance;
   final apiService = sl.get<ApiServiceContract>();
   final hiveService = sl.get<HiveServiceContract>();
   final localAuthService = sl.get<LocalAuthServiceContract>();
