@@ -30,7 +30,7 @@ class _HomeTabState extends State<HomeTab> {
     if (jobProvider.isCompany) {
       return {"company": jobProvider.user?.company?.id};
     }
-    return {"freelancer": jobProvider.user?.freelancer?.id};
+    return {"freelancer": jobProvider.user?.freelancer?.id, "status": "active"};
   }
 
   @override
@@ -89,6 +89,7 @@ class _HomeTabState extends State<HomeTab> {
       scrollController: appProvider.tabScrollControllers[0],
       onRefresh: () => Future.wait([
         if (address != null) userProvider.getBalance(address),
+        userProvider.getUserMe(),
         jobProvider.getJobs(
           mapId: user?.company?.id,
           params: params,
