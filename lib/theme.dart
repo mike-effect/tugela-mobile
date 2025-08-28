@@ -165,7 +165,7 @@ class AppTheme {
       dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
       appBarTheme: AppBarTheme(
         elevation: 0,
-        color: AppColors.scaffoldbackgroundColor,
+        backgroundColor: AppColors.scaffoldbackgroundColor,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.black),
@@ -177,7 +177,7 @@ class AppTheme {
           // letterSpacing: 0.4,
         ),
       ),
-      bottomAppBarTheme: const BottomAppBarTheme(
+      bottomAppBarTheme: const BottomAppBarThemeData(
         elevation: 0,
         color: Colors.transparent,
         padding: ContentPadding,
@@ -453,7 +453,7 @@ class AppTheme {
         backgroundColor: Colors.grey.shade900,
       ),
       appBarTheme: appBarTheme.copyWith(
-        color: AppColors.scaffoldbackgroundColorDark,
+        backgroundColor: AppColors.scaffoldbackgroundColorDark,
         systemOverlayStyle: SystemUiOverlayStyle.light,
         iconTheme: iconTheme.copyWith(color: AppColors.white),
         titleTextStyle: appBarTheme.titleTextStyle?.copyWith(
