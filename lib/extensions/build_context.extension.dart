@@ -13,7 +13,7 @@ extension BuildContextX on BuildContext {
 
   bool get isDark => brightness == Brightness.dark;
 
-  InputDecorationTheme get inputTheme => theme.inputDecorationTheme;
+  InputDecorationThemeData get inputTheme => theme.inputDecorationTheme;
 
   Color? get borderColor =>
       theme.inputDecorationTheme.enabledBorder?.borderSide.color;
